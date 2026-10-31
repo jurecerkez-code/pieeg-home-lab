@@ -4,7 +4,8 @@ import os
 
 import pytest
 
-from conftest import only_recording, script
+from conftest import free_port, only_recording, script, talk
+from self_test import judge
 
 
 @pytest.fixture
@@ -18,7 +19,47 @@ def recording(sim, tmp_path):
 def test_self_test(sim, tmp_path):
     r = script("self_test.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 1, cwd=tmp_path)
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "ch8:" in r.stdout and "Device OK" in r.stdout
+    assert "ch8:" in r.stdout and "Board OK: every channel under 5 µV RMS (250 samples)" in r.stdout
+
+
+def test_self_test_without_board_is_not_a_pass(sim, tmp_path):
+    # The real PiEEG Server answers "Device OK" with 0 samples when no board is mounted
+    talk(sim, {"cmd": "sim_board", "present": False})
+    r = script("self_test.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 1, cwd=tmp_path)
+    assert r.returncode == 1
+    assert "No usable test: 0 of 250 samples" in r.stdout
+    assert "Internal noise within spec" not in r.stdout     # the server's false verdict is not shown
+
+
+def test_judge_noise_results():
+    ok = {"rms": [1.0] * 8, "duration": 3, "samples_collected": 750}
+    assert judge(ok)[1] is None and judge(ok)[0].startswith("Board OK")
+    assert judge({**ok, "samples_collected": 0})[1] == "no samples"
+    assert judge({**ok, "rms": [1.0] * 7 + [20.0]})[1] == "high noise"
+    assert judge({**ok, "rms": [1.0] * 7 + [8.0]})[0].startswith("Marginal")
+
+
+def test_check_setup_against_the_simulator(sim, tmp_path):
+    md = tmp_path / "check.md"
+    r = script("check_setup.py", "--host", "127.0.0.1", "--port", sim, "--dashboard-port", free_port(),
+               "--noise-test", "--markdown", md, cwd=tmp_path)
+    out = r.stdout
+    assert "[ok] Channels: 8" in out
+    assert "[ok] Samples:" in out and "0 gaps" in out
+    assert "[ok] Noise test: Board OK" in out
+    assert "[FAIL] Dashboard" in out            # the simulator has no dashboard
+    assert "[FAIL] Hardware mode: MOCK" in out  # and it is, of course, a mock
+    assert r.returncode == 1
+    assert "| ✅ | Channels | 8, PiEEG-8 mode |" in md.read_text(encoding="utf-8")
+
+
+def test_check_setup_without_board(sim, tmp_path):
+    talk(sim, {"cmd": "sim_board", "present": False})
+    r = script("check_setup.py", "--host", "127.0.0.1", "--port", sim, "--dashboard-port", free_port(),
+               "--noise-test", cwd=tmp_path)
+    assert "[FAIL] Samples: none in 3 s" in r.stdout
+    assert "[warn] Noise test: skipped" in r.stdout
+    assert r.returncode == 1
 
 
 def test_spectrum(recording, tmp_path):

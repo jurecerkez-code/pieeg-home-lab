@@ -1,8 +1,61 @@
 # Raspberry Pi setup
 
-How the MicroSD in the box was prepared. Follow it to redo the setup from scratch or on a new card. About 45 to 90 minutes, most of it waiting: a Pi 3 is slow at updates and installs.
+The MicroSD in the box is ready: put it in the Pi, power it, and it streams. This page says what's on the card, how to reach the Pi from the laptop, how to check that everything works, and how to redo the setup from scratch.
 
-This follows the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/) guide, adapted for a **Raspberry Pi 3 Model B** used **headless** (no monitor, controlled from the MacBook over WiFi).
+## The card in the box
+
+| | |
+|---|---|
+| Name on the network | `raspberrypi`, reachable as **`raspberrypi.local`** |
+| User | `jure`, password on the note in the box |
+| System | Raspberry Pi OS Lite, 64 bit, Debian 13 "trixie" (image of 6 October 2026) |
+| WiFi | your home network, country DE. The Pi 3 only uses 2.4 GHz |
+| SSH | on, with password or key |
+| PiEEG Server | version 0.49.0 (commit `9bf3503`), starts by itself on every boot, in 8 channel mode |
+| SPI | on, with `core_freq_fixed=1` |
+
+Checked on the real Pi on 31 October 2026, results in [validation](validation.md).
+
+## Connect from the laptop
+
+No monitor or keyboard needed. Laptop and Pi only have to be on the same WiFi.
+
+| What | How |
+|---|---|
+| **The graphical view** | The **dashboard**, in any browser: **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** |
+| Python | The scripts in `code/` run on the laptop and read the stream over WiFi ([README, Code](../README.md#code)) |
+| A terminal on the Pi | `ssh jure@raspberrypi.local`, in Terminal on a Mac or PowerShell on Windows |
+
+**Why there's no desktop on the Pi.** The card runs Raspberry Pi OS **Lite**, without a desktop, on purpose: the Pi 3 has 1 GB of RAM, and PiEEG Server, the WiFi stream and a desktop would compete for it. Everything graphical happens on the laptop instead, in the dashboard and in Python, which is also how PiEEG's own "headless option" works. Nothing in this repo needs the Pi's desktop.
+
+If `raspberrypi.local` doesn't resolve, use the Pi's IP address instead (router page, or `hostname -I` in an SSH session), e.g. `http://192.168.0.209:1617`. See [troubleshooting](troubleshooting.md#raspberrypilocal-is-not-found).
+
+## Check that it works
+
+From `code/` on the laptop, after the [code setup](../README.md#setup-once):
+
+```bash
+python check_setup.py                 # about 10 seconds, changes nothing on the Pi
+python check_setup.py --noise-test    # also PiEEG's board noise test, with the PiEEG-8 mounted
+```
+
+It checks the whole chain in order: the Pi's address, PiEEG Server and its version, the dashboard, 8 channel mode, real hardware (not mock mode), and samples arriving at about 250 per second. Every line `[ok]` means the setup is complete. Without the PiEEG-8 mounted, the line `Samples` fails: the server runs, but no data comes from the board.
+
+The PiEEG doctor on the Pi checks the software side: `ssh jure@raspberrypi.local pieeg-server doctor`. Its two warnings about ports 1616 and 1617 being in use just mean the service already runs. It also announces newer PiEEG Server versions. This kit stays on 0.49.0 on purpose, see [updating](#updating-pieeg-server-later).
+
+## Power during setup
+
+With electrodes on anyone: **powerbank only** ([safety](safety.md)). For setup and updates without electrodes, a wall supply is fine, but it has to be strong enough: Raspberry Pi specifies 5 V and 2.5 A for the Pi 3. A 0.7 A phone charger is not: the Pi then runs on too low a voltage, slows itself down, and can corrupt the card while writing to it.
+
+To check, over SSH:
+
+```bash
+vcgencmd get_throttled     # throttled=0x0 is good. 0x50005 means: under voltage right now and since boot
+```
+
+## Set it up from scratch
+
+How the card in the box was made, to redo it on a new card. About 45 to 90 minutes, most of it waiting: a Pi 3 is slow at updates and installs. This follows the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/) guide, adapted for a **Raspberry Pi 3 Model B** used **headless** (no monitor, controlled from the laptop over WiFi).
 
 | | Official PiEEG guide | This kit |
 |---|---|---|
@@ -14,7 +67,7 @@ This follows the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware
 
 ## 1. Flash the MicroSD
 
-1. On the Mac install **[Raspberry Pi Imager](https://www.raspberrypi.com/software/)** and put the MicroSD into a card reader.
+1. On the laptop (Mac or Windows) install **[Raspberry Pi Imager](https://www.raspberrypi.com/software/)** and put the MicroSD into a card reader. Everything on the card gets erased.
 2. Choose device **Raspberry Pi 3**, then **Raspberry Pi OS Lite (64-bit)** (under Raspberry Pi OS (other)), then the MicroSD as storage.
 3. In the **customisation** step (Imager asks before writing):
    - Hostname: `raspberrypi`
@@ -28,7 +81,7 @@ Current Raspberry Pi OS applies these settings on the first boot with cloud-init
 
 ## 2. First boot
 
-Power the Pi from the powerbank (no electrodes needed for setup). Wait 2 to 5 minutes, the first boot takes longer. Then in Terminal on the Mac:
+Power the Pi from the powerbank or a 2.5 A supply (no electrodes during setup, see [power](#power-during-setup)). Wait 2 to 5 minutes, the first boot takes longer. Then in Terminal (Mac) or PowerShell (Windows):
 
 ```bash
 ssh <username>@raspberrypi.local
@@ -68,20 +121,23 @@ If you ran it twice and see `--device pieeg8` twice, edit the line by hand: `sud
 
 ## 5. Check
 
+On the Pi:
+
 ```bash
 pieeg-server doctor                     # checks Pi model, SPI, GPIO, ports, service
 systemctl status pieeg-server           # should say active (running)
 journalctl -u pieeg-server -n 30        # last log lines
+vcgencmd get_throttled                  # throttled=0x0, see power above
 ```
 
-Then, with the PiEEG-8 mounted, from the Mac:
+Then from the laptop, with the PiEEG-8 mounted:
 
 ```bash
 cd pieeg-home-lab/code && source .venv/bin/activate
-python self_test.py                     # board noise test, every channel should be under 5 µV RMS
+python check_setup.py --noise-test      # every line [ok]
 ```
 
-Open **http://raspberrypi.local:1617** on the Mac and click **Connect**. The dashboard must show **8** channels. Sixteen means step 4 didn't apply.
+Open **http://raspberrypi.local:1617** in the browser and click **Connect**. The dashboard must show **8** channels. Sixteen means step 4 didn't apply.
 
 ## 6. Test on yourself
 
@@ -89,7 +145,9 @@ Do the [first test](first-test.md) once with your own forehead. Blink, see spike
 
 ## 7. Back up the card
 
-Once everything works, an image of the card saves the whole setup. On the Mac, with the card in the reader:
+Once everything works, an image of the card saves the whole setup. Shut the Pi down first (`sudo shutdown -h now`, wait until the green LED stops blinking), then put the card in the laptop's reader.
+
+On a Mac:
 
 ```bash
 diskutil list                             # find the card: external, about 16 GB, e.g. /dev/disk4
@@ -97,7 +155,9 @@ diskutil unmountDisk /dev/disk4
 sudo dd if=/dev/rdisk4 bs=4m | gzip > ~/pieeg-sd-backup.img.gz
 ```
 
-Double check the disk number: `dd` only reads here, but the restore writes. To restore, write `pieeg-sd-backup.img.gz` with Raspberry Pi Imager (**Use custom**). The image contains the WiFi password, keep it private.
+Double check the disk number: `dd` only reads here, but the restore writes. On Windows, [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/) does the same with its **Read** button: pick a file name and the card's drive letter.
+
+To restore, write the image with Raspberry Pi Imager (**Use custom**). The image contains the WiFi password, keep it private.
 
 ## Updating PiEEG Server later
 

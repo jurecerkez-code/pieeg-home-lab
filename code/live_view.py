@@ -14,6 +14,7 @@ are on, the data arrives already filtered, and --raw shows exactly that.
 
 import argparse
 import collections
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -78,15 +79,23 @@ def main():
     status = fig.text(0.01, 0.99, "connecting...", va="top", fontsize=9)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
 
+    last_sample = [time.monotonic()]
+
     def update(_):
         if stream.error:
             status.set_text(f"Error: {stream.error}  (see docs/troubleshooting.md)")
             return
-        if not stream.connected:
+        new = stream.get_new()
+        if new:
+            last_sample[0] = time.monotonic()
+        elif stream.ever_connected and stream.samples_received == 0 and time.monotonic() - last_sample[0] > 4:
+            status.set_text(f"{stream.url} answers, but no samples arrive. "
+                            "Is the PiEEG-8 mounted? (docs/troubleshooting.md)")
+            return
+        elif not stream.connected:
             what = "reconnecting" if stream.ever_connected else "connecting"
             status.set_text(f"{what} to {stream.url} ...  {stream.last_error or ''}")
             return
-        new = stream.get_new()
         for s in new:
             for c in a.channels:
                 if c <= len(s.uv):

@@ -63,14 +63,14 @@ The clip cables are 20 cm, so the Pi sits near your head. Short is good: less wi
 1. Plug the Micro USB cable into the Pi (port **PWR IN**) and into the powerbank.
 2. The red LED on the Pi and the LED on the PiEEG-8 light up. Wait about 60 seconds for the Pi to boot and join the WiFi.
 
-## 6. Board self test (optional, 10 seconds)
+## 6. Setup check (optional, 10 seconds)
 
 ```bash
 cd pieeg-home-lab/code && source .venv/bin/activate
-python self_test.py
+python check_setup.py --noise-test
 ```
 
-Every channel under 5 µV RMS means the board is healthy. This is PiEEG's official noise check: the chip shorts its own inputs, so the result doesn't depend on the stickers. While it runs, every program reading the stream gets that shorted signal, so never run it during a recording.
+Every line `[ok]` means WiFi, Pi, server and board work together. The noise part is PiEEG's official check: the chip shorts its own inputs, and every channel under 5 µV RMS means the board is healthy, whatever the stickers are doing. While it runs, every program reading the stream gets that shorted signal, so never run it during a recording. If a line fails, it names the problem, see [troubleshooting](troubleshooting.md).
 
 ## 7. Open the dashboard
 

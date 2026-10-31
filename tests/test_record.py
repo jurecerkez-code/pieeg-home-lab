@@ -119,6 +119,16 @@ def test_filters_switched_on_by_another_client_are_detected(sim, tmp_path):
     assert meta["data_filtering"].startswith("none, except")
 
 
+def test_no_board_gives_a_clear_message_and_restores_filters(sim, tmp_path):
+    talk(sim, {"cmd": "sim_board", "present": False})     # like the real Pi without the PiEEG-8
+    r = script("record.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 2,
+               "--wait-for-samples", 5, "--out", tmp_path / "r", cwd=tmp_path)
+    assert r.returncode != 0
+    assert "no samples arrived" in r.stderr and "PiEEG-8" in r.stderr
+    assert not list((tmp_path / "r").glob("*.csv"))
+    assert talk(sim)["filter"] is True, "filters must be back on even when nothing was recorded"
+
+
 def test_no_server_gives_a_clear_error(tmp_path):
     r = script("record.py", "--host", "127.0.0.1", "--port", free_port(), "--seconds", 1,
                "--connect-timeout", 2, "--out", tmp_path / "r", cwd=tmp_path)

@@ -135,6 +135,7 @@ Bonus: PiEEG sets `BIAS_SENSP` and `BIAS_SENSN` to `0x00` (in PiEEG Server and i
 
 ## Ideas after that
 
+- **A first open source contribution.** PiEEG Server's noise test answers "Device OK" when it collected zero samples, for example with no board mounted ([validation](validation.md) shows how it was found). Read `_run_noise_test` in [server.py](https://github.com/pieeg-club/PiEEG-server/blob/9bf350310bb492e1373edfe5b0714857f1fe04e9/pieeg_server/server.py), find why zero samples give an RMS of 0, and open an issue with the steps to reproduce, or a pull request that checks `samples_collected`
 - Blink detector that toggles something on the laptop
 - Eyes closed alarm: alpha above a threshold for 5 s
 - Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection. Record with `--electrodes "ch1=left wrist,ref=right wrist,bias=left ankle"`. **Never on anyone with a pacemaker or other implant**

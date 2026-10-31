@@ -26,12 +26,38 @@ import json
 import websockets
 
 
-async def run(host: str, port: int, duration: float):
+FS = 250
+
+
+def judge(result: dict):
+    """(verdict, problem) for a noise test result. problem is None when the board is fine.
+
+    PiEEG Server says "Device OK" even when it collected no samples at all (no board,
+    or a board that isn't seated), because the RMS of nothing is 0. So check the count first.
+    """
+    duration = float(result.get("duration") or 3)
+    expected = int(duration * FS)
+    got = result.get("samples_collected")
+    rms = [float(v) for v in result.get("rms", [])]
+    if not isinstance(got, int) or got < 0.9 * expected:
+        return (f"No usable test: {got} of {expected} samples came from the board, so the numbers mean "
+                "nothing (PiEEG Server still says 'Device OK'). Is the PiEEG-8 mounted and pressed onto "
+                "all 40 pins?", "no samples")
+    worst = max(rms, default=0.0)
+    if worst > 15:
+        return f"Hardware problem: {worst:.2f} µV RMS on the worst channel (limit 15).", "high noise"
+    if worst >= 5:
+        return f"Marginal: {worst:.2f} µV RMS on the worst channel. Seat the board again and repeat.", None
+    return f"Board OK: every channel under 5 µV RMS ({got} samples).", None
+
+
+async def run(host: str, port: int, duration: float, quiet: bool = False):
     url = f"ws://{host}:{port}"
-    async with websockets.connect(url, max_queue=None) as ws:
+    async with websockets.connect(url, max_queue=None, open_timeout=10) as ws:
         await ws.send(json.dumps({"cmd": "noise_test", "duration": duration}))
-        print(f"Running {duration:g} s noise test on {host} ...")
-        print("(For these seconds every client, dashboard and record.py included, gets the shorted signal.)")
+        if not quiet:
+            print(f"Running {duration:g} s noise test on {host} ...")
+            print("(For these seconds every client, dashboard and record.py included, gets the shorted signal.)")
         while True:
             raw = await asyncio.wait_for(ws.recv(), timeout=duration + 30)
             try:
@@ -54,16 +80,21 @@ def main():
     a = p.parse_args()
     try:
         r = asyncio.run(run(a.host, a.port, a.seconds))
-    except (OSError, asyncio.TimeoutError) as e:
+    except (OSError, asyncio.TimeoutError, websockets.exceptions.WebSocketException) as e:
         raise SystemExit(f"Could not run the test on {a.host}: {e}\nSee docs/troubleshooting.md")
 
+    verdict, problem = judge(r)
     print()
-    for i, v in enumerate(r.get("rms", []), start=1):
-        flag = "ok" if v < 5 else ("marginal" if v <= 15 else "HIGH")
-        print(f"  ch{i}: {v:6.2f} µV RMS   {flag}")
-    print()
-    print(r.get("verdict", ""))
-    print(r.get("recommendation", ""))
+    if problem != "no samples":
+        for i, v in enumerate(r.get("rms", []), start=1):
+            flag = "ok" if v < 5 else ("marginal" if v <= 15 else "HIGH")
+            print(f"  ch{i}: {v:6.2f} µV RMS   {flag}")
+        print()
+    print(verdict)
+    if problem is None:
+        print(r.get("recommendation", ""))
+    else:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

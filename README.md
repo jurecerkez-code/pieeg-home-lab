@@ -45,6 +45,7 @@ There's no EEG cap in this kit on purpose. It starts with electrode stickers on 
 | Electrodes | Ag/AgCl stickers, forehead and mastoids |
 | Power | Battery only (powerbank) |
 | Analysis | Python 3.10+, NumPy, SciPy, Matplotlib, PyNWB |
+| Validated | Raspberry Pi and PiEEG Server on 31 October 2026, board pending: [docs/validation.md](docs/validation.md) |
 
 ---
 
@@ -139,17 +140,19 @@ The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at he
 
 Wait about a minute while the Pi boots and joins the WiFi.
 
-### Step 5 · Test the board (optional)
+### Step 5 · Check the setup (optional, 10 seconds)
 
 On the MacBook, after the [code setup](#code):
 
 ```bash
-python self_test.py
+python check_setup.py --noise-test
 ```
 
-Runs PiEEG's official noise check: the ADS1299 shorts its own inputs and measures what's left. Every channel under 5 µV RMS means the board is healthy, whatever the stickers are doing. For those few seconds every program reading the stream gets the shorted signal, so never run it during a recording.
+Checks the whole chain in one go: WiFi, Pi, PiEEG Server, 8 channel mode, samples from the board, and PiEEG's official noise check, where the ADS1299 shorts its own inputs and measures what's left. Every line `[ok]` means the hardware is ready, whatever the stickers are doing. The noise check shorts the inputs for every program reading the stream for a few seconds, so never run it during a recording.
 
 ### Step 6 · Open the dashboard
+
+The dashboard is the kit's graphical view. The Pi itself runs without a desktop (Raspberry Pi OS Lite, to leave its 1 GB of RAM to the server), so everything visual happens in the laptop's browser.
 
 On the MacBook (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Then:
 
@@ -208,6 +211,21 @@ pip install -r requirements.txt
 
 `requirements-lock.txt` holds the exact versions the tests passed with. If a future release ever breaks something: `pip install -r requirements-lock.txt`.
 
+<details><summary>On Windows</summary>
+
+Install Python from [python.org](https://www.python.org/downloads/windows/), then in PowerShell:
+
+```powershell
+git clone https://github.com/jurecerkez-code/pieeg-home-lab.git
+cd pieeg-home-lab\code
+py -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python check_setup.py
+```
+
+Start every script with `.venv\Scripts\python` instead of `python`. `raspberrypi.local` works on Windows 10 and 11.
+</details>
+
 > [!IMPORTANT]
 > The first time Python connects to the Pi, macOS asks **"Allow Python to find devices on your local network?"** Click **Allow**. Missed it? System Settings → Privacy & Security → Local Network → turn on Terminal.
 
@@ -241,6 +259,7 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 
 | Script | Purpose |
 |---|---|
+| [`check_setup.py`](code/check_setup.py) | Checks laptop, WiFi, Pi, PiEEG Server and board in one go, names the first broken link |
 | [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://raspberrypi.local:1616`), reconnects by itself |
 | [`live_view.py`](code/live_view.py) | Live bandpass filtered traces and a Welch spectrum |
 | [`record.py`](code/record.py) | Raw recording to CSV with a JSON metadata sidecar |
@@ -287,6 +306,7 @@ pieeg-home-lab/
 ├── CITATION.cff
 ├── LICENSE
 ├── code/
+│   ├── check_setup.py       one command check of the whole chain
 │   ├── eeg_stream.py        WebSocket client
 │   ├── live_view.py         live plot
 │   ├── record.py            raw CSV + JSON recording
@@ -307,6 +327,7 @@ pieeg-home-lab/
     ├── recording-someone-else.md
     ├── setup-raspberry-pi.md
     ├── safety.md
+    ├── validation.md        what was checked on this kit's hardware
     ├── missions.md
     ├── troubleshooting.md
     ├── images/              diagrams

@@ -130,6 +130,7 @@ class EEGStream:
         self.events: list = []           # what happened, with wall clock time and the last sample number
         self.possibly_filtered: list = []  # [first_n, last_n] ranges that may hold filtered samples
         self.discarded = 0               # samples dropped while the server filters settled
+        self.samples_received = 0        # data frames received, all connections together
         self.ever_connected = False
         self.last_error = None           # why the last connection attempt failed or ended
         self.error = None                # unexpected failure of the reader itself
@@ -221,6 +222,7 @@ class EEGStream:
 
     async def _session(self, ws):
         last_msg = time.monotonic()
+        got_frame = False
         probe = None
         try:
             while not self._stop.is_set():
@@ -236,12 +238,16 @@ class EEGStream:
                     raw = await asyncio.wait_for(ws.recv(), timeout=0.5)
                 except asyncio.TimeoutError:
                     if time.monotonic() - last_msg > SILENCE_TIMEOUT:
-                        self.last_error = f"no data for {SILENCE_TIMEOUT:g} s"
+                        # The server answered but sends nothing: no board, or the WiFi is gone
+                        self.last_error = (f"no data for {SILENCE_TIMEOUT:g} s" if got_frame
+                                           else "the server answers but sends no samples")
                         return
                     continue
                 last_msg = time.monotonic()
                 s = parse_message(raw)
                 if s is not None:
+                    got_frame = True
+                    self.samples_received += 1
                     self._last_n = s.n
                     if time.monotonic() < self._settle_until:
                         self.discarded += 1

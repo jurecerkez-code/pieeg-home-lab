@@ -18,7 +18,9 @@ The signal: an alpha rhythm (10 Hz) that gets stronger every other 10 seconds
 
 Test hooks, used by tests/: {"cmd": "sim_outage", "seconds": 4} stops all traffic like a
 WiFi drop, {"cmd": "sim_restart"} closes every connection and resets the server like
-a restart of the pieeg-server service.
+a restart of the pieeg-server service, {"cmd": "sim_board", "present": false} behaves like
+the real server without a PiEEG-8: welcome message, but no samples, and a noise test
+that reports "Device OK" with zero samples.
 """
 
 import argparse
@@ -76,6 +78,7 @@ class FakeServer:
         self.n = 0
         self.outage_until = 0.0
         self.shorted_until = 0.0
+        self.board = True
         self.reset()
 
     def reset(self):
@@ -140,20 +143,26 @@ class FakeServer:
                 self.n = 0
                 for c in list(self.clients):
                     await c.close(1012, "simulated restart")
+            elif cmd == "sim_board":
+                self.board = bool(msg.get("present", True))
         except (TypeError, ValueError):
             pass
 
     async def noise_test(self, ws, msg):
         duration = min(max(float(msg.get("duration", 3)), 1), 10)
         await ws.send(json.dumps({"noise_test_status": "running"}))
-        self.shorted_until = time.monotonic() + duration + 0.5
-        await asyncio.sleep(duration + 0.5)
-        rms = [round(random.uniform(0.6, 1.6), 2) for _ in range(N_CH)]
+        if self.board:
+            self.shorted_until = time.monotonic() + duration + 0.5
+            await asyncio.sleep(duration + 0.5)
+            rms = [round(random.uniform(0.6, 1.6), 2) for _ in range(N_CH)]
+            collected = int(duration * FS)
+        else:
+            rms, collected = [0.0] * N_CH, 0        # what the real server reports without a board
         await ws.send(json.dumps({"noise_test_result": {
             "rms": rms, "max_rms": max(rms),
             "verdict": "Device OK. Internal noise within spec. (simulated)",
             "recommendation": "This is the simulator, not real hardware.",
-            "duration": duration, "samples_collected": int(duration * FS)}}))
+            "duration": duration, "samples_collected": collected}}))
 
     async def produce(self):
         start, k = time.monotonic(), 0
@@ -162,6 +171,8 @@ class FakeServer:
             delay = start + k / FS - time.monotonic()
             if delay > 0:
                 await asyncio.sleep(delay)
+            if not self.board:
+                continue                      # no chip, no DRDY, no samples
             self.n += 1
             now = time.monotonic()
             if now < self.shorted_until:

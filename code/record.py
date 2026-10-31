@@ -106,6 +106,7 @@ def main():
                    help="record what the server sends, filters included (not raw)")
     p.add_argument("--check-every", type=float, default=5.0, help=argparse.SUPPRESS)
     p.add_argument("--connect-timeout", type=float, default=15.0, help=argparse.SUPPRESS)
+    p.add_argument("--wait-for-samples", type=float, default=NO_SAMPLE_TIMEOUT, help=argparse.SUPPRESS)
     p.add_argument("--out", default="recordings")
     a = p.parse_args()
     if a.seconds <= 0:
@@ -148,7 +149,7 @@ def main():
     n_rows, n_ch, first, last = 0, None, None, None
     gaps, missing, resets, skipped = 0, 0, 0, 0
     end_reason = None
-    t_connected, t_first, last_note = time.monotonic(), None, 0.0
+    t_connected, t_first, last_note, waiting_noted = time.monotonic(), None, 0.0, False
     f = csv_path.open("w", newline="")
     w = csv.writer(f)
     try:
@@ -184,13 +185,17 @@ def main():
                 end_reason = f"reader error: {stream.error}"
                 break
             now = time.monotonic()
-            if t_first is None and now - t_connected > NO_SAMPLE_TIMEOUT:
-                end_reason = "no samples received"
-                break
-            if t_first is not None and now - t_first > a.seconds + 3:
+            if t_first is None:
+                if now - t_connected > a.wait_for_samples:
+                    end_reason = "no samples received"
+                    break
+                if not waiting_noted and now - t_connected > 4:
+                    print(f"  connected, but no samples yet. Waiting up to {a.wait_for_samples:g} s ...")
+                    waiting_noted = True
+            elif now - t_first > a.seconds + 3:
                 end_reason = "connection lost before the planned end"
                 break
-            if not stream.connected and now - last_note > 2:
+            elif not stream.connected and now - last_note > 2:
                 print(f"  connection lost ({stream.last_error}), reconnecting ...")
                 last_note = now
             time.sleep(0.05)
@@ -202,7 +207,11 @@ def main():
 
     if n_rows == 0:
         csv_path.unlink(missing_ok=True)
-        raise SystemExit(f"No samples saved ({end_reason}). Is PiEEG Server running? See docs/troubleshooting.md")
+        if end_reason == "no samples received" and stream.samples_received == 0:
+            raise SystemExit("Nothing saved: PiEEG Server answers, but no samples arrived. Is the PiEEG-8 "
+                             "mounted and pressed onto all 40 pins? See docs/troubleshooting.md, "
+                             "'No samples from the board'.")
+        raise SystemExit(f"Nothing saved ({end_reason}). See docs/troubleshooting.md")
 
     if not raw:
         filtering = (f"PiEEG Server filters, applied live on the Pi: {start_filters.describe()} at the start "
