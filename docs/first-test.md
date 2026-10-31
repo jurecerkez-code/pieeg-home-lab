@@ -1,6 +1,6 @@
 # First test
 
-Goal: see a blink and your alpha rhythm in the browser. About 10 minutes. Based on the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to the stick-on electrodes in this kit.
+Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears the electrodes. With a pacemaker or other implant, don't wear them without a physician's approval: be the researcher and [record someone else](recording-someone-else.md). About 10 minutes. Based on the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to the stick-on electrodes in this kit.
 
 ## You need
 

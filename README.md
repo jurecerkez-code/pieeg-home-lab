@@ -77,6 +77,9 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 > [!CAUTION]
 > **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from a **powerbank that is not charging**, and the MacBook runs **on battery, charger unplugged**. No wall power, no HDMI and no Ethernet cable anywhere in the setup. [docs/safety.md](docs/safety.md)
 
+> [!WARNING]
+> **Pacemaker or other implanted electronic device?** Don't wear the electrodes without your physician's approval (PiEEG safety rule). You can still do everything as the researcher: [record someone else](docs/recording-someone-else.md) and start with [PiEEG's real example data](docs/missions.md#mission-0-real-data-first).
+
 > [!NOTE]
 > PiEEG is a research and education tool, **not a medical device**. Nothing it shows is a diagnosis.
 
@@ -84,7 +87,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 
 ## Step by step
 
-The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
+The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
 
 ### Step 1 · Mount the board
 
@@ -204,12 +207,21 @@ pip install -r requirements.txt
 ```bash
 source .venv/bin/activate
 python live_view.py                                     # live traces + running spectrum (channels 1 and 2)
-python record.py --seconds 60 --label eyes_open         # → recordings/*.csv + .json
+python record.py --seconds 60 --label eyes_open         # → recordings/*.csv + .json (add --subject sub-02 for someone else)
 python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
 ### Without hardware
+
+Real recordings from PiEEG, converted to this repo's format:
+
+```bash
+python get_example_data.py                                   # → recordings/example_*.csv
+python spectrum.py recordings/example_*.csv
+```
+
+Or a live simulated stream:
 
 ```bash
 python simulate.py                     # Terminal tab 1: fake PiEEG (alpha, blinks, 50 Hz hum)
@@ -222,6 +234,7 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | [`live_view.py`](code/live_view.py) | Live band-pass filtered traces and a Welch spectrum |
 | [`record.py`](code/record.py) | Record to CSV with a JSON metadata sidecar |
 | [`spectrum.py`](code/spectrum.py) | Power spectrum, alpha peak frequency and alpha power |
+| [`get_example_data.py`](code/get_example_data.py) | Downloads PiEEG's example recordings and converts them |
 | [`self_test.py`](code/self_test.py) | Board noise test (inputs shorted), PiEEG's official hardware check |
 | [`simulate.py`](code/simulate.py) | Simulated PiEEG stream, also answers the self-test |
 | [`mission_1_notch.py`](code/mission_1_notch.py) | Mission 1 with automatic PASS/FAIL check |
@@ -235,6 +248,7 @@ Stream format, CSV columns and sidecar fields: [docs/how-it-works.md](docs/how-i
 
 | # | Mission | Done when |
 |---|---|---|
+| 0 | **Real data first** | Your detector finds 10 chews and 10 blinks in PiEEG's example file |
 | 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice |
 | 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
 | 3 | **Make it NWB** | Your recording passes `nwbinspector` |
@@ -257,6 +271,7 @@ pieeg-home-lab/
 │   ├── live_view.py         live plot
 │   ├── record.py            CSV + JSON recording
 │   ├── spectrum.py          alpha analysis
+│   ├── get_example_data.py  PiEEG example recordings
 │   ├── self_test.py         board noise test
 │   ├── simulate.py          hardware-free test stream
 │   ├── mission_1_notch.py
@@ -266,6 +281,7 @@ pieeg-home-lab/
     ├── equipment.md         every part, specs, why
     ├── how-it-works.md      signal chain, pins, data formats, sources
     ├── first-test.md        detailed first session
+    ├── recording-someone-else.md
     ├── setup-raspberry-pi.md
     ├── safety.md
     ├── missions.md

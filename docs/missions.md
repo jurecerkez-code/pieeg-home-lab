@@ -1,6 +1,32 @@
 # Missions
 
-Each mission is small enough for one evening. Do them in order or not, they're yours.
+Each mission is small enough for one evening. Do them in order or not, they're yours. Every mission works on your own recordings, on someone else's ([recording someone else](recording-someone-else.md)), or on PiEEG's published example data.
+
+---
+
+## Mission 0: real data first
+
+Before anyone wears electrodes, work with real PiEEG recordings. PiEEG publishes three example files from their own hardware. One command downloads them and converts them to this repo's format:
+
+```bash
+python get_example_data.py
+python spectrum.py recordings/example_*.csv
+```
+
+| File | What's in it |
+|---|---|
+| `example_dry.csv` | 77 s, 8 channels, dry Ag/AgCl electrodes on the 10-20 system |
+| `example_artifacts.csv` | 20 s: chewing 4, 3, 2, 1 times and blinking 4, 3, 2, 1 times |
+| `example_alpha.csv` | 40 s, the file PiEEG uses in their own alpha plotting example |
+
+Tasks:
+1. Plot `example_artifacts.csv` and find all 10 chewing bursts and all 10 blinks by eye. Then write code that finds them.
+2. Run [Mission 1](#mission-1-kill-the-50-hz-hum) on `example_dry.csv`. It has real 50 Hz hum.
+3. Which channel in `example_alpha.csv` has the strongest alpha? What does that suggest about where it sat on the head?
+
+Done when your artifact detector finds 10 chews and 10 blinks.
+
+For NWB practice there's far more: [DANDI](https://dandiarchive.org/) hosts thousands of published NWB datasets you can open with `pynwb`, and [OpenNeuro](https://openneuro.org/) has hundreds of human EEG studies.
 
 ---
 
@@ -98,5 +124,5 @@ Done when you can explain each step and you've checked whether the PiEEG formula
 
 - Blink detector that toggles something on the laptop
 - Eyes closed alarm: alpha above a threshold for 5 s
-- Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection
+- Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection. **Never on anyone with a pacemaker or other implant**
 - Stream to [LSL](https://labstreaminglayer.org/) from the dashboard and analyse live in MNE

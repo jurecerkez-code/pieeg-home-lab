@@ -9,7 +9,7 @@ The PiEEG-8 connects your skin directly to the electronics and has **no isolatio
 3. **No cable to anything on the mains.** No wall charger, no HDMI to a TV or monitor, no USB to a plugged-in computer, and **no Ethernet cable** (the Pi 3 has a network port, leave it empty).
 4. **Laptop on battery, WiFi only.** Unplug the MacBook charger before the electrodes go on. The MacBook never gets a cable to the Pi.
 5. **Not a medical device.** Learning and research only. No diagnosis, monitoring or treatment of anything.
-6. **Implants.** Don't use it on anyone with a pacemaker or other implanted electronic device without a physician's approval.
+6. **Implants.** Don't put electrodes on anyone with a pacemaker or other implanted electronic device without a physician's approval. The Bias electrode actively drives a small signal into the body, and an implant isn't designed with that in mind. Without approval, be the researcher and [record someone else](recording-someone-else.md). Skip ECG experiments (wrists, chest) for that person entirely.
 7. **Skin.** Clean, intact skin only. Stop if a sticker itches or burns.
 8. **Bare board.** The PiEEG-8 has no case. Hold it by the edges, touch something metal first to discharge static, keep drinks away.
 
