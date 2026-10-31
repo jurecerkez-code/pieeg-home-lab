@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/hero.png" alt="PiEEG Home Lab: forehead EEG traces with eyes open and eyes closed, and the alpha peak in the power spectrum" width="100%">
+<img src="docs/images/hero.png" alt="PiEEG Home Lab: classical marble bust wearing EEG electrodes, next to a forehead EEG trace that switches from eyes open to eyes closed alpha" width="100%">
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -34,9 +34,9 @@
 
 This kit records EEG with the open source **[PiEEG-8](https://docs.pieeg.com/hardware/devices/pieeg-8/)** shield, built around the Texas Instruments **ADS1299**, the same 24 bit biopotential converter used in OpenBCI and many research amplifiers. The Raspberry Pi runs **[PiEEG Server](https://github.com/pieeg-club/PiEEG-server)** and streams 250 samples per second over WiFi. Everything else happens on the MacBook: a browser dashboard for the first look, and Python for live plots, recording, spectral analysis and conversion to the **[NWB](https://www.nwb.org/)** research data standard.
 
-There's no EEG cap in this kit on purpose. It starts with stick-on electrodes on skin without hair (forehead and behind the ears), which is enough for blinks, eye movements, muscle activity and the alpha rhythm. Getting through hair to more positions is [Mission 4](docs/missions.md#mission-4-go-beyond-the-forehead).
+There's no EEG cap in this kit on purpose. It starts with stick-on electrodes on skin without hair (forehead and behind the ears), which is enough for blinks, eye movements, muscle activity and the alpha rhythm. More channels on bare skin (temples, eye corners) are [Mission 4](docs/missions.md#mission-4-more-channels-on-bare-skin). Positions through hair need dry electrodes, a later upgrade.
 
-<img src="docs/images/system.svg" alt="System overview: electrodes, PiEEG-8 on Raspberry Pi, powerbank, WiFi, MacBook" width="100%">
+<img src="docs/images/system.png" alt="System overview: electrodes, PiEEG-8 on Raspberry Pi, powerbank, WiFi, MacBook" width="100%">
 
 | | |
 |---|---|
@@ -50,7 +50,7 @@ There's no EEG cap in this kit on purpose. It starts with stick-on electrodes on
 
 ## Equipment
 
-<img src="docs/images/kit.svg" alt="All parts in the box" width="100%">
+<img src="docs/images/kit.png" alt="All parts in the box" width="100%">
 
 | # | Part | Spec | Source |
 |---|---|---|---|
@@ -58,7 +58,7 @@ There's no EEG cap in this kit on purpose. It starts with stick-on electrodes on
 | ② | **PiEEG-8 board** | ADS1299, 24 bit, 250 Hz, 8 ch + Ref + Bias, 2.54 mm male header | [Elecrow](https://www.elecrow.com/pieeg.html) |
 | ③ | **Ag/AgCl electrode stickers**, 60 pcs | 2.6 cm foam, snap button, single use | [Somnomedics SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
 | ④ | **Dupont to alligator clip cables**, 10 pcs | female 2.54 mm ↔ clip, 20 cm | [BerryBase DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
-| ⑤ | **Powerbank** + official Micro USB cable | USB A, 2.4 A or more | [BerryBase RPI-MUSB-1](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel) |
+| ⑤ | **Powerbank** + official Micro USB cable | 5 V, 2.5 A or more (PiEEG recommends 3 A) | [BerryBase RPI-MUSB-1](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel) |
 | ⑥ | Alcohol wipes | skin prep | dm |
 
 <p>
@@ -75,7 +75,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 ## Safety
 
 > [!CAUTION]
-> **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from the **powerbank** and the MacBook runs **on battery, charger unplugged**. No wall power anywhere in the setup. [docs/safety.md](docs/safety.md)
+> **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from a **powerbank that is not charging**, and the MacBook runs **on battery, charger unplugged**. No wall power, no HDMI and no Ethernet cable anywhere in the setup. [docs/safety.md](docs/safety.md)
 
 > [!NOTE]
 > PiEEG is a research and education tool, **not a medical device**. Nothing it shows is a diagnosis.
@@ -84,13 +84,13 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 
 ## Step by step
 
-The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). From opening the box to the first alpha wave takes about 10 minutes.
+The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
 
 ### Step 1 · Mount the board
 
 Pi unplugged. Line the PiEEG-8 up with the 40 pin header so it sits over the Pi, then press it straight down until every pin is seated.
 
-<img src="docs/images/assembly.svg" alt="Line up, press down, done" width="100%">
+<img src="docs/images/assembly.png" alt="Line up, press down, done" width="100%">
 
 <img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_on_pi.jpg" alt="PiEEG-8 correctly mounted on the Raspberry Pi" width="380">
 
@@ -100,19 +100,21 @@ Pi unplugged. Line the PiEEG-8 up with the 40 pin header so it sits over the Pi,
 
 Wipe the skin with an alcohol wipe and let it dry. Then three stickers:
 
-| Sticker | Position | 10-20 name |
+| Sticker | Position | Name |
 |---|---|---|
 | Left forehead, two fingers above the eyebrow | front left | **Fp1** |
-| Bony bump behind the left ear | left mastoid | **Ref** |
-| Bony bump behind the right ear | right mastoid | **Bias** |
+| Bony bump behind the left ear | left mastoid, M1 | **Ref** |
+| Bony bump behind the right ear | right mastoid, M2 | **Bias** |
 
-<img src="docs/images/placement.svg" alt="Electrode positions on the forehead and behind the ears" width="100%">
+PiEEG's official setup puts Ref and Bias on ear clips at the earlobes. A sticker doesn't fit an earlobe, so this kit uses the mastoids right behind them, the other standard EEG reference site.
+
+<img src="docs/images/placement.png" alt="Electrode positions on the forehead and behind the ears" width="100%">
 
 ### Step 3 · Connect the cables
 
 Black female end of the cable onto the pin, alligator clip onto the metal snap in the middle of the sticker.
 
-<img src="docs/images/wiring.svg" alt="Electrode header: Ref, Biasout, E8 to E1, and which sticker each clip goes to" width="100%">
+<img src="docs/images/wiring.png" alt="Electrode header: Ref, Biasout, E8 to E1, and which sticker each clip goes to" width="100%">
 
 | Pin on the board | Clip goes to |
 |---|---|
@@ -124,7 +126,7 @@ Black female end of the cable onto the pin, alligator clip onto the metal snap i
 
 ### Step 4 · Position and power
 
-The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at head height, or the pillow if you lie down. Plug the Micro USB cable into **PWR IN** and into the powerbank. The LED on the PiEEG-8 lights up.
+The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at head height, or the pillow if you lie down. Plug the Micro USB cable into **PWR IN** and into the powerbank (charged, and not plugged into the wall). The LED on the PiEEG-8 lights up.
 
 <img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_led.png" alt="The PiEEG-8 LED lights up when the board has power" width="420">
 
@@ -132,15 +134,29 @@ The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at he
 
 Wait about a minute while the Pi boots and joins the WiFi.
 
-### Step 5 · Open the dashboard
+### Step 5 · Self-test the board (optional)
 
-On the MacBook (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Turn on the band-pass filter (1 to 40 Hz) and the **50 Hz** notch filter.
+On the MacBook, after the [code setup](#code):
 
-<img src="https://github.com/user-attachments/assets/0556e2b9-2ae2-4864-84d0-267abfedc177" alt="PiEEG Server dashboard" width="100%">
+```bash
+python self_test.py
+```
 
-<sub>PiEEG Server dashboard. Screenshot: <a href="https://github.com/pieeg-club/PiEEG-server">PiEEG Server</a>. With one electrode, only channel 1 shows a real signal, channels 2 to 8 are empty inputs and look like noise.</sub>
+Runs PiEEG's official noise check: the ADS1299 shorts its own inputs and measures what's left. Every channel under 5 µV RMS means the board is healthy, whatever the stickers are doing.
 
-### Step 6 · Check the signal
+### Step 6 · Open the dashboard
+
+On the MacBook (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Then:
+
+1. Check it shows **8 channels** (16 means the server isn't in PiEEG-8 mode, see [troubleshooting](docs/troubleshooting.md#pieeg-server)).
+2. **Bandpass** → **Enabled** (default 1 to 40 Hz).
+3. **Notch** → choose **50 Hz** → **Enabled**. The dashboard defaults to 60 Hz, Germany runs at 50 Hz.
+
+<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2025/05/pieeg-1024x485.jpg" alt="PiEEG Server dashboard" width="100%">
+
+<sub>PiEEG Server dashboard. Screenshot: PiEEG, <a href="https://docs.pieeg.com/hardware/devices/pieeg-8/software/">official documentation</a>. With one electrode, only channel 1 shows a real signal. Channels 2 to 8 are empty inputs and look like noise.</sub>
+
+### Step 7 · Check the signal
 
 Sit still, relax your face, look at one point.
 
@@ -154,9 +170,9 @@ Sit still, relax your face, look at one point.
 
 Alpha is strongest at the back of the head. On the forehead it's weaker, so give it time and watch the spectrum rather than the raw line. Full checklist: **[docs/first-test.md](docs/first-test.md)**. Something off: **[docs/troubleshooting.md](docs/troubleshooting.md)**.
 
-### Step 7 · Finish
+### Step 8 · Finish
 
-Unplug the powerbank, peel off the stickers (single use), recharge the powerbank.
+Unplug the powerbank, peel off the stickers (single use), then recharge the powerbank with nothing connected to it.
 
 ---
 
@@ -187,7 +203,7 @@ pip install -r requirements.txt
 
 ```bash
 source .venv/bin/activate
-python live_view.py --channels 1 2                      # live traces + running spectrum
+python live_view.py                                     # live traces + running spectrum (channels 1 and 2)
 python record.py --seconds 60 --label eyes_open         # → recordings/*.csv + .json
 python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
@@ -206,7 +222,8 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | [`live_view.py`](code/live_view.py) | Live band-pass filtered traces and a Welch spectrum |
 | [`record.py`](code/record.py) | Record to CSV with a JSON metadata sidecar |
 | [`spectrum.py`](code/spectrum.py) | Power spectrum, alpha peak frequency and alpha power |
-| [`simulate.py`](code/simulate.py) | Simulated PiEEG stream for testing without hardware |
+| [`self_test.py`](code/self_test.py) | Board noise test (inputs shorted), PiEEG's official hardware check |
+| [`simulate.py`](code/simulate.py) | Simulated PiEEG stream, also answers the self-test |
 | [`mission_1_notch.py`](code/mission_1_notch.py) | Mission 1 with automatic PASS/FAIL check |
 | [`mission_3_nwb.py`](code/mission_3_nwb.py) | Mission 3 skeleton: CSV → NWB |
 
@@ -221,7 +238,7 @@ Stream format, CSV columns and sidecar fields: [docs/how-it-works.md](docs/how-i
 | 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice |
 | 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
 | 3 | **Make it NWB** | Your recording passes `nwbinspector` |
-| 4 | **Go beyond the forehead** | Three channels, alpha clearer than at Fp1 |
+| 4 | **More channels on bare skin** | 4 channels incl. eye corners, a left/right eye movement plot |
 | 5 | **Read the datasheet** | Every step from 3 raw bytes to one µV value explained |
 
 Details and hints: **[docs/missions.md](docs/missions.md)**
@@ -240,6 +257,7 @@ pieeg-home-lab/
 │   ├── live_view.py         live plot
 │   ├── record.py            CSV + JSON recording
 │   ├── spectrum.py          alpha analysis
+│   ├── self_test.py         board noise test
 │   ├── simulate.py          hardware-free test stream
 │   ├── mission_1_notch.py
 │   ├── mission_3_nwb.py
@@ -261,7 +279,7 @@ pieeg-home-lab/
 ## References and citation
 
 - PiEEG-8 documentation: [docs.pieeg.com](https://docs.pieeg.com/hardware/devices/pieeg-8/)
-- PiEEG Python SDK: [github.com/pieeg-club/PiEEG](https://github.com/pieeg-club/PiEEG) · PiEEG Server: [github.com/pieeg-club/PiEEG-server](https://github.com/pieeg-club/PiEEG-server)
+- PiEEG Python SDK: [github.com/pieeg-club/PiEEG-8](https://github.com/pieeg-club/PiEEG-8) · PiEEG Server: [github.com/pieeg-club/PiEEG-server](https://github.com/pieeg-club/PiEEG-server)
 - ADS1299 datasheet: [Texas Instruments](https://www.ti.com/lit/ds/symlink/ads1299.pdf)
 - NWB: [nwb.org](https://www.nwb.org/) · DANDI Archive: [dandiarchive.org](https://dandiarchive.org/)
 
@@ -273,7 +291,7 @@ Conference on Electrical, Electronics, Communication, Computer Technologies and 
 Techniques (ICEECCOT), pp. 410–413. DOI: 10.1109/ICEECCOT52851.2021.9707969
 ```
 
-This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. This is an unofficial starter kit, not affiliated with PiEEG.
+This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. The hero illustration was AI generated for this repo, and the EEG trace in it is simulated. Diagrams are original drawings in `docs/images` (SVG source + PNG). This is an unofficial starter kit, not affiliated with PiEEG.
 
 <div align="center">
 <br>

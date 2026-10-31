@@ -1,49 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <rect width="900" height="520" fill="#ffffff"/>
-  <text x="30" y="34" font-size="18" font-weight="bold">Electrode header on the PiEEG-8 (10 male pins, left edge of the board)</text>
-  <text x="30" y="56" fill="#555" font-size="13">Order top to bottom as printed on the board: Ref, Biasout, E8 ... E1. Check the silkscreen on your board.</text>
-  <!-- board edge -->
-  <rect x="60" y="80" width="220" height="410" rx="6" fill="#f2b84b" stroke="#333" stroke-width="2"/>
-  <text x="170" y="478" text-anchor="middle" font-weight="bold">PiEEG-8</text>
-  <g font-size="13">
-    <!-- pins: y from 110 step 36 -->
-    <g id="pins">
-      <rect x="220" y="104" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="115" text-anchor="end" font-weight="bold">Ref</text>
-      <rect x="220" y="140" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="151" text-anchor="end" font-weight="bold">Biasout</text>
-      <rect x="220" y="176" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="187" text-anchor="end">E8</text>
-      <rect x="220" y="212" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="223" text-anchor="end">E7</text>
-      <rect x="220" y="248" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="259" text-anchor="end">E6</text>
-      <rect x="220" y="284" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="295" text-anchor="end">E5</text>
-      <rect x="220" y="320" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="331" text-anchor="end">E4</text>
-      <rect x="220" y="356" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="367" text-anchor="end">E3</text>
-      <rect x="220" y="392" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="403" text-anchor="end" font-weight="bold">E2</text>
-      <rect x="220" y="428" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="439" text-anchor="end" font-weight="bold">E1</text>
-    </g>
-  </g>
-  <!-- cables -->
-  <g stroke-width="4" fill="none">
-    <path d="M232 110 C 420 110, 480 140, 600 140" stroke="#2f6fb0"/>
-    <path d="M232 146 C 420 146, 480 210, 600 210" stroke="#7b4fa0"/>
-    <path d="M232 398 C 420 398, 480 300, 600 300" stroke="#5aa469" stroke-dasharray="9 6"/>
-    <path d="M232 434 C 420 434, 480 370, 600 370" stroke="#c0392b"/>
-  </g>
-  <g font-size="12" fill="#555">
-    <text x="300" y="100">female Dupont end onto the pin</text>
-  </g>
-  <!-- clip + sticker icons -->
-  <g>
-    <path d="M600 132 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="140" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="140" r="4" fill="#999"/>
-    <path d="M600 202 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="210" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="210" r="4" fill="#999"/>
-    <path d="M600 292 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="300" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="300" r="4" fill="#999"/>
-    <path d="M600 362 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="370" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="370" r="4" fill="#999"/>
-  </g>
-  <g>
-    <text x="664" y="136" font-weight="bold" fill="#2f6fb0">Ref</text><text x="664" y="153" fill="#333" font-size="13">behind LEFT ear (mastoid bone)</text>
-    <text x="664" y="206" font-weight="bold" fill="#7b4fa0">Bias</text><text x="664" y="223" fill="#333" font-size="13">behind RIGHT ear (mastoid bone)</text>
-    <text x="664" y="296" font-weight="bold" fill="#5aa469">E2 (optional)</text><text x="664" y="313" fill="#333" font-size="13">right forehead, Fp2</text>
-    <text x="664" y="366" font-weight="bold" fill="#c0392b">E1</text><text x="664" y="383" fill="#333" font-size="13">left forehead, Fp1</text>
-  </g>
-  <text x="600" y="440" fill="#555" font-size="12">Alligator clip bites the metal snap</text>
-  <text x="600" y="456" fill="#555" font-size="12">on the electrode sticker.</text>
-  <text x="600" y="480" fill="#555" font-size="12">Unused pins E3 to E8 stay empty.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14">
+<rect width="1000" height="560" fill="#0b0d33"/>
+<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M18 524 L18 542 L36 542" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 524 L982 542 L964 542" stroke="#2b3170" stroke-width="2" fill="none"/>
+<text x="44" y="48" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#9a9ccc">FIG. 05  ·  WIRING</text>
+<text x="44" y="86" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-weight="200" font-size="32" fill="#ecebf7">Which pin goes where</text>
+<text x="44" y="112" fill="#9a9ccc" font-size="14">10 male pins on the left edge of the PiEEG-8, printed top to bottom. Check the print on your board.</text>
+<rect x="60" y="150" width="230" height="370" rx="6" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
+<text x="175" y="505" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1.5" fill="#d8b55a" text-anchor="middle">PIEEG-8</text>
+<rect x="248" y="172" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
+<text x="236" y="182" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">REF</text>
+<rect x="248" y="204" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
+<text x="236" y="214" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">BIASOUT</text>
+<rect x="248" y="236" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="246" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E8</text>
+<rect x="248" y="268" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="278" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E7</text>
+<rect x="248" y="300" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="310" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E6</text>
+<rect x="248" y="332" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="342" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E5</text>
+<rect x="248" y="364" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="374" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E4</text>
+<rect x="248" y="396" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
+<text x="236" y="406" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E3</text>
+<rect x="248" y="428" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
+<text x="236" y="438" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">E2</text>
+<rect x="248" y="460" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
+<text x="236" y="470" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">E1</text>
+<path d="M260 178 C 480 178, 470 200, 600 200" stroke="#22d3ff" stroke-width="2.5" fill="none"/>
+<path d="M600 195 l26 -6 l2 4 l-26 7 z M600 205 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
+<circle cx="650" cy="200" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
+<circle cx="650" cy="200" r="4" fill="#cfc8b9"/>
+<text x="676" y="197" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#22d3ff" text-anchor="start">REF</text>
+<text x="676" y="216" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">behind LEFT ear · mastoid M1</text>
+<path d="M260 210 C 480 210, 470 270, 600 270" stroke="#c792ff" stroke-width="2.5" fill="none"/>
+<path d="M600 265 l26 -6 l2 4 l-26 7 z M600 275 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
+<circle cx="650" cy="270" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
+<circle cx="650" cy="270" r="4" fill="#cfc8b9"/>
+<text x="676" y="267" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#c792ff" text-anchor="start">BIAS</text>
+<text x="676" y="286" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">behind RIGHT ear · mastoid M2</text>
+<path d="M260 434 C 480 434, 470 380, 600 380" stroke="#8f96ff" stroke-width="2.5" fill="none" stroke-dasharray="8 6"/>
+<path d="M600 375 l26 -6 l2 4 l-26 7 z M600 385 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
+<circle cx="650" cy="380" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
+<circle cx="650" cy="380" r="4" fill="#cfc8b9"/>
+<text x="676" y="377" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#8f96ff" text-anchor="start">E2 · OPTIONAL</text>
+<text x="676" y="396" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">right forehead · Fp2</text>
+<path d="M260 466 C 480 466, 470 450, 600 450" stroke="#4b4bff" stroke-width="2.5" fill="none"/>
+<path d="M600 445 l26 -6 l2 4 l-26 7 z M600 455 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
+<circle cx="650" cy="450" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
+<circle cx="650" cy="450" r="4" fill="#cfc8b9"/>
+<text x="676" y="447" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#4b4bff" text-anchor="start">E1</text>
+<text x="676" y="466" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">left forehead · Fp1</text>
+<text x="330" y="172" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">FEMALE DUPONT END ONTO THE PIN</text>
+<text x="600" y="520" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">CLIP BITES THE METAL SNAP · E3 TO E8 STAY EMPTY</text>
 </svg>

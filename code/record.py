@@ -50,6 +50,8 @@ def main():
     except KeyboardInterrupt:
         pass
     stream.stop()
+    if stream.channel_warning():
+        print("Warning:", stream.channel_warning())
 
     if not rows:
         raise SystemExit("No samples received. Is PiEEG Server running? See docs/troubleshooting.md")

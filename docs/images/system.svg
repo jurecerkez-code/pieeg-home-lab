@@ -1,36 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <rect width="900" height="300" fill="#ffffff"/>
-  <!-- head -->
-  <ellipse cx="90" cy="140" rx="62" ry="74" fill="#f3e3d3" stroke="#333" stroke-width="2"/>
-  <circle cx="70" cy="95" r="7" fill="#c8d6e5" stroke="#333"/>
-  <circle cx="30" cy="160" r="7" fill="#c8d6e5" stroke="#333"/>
-  <circle cx="150" cy="160" r="7" fill="#c8d6e5" stroke="#333"/>
-  <text x="90" y="240" text-anchor="middle" font-weight="bold">Her head</text>
-  <text x="90" y="258" text-anchor="middle" fill="#555" font-size="12">3 stickers + clips</text>
-  <!-- cables -->
-  <path d="M150 140 C 210 140, 210 140, 250 140" stroke="#d4a017" stroke-width="4" fill="none"/>
-  <text x="200" y="128" text-anchor="middle" fill="#555" font-size="12">20 cm</text>
-  <!-- stack -->
-  <rect x="250" y="90" width="190" height="40" rx="4" fill="#f2b84b" stroke="#333" stroke-width="2"/>
-  <text x="345" y="115" text-anchor="middle" font-weight="bold">PiEEG-8 board</text>
-  <rect x="250" y="134" width="190" height="56" rx="4" fill="#5aa469" stroke="#333" stroke-width="2"/>
-  <text x="345" y="167" text-anchor="middle" fill="#fff" font-weight="bold">Raspberry Pi 3 Model B</text>
-  <text x="250" y="214" fill="#555" font-size="12">runs PiEEG Server</text>
-  <!-- powerbank -->
-  <rect x="290" y="232" width="110" height="40" rx="8" fill="#3d4a5c" stroke="#333" stroke-width="2"/>
-  <text x="345" y="257" text-anchor="middle" fill="#fff">Powerbank</text>
-  <path d="M345 232 L345 192" stroke="#c0392b" stroke-width="3"/>
-  <text x="410" y="252" fill="#c0392b" font-size="11">Micro USB</text>
-  <!-- wifi -->
-  <path d="M440 160 L640 160" stroke="#2f6fb0" stroke-width="3" stroke-dasharray="8 6"/>
-  <text x="540" y="148" text-anchor="middle" fill="#2f6fb0" font-weight="bold">WiFi</text>
-  <text x="540" y="182" text-anchor="middle" fill="#555" font-size="12">ws :1616 data</text>
-  <text x="540" y="198" text-anchor="middle" fill="#555" font-size="12">http :1617 dashboard</text>
-  <!-- laptop -->
-  <rect x="650" y="95" width="200" height="120" rx="6" fill="#e9eef4" stroke="#333" stroke-width="2"/>
-  <rect x="665" y="108" width="170" height="92" fill="#ffffff" stroke="#999"/>
-  <polyline points="672,170 690,150 700,175 712,135 724,168 740,152 758,172 772,140 790,165 808,150 826,160" fill="none" stroke="#2f6fb0" stroke-width="2"/>
-  <rect x="630" y="215" width="240" height="12" rx="4" fill="#cfd8e3" stroke="#333"/>
-  <text x="750" y="255" text-anchor="middle" font-weight="bold">Her laptop</text>
-  <text x="750" y="273" text-anchor="middle" fill="#c0392b" font-size="12">charger unplugged while recording</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14">
+<rect width="1000" height="430" fill="#0b0d33"/>
+<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M18 394 L18 412 L36 412" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 394 L982 412 L964 412" stroke="#2b3170" stroke-width="2" fill="none"/>
+<text x="44" y="48" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#9a9ccc">FIG. 01  ·  SYSTEM</text>
+<text x="44" y="86" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-weight="200" font-size="32" fill="#ecebf7">How the pieces talk</text>
+<g transform="translate(30,120) scale(0.62)">
+<path d="M250 60 C 330 55, 392 110, 394 190 C 396 248, 372 285, 346 305 L 342 370 L 252 370 C 252 338, 246 318, 232 306 C 210 301, 194 294, 188 280 C 185 270, 191 263, 187 256 C 181 251, 183 246, 187 243 C 179 237, 183 231, 189 229 C 179 221, 166 213, 168 205 C 170 197, 182 191, 186 179 C 189 168, 182 160, 184 150 C 187 110, 202 64, 250 60 Z" fill="#e7e2d6" stroke="#cfc8b9" stroke-width="2" stroke-linejoin="round"/>
+<g stroke="#bdb5a4" stroke-width="1" opacity="0.55"><line x1="352" y1="300" x2="258" y2="300"/><line x1="351" y1="306" x2="258" y2="306"/><line x1="351" y1="312" x2="258" y2="312"/><line x1="350" y1="318" x2="257" y2="318"/><line x1="350" y1="324" x2="257" y2="324"/><line x1="349" y1="330" x2="257" y2="330"/><line x1="348" y1="336" x2="257" y2="336"/><line x1="348" y1="342" x2="257" y2="342"/><line x1="347" y1="348" x2="256" y2="348"/><line x1="347" y1="354" x2="256" y2="354"/><line x1="346" y1="360" x2="256" y2="360"/><line x1="345" y1="366" x2="256" y2="366"/></g>
+<path d="M190 112 C 196 70, 240 50, 290 52 C 360 54, 404 120, 410 200 C 414 260, 420 320, 428 368 L 352 368 C 356 330, 362 290, 362 262 C 362 230, 350 205, 332 188 C 318 176, 300 172, 290 178 C 280 140, 240 112, 194 116 Z" fill="#e3c46f" stroke="#bf9b45" stroke-width="1.5" stroke-linejoin="round"/>
+<g stroke="#bf9b45" stroke-width="1.2" fill="none" opacity="0.9"><path d="M215 90 C 280 66, 350 90, 385 160"/><path d="M250 72 C 330 70, 395 140, 398 240"/><path d="M300 118 C 360 140, 385 210, 390 300"/><path d="M380 230 C 388 290, 396 330, 405 365"/></g>
+<path d="M196 170 q10 -5 20 0" stroke="#5a5446" stroke-width="1.6" fill="none"/>
+<path d="M296 182 C 318 176, 330 196, 326 220 C 323 240, 314 252, 302 254 C 293 255, 290 246, 296 240 C 304 232, 300 222, 294 216 C 288 208, 288 188, 296 182 Z" fill="#cfc8b9" stroke="#a8a091" stroke-width="1.6"/>
+</g>
+<circle cx="150" cy="207" r="6" fill="#4b4bff" stroke="#ecebf7" stroke-width="1.5"/>
+<circle cx="241" cy="275" r="6" fill="#22d3ff" stroke="#ecebf7" stroke-width="1.5"/>
+<path d="M150 207 C 120 147, 330 120, 360 200" stroke="#4b4bff" stroke-width="2" fill="none"/>
+<path d="M241 275 C 300 275, 330 230, 360 212" stroke="#22d3ff" stroke-width="2" fill="none"/>
+<text x="292" y="150" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">20 CM</text>
+<rect x="360" y="200" width="220" height="18" rx="2" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
+<text x="470.0" y="213" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1" fill="#d8b55a" text-anchor="middle">PIEEG-8 · ADS1299</text>
+<rect x="520" y="218" width="44" height="14" fill="#2b3170"/>
+<rect x="360" y="232" width="220" height="22" rx="2" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<text x="470.0" y="247" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1" fill="#ecebf7" text-anchor="middle">RASPBERRY PI 3 MODEL B</text>
+<line x1="370" y1="188" x2="370" y2="200" stroke="#d8b55a" stroke-width="2"/>
+<line x1="377" y1="188" x2="377" y2="200" stroke="#d8b55a" stroke-width="2"/>
+<line x1="384" y1="188" x2="384" y2="200" stroke="#d8b55a" stroke-width="2"/>
+<rect x="405" y="320" width="130" height="44" rx="10" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<text x="470" y="347" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#ecebf7" text-anchor="middle">POWERBANK</text>
+<path d="M470 320 L470 256" stroke="#ecebf7" stroke-width="2"/>
+<text x="482" y="296" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">MICRO USB · PWR IN</text>
+<text x="470" y="386" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#8f96ff" text-anchor="middle">BATTERY ONLY</text>
+<path d="M590 228 L720 228" stroke="#8f96ff" stroke-width="2" stroke-dasharray="7 6"/>
+<text x="655" y="214" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1.5" fill="#8f96ff" text-anchor="middle">WIFI</text>
+<text x="655" y="252" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle">WS :1616  DATA</text>
+<text x="655" y="268" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle">HTTP :1617  DASHBOARD</text>
+<rect x="735" y="150" width="210" height="135" rx="6" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<rect x="748" y="162" width="184" height="104" fill="#0b0d33" stroke="#2b3170"/>
+<polyline points="756,222 772,214 784,226 796,190 808,236 820,212 834,218 848,206 862,222 876,200 890,226 904,212 920,216" fill="none" stroke="#8f96ff" stroke-width="1.8"/>
+<path d="M718 285 L962 285 L948 298 L732 298 Z" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<text x="840" y="330" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#ecebf7" text-anchor="middle">MACBOOK</text>
+<text x="840" y="348" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle">ON BATTERY · CHARGER OFF</text>
+<text x="44" y="400" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#5d6199" text-anchor="start">STICKERS → CLIPS → PIEEG-8 → RASPBERRY PI → WIFI → BROWSER / PYTHON</text>
 </svg>

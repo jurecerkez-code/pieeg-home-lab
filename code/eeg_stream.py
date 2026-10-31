@@ -51,7 +51,18 @@ def parse_message(raw: str):
     return Sample(t=float(msg.get("t", 0.0)), n=int(msg["n"]), uv=[float(v) for v in ch])
 
 
-async def _reader(url: str, out: "queue.Queue", stop: threading.Event):
+def parse_welcome(raw: str):
+    """Return the server's welcome dict ({"status": "connected", "channels": 8, ...}) or None."""
+    try:
+        msg = json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+    if isinstance(msg, dict) and msg.get("status") == "connected":
+        return msg
+    return None
+
+
+async def _reader(url: str, out: "queue.Queue", stop: threading.Event, info: dict):
     async with websockets.connect(url, max_queue=4096) as ws:
         while not stop.is_set():
             try:
@@ -61,6 +72,10 @@ async def _reader(url: str, out: "queue.Queue", stop: threading.Event):
             s = parse_message(raw)
             if s is not None:
                 out.put(s)
+                continue
+            w = parse_welcome(raw)
+            if w is not None:
+                info.update(w)
 
 
 class EEGStream:
@@ -71,11 +86,12 @@ class EEGStream:
         self._q: "queue.Queue[Sample]" = queue.Queue()
         self._stop = threading.Event()
         self.error = None
+        self.server_info: dict = {}   # filled from the welcome message: sample_rate, channels
         self._thread = threading.Thread(target=self._run, daemon=True)
 
     def _run(self):
         try:
-            asyncio.run(_reader(self.url, self._q, self._stop))
+            asyncio.run(_reader(self.url, self._q, self._stop, self.server_info))
         except Exception as e:  # shown to the user by the calling script
             self.error = e
 
@@ -85,6 +101,14 @@ class EEGStream:
 
     def stop(self):
         self._stop.set()
+
+    def channel_warning(self):
+        """Text to show if the server runs in 16 channel mode instead of PiEEG-8 mode."""
+        n = self.server_info.get("channels")
+        if isinstance(n, int) and n != 8:
+            return (f"Server reports {n} channels. For the PiEEG-8, start it with --device pieeg8 "
+                    "(docs/setup-raspberry-pi.md, step 4).")
+        return None
 
     def get_new(self):
         items = []

@@ -60,15 +60,25 @@ The skeleton in [`code/mission_3_nwb.py`](../code/mission_3_nwb.py) has 6 TODOs,
 
 ---
 
-## Mission 4: go beyond the forehead
+## Mission 4: more channels on bare skin
 
-Alpha is strongest over the back of the head (O1, O2), where there's hair. Options, cheapest first:
+You have 60 stickers and 10 clip cables, but stickers only hold on skin without hair. That still leaves several real EEG and EOG positions:
 
-1. Put a sticker as low on the back of the neck as possible, just under the hairline, on **E2**. Compare alpha with E1.
-2. Part the hair carefully at O1 and press a sticker to the scalp. Does it hold?
-3. Order dry comb Ag/AgCl electrodes and build a head strap following the [PiEEG DIY cap guide](https://pieeg.com/?p=633).
+| Pin | Sticker on | 10-20 / EOG name | What you'll see |
+|---|---|---|---|
+| E1 | left forehead | Fp1 | blinks, frontal EEG |
+| E2 | right forehead | Fp2 | blinks, compare left vs right |
+| E3 | left temple, at the outer corner of the eye | LOC / near F7 | horizontal eye movements |
+| E4 | right temple, at the outer corner of the eye | ROC / near F8 | horizontal eye movements, opposite sign |
 
-Done when you have 3 channels and alpha is clearer than at Fp1.
+Tasks:
+1. Record 60 s while looking left, centre, right in a fixed rhythm. Plot E3 minus E4: that's horizontal EOG, a simple eye tracker.
+2. Build a blink detector on E1 and E2 (threshold plus refractory period). Count blinks per minute.
+3. Compare alpha on E1 with eyes closed against E3 and E4. Where is it strongest?
+
+Done when you have 4 channels recording cleanly and an eye movement plot that shows left and right.
+
+Getting alpha from the back of the head (O1, O2) needs electrodes that work through hair. That's a later upgrade: dry comb electrodes and a head strap, following the [PiEEG DIY cap guide](https://pieeg.com/?p=633).
 
 ---
 
@@ -76,11 +86,11 @@ Done when you have 3 channels and alpha is clearer than at Fp1.
 
 Each sample arrives as 3 bytes per channel from the ADS1299. PiEEG converts them to µV in software.
 
-1. Find the conversion in the official code: `_decode_channels` in [PiEEG Server `hardware.py`](https://github.com/pieeg-club/PiEEG-server/blob/main/pieeg_server/hardware.py).
-2. Find the data format and LSB size in the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf) (look for the section on data format and the input full scale range).
+1. Read the official conversion in the [PiEEG-8 specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/#converting-to-microvolts) and in `_decode_channels` in [PiEEG Server hardware.py](https://github.com/pieeg-club/PiEEG-server/blob/main/pieeg_server/hardware.py).
+2. Find the data format and the LSB size in the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf) (sections on data format and input full scale range).
 3. Write down every step: bytes, two's complement, gain, VREF, µV.
 
-Done when you can explain each step and you've checked whether the code's formula matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub.
+Done when you can explain each step and you've checked whether the PiEEG formula (about 0.268 µV per count at gain 1) matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub.
 
 ---
 
@@ -88,5 +98,5 @@ Done when you can explain each step and you've checked whether the code's formul
 
 - Blink detector that toggles something on the laptop
 - Eyes closed alarm: alpha above a threshold for 5 s
-- Heart rate: an electrode on each wrist, one channel, R peak detection (that's ECG, the board does that too)
+- Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection
 - Stream to [LSL](https://labstreaminglayer.org/) from the dashboard and analyse live in MNE

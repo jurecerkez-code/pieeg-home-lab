@@ -3,7 +3,7 @@ Live view of the EEG on your laptop, with a running spectrum.
 
     python live_view.py                      # real PiEEG on raspberrypi.local
     python live_view.py --host localhost     # together with simulate.py
-    python live_view.py --channels 1 2       # only some channels
+    python live_view.py --channels 1 2 3     # choose channels (default: 1 2)
 
 Top: last 5 seconds per channel, band-pass filtered 1 to 40 Hz.
 Bottom: spectrum of channel 1. Close your eyes and watch the bump at ~10 Hz.
@@ -31,7 +31,7 @@ def bandpass(x, lo=1.0, hi=40.0):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--host", default="raspberrypi.local")
-    p.add_argument("--channels", type=int, nargs="+", default=[1, 2, 3, 4])
+    p.add_argument("--channels", type=int, nargs="+", default=[1, 2])
     p.add_argument("--raw", action="store_true", help="show unfiltered signal")
     a = p.parse_args()
 
@@ -70,7 +70,8 @@ def main():
                 if c <= len(s.uv):
                     bufs[c].append(s.uv[c - 1])
         if new:
-            status.set_text(f"{a.host}   sample #{new[-1].n}")
+            warn = stream.channel_warning()
+            status.set_text(warn or f"{a.host}   sample #{new[-1].n}")
         for ax, c in zip(axes[:-1], a.channels):
             x = np.asarray(bufs[c])
             y = x - x.mean() if a.raw else bandpass(x)

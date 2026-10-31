@@ -2,7 +2,7 @@
 
 Every part in the box, what it is, why it's there, and how it connects.
 
-![Kit overview](images/kit.svg)
+![Kit overview](images/kit.png)
 
 ---
 
@@ -50,6 +50,8 @@ The 40 pin header on the right edge of the top photo is where the PiEEG-8 sits. 
 
 From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always check against the print on your own board.
 
+**Ref** is the shared reference for all 8 channels (the ADS1299's SRB1 input). **Biasout** drives the body to cancel noise common to all electrodes, such as 50 Hz hum. PiEEG's official setup uses ear clips on the earlobes for these two. This kit uses stickers on the mastoids behind the ears instead.
+
 ---
 
 ## ③ Electrode stickers (Ag/AgCl, foam, 2.6 cm)
@@ -62,7 +64,7 @@ From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always che
 | Amount | 2 packs × 30 = 60 stickers, about 15 sessions with 4 stickers each |
 | Bought at | [Somnomedics, SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
 
-**Why Ag/AgCl:** silver chloride is the standard for biosignal electrodes because it gives a stable, low noise contact with the skin. **Why stickers:** no gel in the hair, and they hold still. **Limit:** they don't work through hair, so channels over the scalp need dry comb electrodes later ([Mission 4](missions.md#mission-4-go-beyond-the-forehead)).
+**Why Ag/AgCl:** silver chloride is the standard for biosignal electrodes because it gives a stable, low noise contact with the skin. **Why stickers:** no gel in the hair, and they hold still. **Limit:** they don't work through hair, so channels over the scalp need dry comb electrodes later ([Mission 4](missions.md#mission-4-more-channels-on-bare-skin)).
 
 ---
 
@@ -85,11 +87,11 @@ The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: 
 
 | | |
 |---|---|
-| Powerbank | Any USB A powerbank with an output of **2.4 A or more** |
+| Powerbank | 5 V USB A powerbank. Raspberry Pi recommends **2.5 A** for the Pi 3, PiEEG recommends **3 A**. Check the label of the port you use |
 | Cable | Official Raspberry Pi Micro USB cable, 1 m ([BerryBase RPI-MUSB-1](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel)) |
 | Why | The board has no electrical isolation. A battery is the only safe power source with electrodes on, and it also gives a cleaner signal |
 
-A 10,000 mAh powerbank runs the Pi for several hours.
+A 10,000 mAh powerbank runs the Pi for several hours. Charge it **before** a session, never while it powers the Pi with electrodes on ([safety](safety.md)).
 
 ---
 
@@ -112,6 +114,6 @@ Wipe each spot before sticking an electrode and let it dry. Removes skin oil, lo
 | What's in the box (official) | [required equipment](https://docs.pieeg.com/hardware/devices/pieeg-8/required-equipment/) |
 | Electrodes & pinout | [connections](https://docs.pieeg.com/hardware/devices/pieeg-8/connections/) |
 | Specification and data frame | [specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/) |
-| Quick start manual (PDF) | [PiEEG on GitHub](https://github.com/pieeg-club/PiEEG/blob/main/Manual.%20Conenction%20and%20start%20-%20PiEEG1.pdf) |
+| Quick start manual (PDF) | [PiEEG-8 on GitHub](https://github.com/pieeg-club/PiEEG-8/blob/main/Manual.%20Conenction%20and%20start%20-%20PiEEG1.pdf) |
 | ADS1299 datasheet | [ti.com/lit/ds/symlink/ads1299.pdf](https://www.ti.com/lit/ds/symlink/ads1299.pdf) |
 | Research paper | Rakhmatulin et al., [arXiv:2201.02228](https://arxiv.org/abs/2201.02228) |

@@ -13,7 +13,7 @@ From a voltage on your forehead to a number in Python.
                                                  · drives Bias                    · dashboard on :1617
 ```
 
-![Wiring in this kit](images/wiring.svg)
+![Wiring in this kit](images/wiring.png)
 
 <sub>This kit uses stick-on electrodes: one on the forehead (E1), Ref and Bias behind the ears. The official PiEEG wiring is the same, with a cap and ear clips instead.</sub>
 
@@ -21,7 +21,7 @@ From a voltage on your forehead to a number in Python.
 
 Every channel measures the **difference** between its electrode and **Ref**. If Ref is noisy, every channel is noisy, so Ref and Bias stickers matter most.
 
-**Bias** is driven by the ADS1299 with the inverted average of the inputs. It pushes the body's common voltage back to the middle of the amplifier's range and cancels noise that appears on all electrodes at once (50 Hz mains hum).
+**Bias** actively drives the body to cancel common-mode noise, the part that appears on all electrodes at once, mainly 50 Hz mains hum (PiEEG: [Electrodes & Pinout](https://docs.pieeg.com/hardware/devices/pieeg-8/connections/)). In the register setup, **Ref** is the ADS1299's SRB1 input, shared by all channels (`MISC1 = 0x20`).
 
 ## Raspberry Pi pins used
 
@@ -43,7 +43,7 @@ Each time DRDY goes low (250 times a second), the Pi reads **27 bytes**:
 
 | Bytes | Content |
 |---|---|
-| 0 to 2 | Status word (lead off bits, GPIO) |
+| 0 to 2 | Status word, normally `0xC0 0x00 0x08` |
 | 3 to 5 | Channel 1, 24 bit two's complement |
 | ... | ... |
 | 24 to 26 | Channel 8 |
@@ -102,8 +102,8 @@ PiEEG's default 8 channel montage: Fp1, Fp2, C3, C4, P7, P8, O1, O2. This kit st
 | | |
 |---|---|
 | PiEEG-8 specification, data frame, registers | [docs.pieeg.com · specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/) |
-| Official quick start manual (PDF) | [GitHub · PiEEG](https://github.com/pieeg-club/PiEEG/blob/main/Manual.%20Conenction%20and%20start%20-%20PiEEG1.pdf) |
-| Official Python SDK (register setup, raw SPI reads) | [GitHub · PiEEG/1.GUI](https://github.com/pieeg-club/PiEEG/tree/main/1.GUI) |
+| Official quick start manual (PDF) | [GitHub · PiEEG-8](https://github.com/pieeg-club/PiEEG-8/blob/main/Manual.%20Conenction%20and%20start%20-%20PiEEG1.pdf) |
+| Official Python SDK (register setup, raw SPI reads) | [GitHub · PiEEG-8/1.GUI](https://github.com/pieeg-club/PiEEG-8/tree/main/1.GUI) |
 | PiEEG Server source | [GitHub · PiEEG-server](https://github.com/pieeg-club/PiEEG-server) |
 | ADS1299 datasheet | [Texas Instruments](https://www.ti.com/lit/ds/symlink/ads1299.pdf) |
 | Original paper | I. Rakhmatulin, S. Völkl: *PIEEG: Turn a Raspberry Pi into a Brain-Computer-Interface to measure biosignals*, [arXiv:2201.02228](https://arxiv.org/abs/2201.02228) |

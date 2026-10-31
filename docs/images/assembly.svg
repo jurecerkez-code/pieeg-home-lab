@@ -1,38 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <rect width="1000" height="300" fill="#f6f7f9"/>
-  <text x="30" y="36" font-size="18" font-weight="bold" fill="#1b2a3a">Mounting the PiEEG-8 on the Raspberry Pi (side view)</text>
-  <!-- step a -->
-  <g transform="translate(40,70)">
-    <rect x="0" y="40" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
-    <rect x="170" y="56" width="40" height="14" fill="#222"/>
-    <text x="110" y="34" text-anchor="middle" font-size="12" fill="#556">PiEEG-8 (socket underneath)</text>
-    <path d="M190 80 L190 112" stroke="#2f6fb0" stroke-width="3" marker-end="url(#a)"/>
-    <rect x="175" y="118" width="30" height="16" fill="#c9a227"/>
-    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
-    <text x="110" y="172" text-anchor="middle" font-size="12" fill="#556">Raspberry Pi (40 pins on top)</text>
-    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">1  Line up</text>
-    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">socket exactly over all 40 pins</text>
-  </g>
-  <!-- step b -->
-  <g transform="translate(370,70)">
-    <path d="M60 10 L60 48 M110 10 L110 48 M160 10 L160 48" stroke="#2f6fb0" stroke-width="3"/>
-    <rect x="0" y="92" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
-    <rect x="170" y="108" width="40" height="14" fill="#222"/>
-    <rect x="175" y="118" width="30" height="16" fill="#c9a227" opacity="0.4"/>
-    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
-    <text x="110" y="70" text-anchor="middle" font-size="12" fill="#556">press evenly, straight down</text>
-    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">2  Press down</text>
-    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">Pi unplugged · never at an angle</text>
-  </g>
-  <!-- step c -->
-  <g transform="translate(700,70)">
-    <rect x="0" y="92" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
-    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
-    <rect x="170" y="108" width="40" height="26" fill="#222"/>
-    <g fill="#c9a227"><rect x="12" y="66" width="4" height="26"/><rect x="22" y="66" width="4" height="26"/><rect x="32" y="66" width="4" height="26"/></g>
-    <text x="40" y="62" font-size="12" fill="#556">electrode pins point up</text>
-    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">3  Done</text>
-    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">no pins visible at the sides · LED lights on power</text>
-  </g>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2f6fb0"/></marker></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14">
+<rect width="1000" height="340" fill="#0b0d33"/>
+<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M18 304 L18 322 L36 322" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 304 L982 322 L964 322" stroke="#2b3170" stroke-width="2" fill="none"/>
+<text x="44" y="48" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#9a9ccc">FIG. 03  ·  MOUNTING</text>
+<text x="44" y="86" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-weight="200" font-size="32" fill="#ecebf7">PiEEG-8 onto the Raspberry Pi, side view</text>
+<rect x="44" y="150" width="220" height="16" rx="2" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
+<rect x="214" y="166" width="40" height="14" fill="#2b3170" stroke="#9a9ccc"/>
+<rect x="44" y="240" width="220" height="16" rx="2" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<rect x="219" y="226" width="30" height="14" fill="none" stroke="#d8b55a" stroke-dasharray="2 2"/>
+<path d="M234 205 L234 236" stroke="#8f96ff" stroke-width="2"/>
+<path d="M228 230 L234 240 L240 230" stroke="#8f96ff" stroke-width="2" fill="none"/>
+<text x="44" y="140" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">PIEEG-8 · SOCKET UNDERNEATH</text>
+<text x="44" y="268" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">PI · 40 PINS ON TOP</text>
+<text x="44" y="300" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" letter-spacing="1.5" fill="#ecebf7" text-anchor="start">01  LINE UP</text>
+<text x="44" y="320" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">Socket exactly over all 40 pins</text>
+<rect x="380" y="200" width="220" height="16" rx="2" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
+<rect x="550" y="216" width="40" height="14" fill="#2b3170" stroke="#9a9ccc"/>
+<rect x="380" y="230" width="220" height="16" rx="2" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<path d="M430 140 L430 180 M424 174 L430 184 L436 174" stroke="#8f96ff" stroke-width="2" fill="none"/>
+<path d="M490 140 L490 180 M484 174 L490 184 L496 174" stroke="#8f96ff" stroke-width="2" fill="none"/>
+<path d="M550 140 L550 180 M544 174 L550 184 L556 174" stroke="#8f96ff" stroke-width="2" fill="none"/>
+<text x="380" y="300" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" letter-spacing="1.5" fill="#ecebf7" text-anchor="start">02  PRESS DOWN</text>
+<text x="380" y="320" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">Evenly, straight. Pi unplugged.</text>
+<rect x="716" y="200" width="220" height="16" rx="2" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
+<rect x="886" y="216" width="40" height="14" fill="#2b3170" stroke="#9a9ccc"/>
+<rect x="716" y="230" width="220" height="16" rx="2" fill="#11144a" stroke="#ecebf7" stroke-width="1.5"/>
+<line x1="728" y1="176" x2="728" y2="200" stroke="#d8b55a" stroke-width="2.5"/>
+<line x1="736" y1="176" x2="736" y2="200" stroke="#d8b55a" stroke-width="2.5"/>
+<line x1="744" y1="176" x2="744" y2="200" stroke="#d8b55a" stroke-width="2.5"/>
+<text x="760" y="186" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">ELECTRODE PINS UP</text>
+<text x="716" y="300" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" letter-spacing="1.5" fill="#ecebf7" text-anchor="start">03  DONE</text>
+<text x="716" y="320" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">No pins visible. LED lights with power.</text>
 </svg>
