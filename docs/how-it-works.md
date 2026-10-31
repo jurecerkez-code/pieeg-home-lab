@@ -6,7 +6,7 @@ From a voltage on your forehead to a number in Python.
 
 ```
  scalp ── Ag/AgCl sticker ── alligator cable ──► PiEEG-8 ─────────────────────► Raspberry Pi 3 ──── WiFi ────► MacBook
- (~10 µV)                     20 cm              ADS1299                SPI0      PiEEG Server                  Python / browser
+ (~10 µV)                     40 cm              ADS1299                SPI0      PiEEG Server                  Python / browser
                                                  · subtracts Ref                  · reads 27 bytes per sample    · live_view.py
                                                  · gain                           · converts to µV               · record.py
                                                  · 24 bit ADC @ 250 Hz            · JSON over WebSocket :1616    · dashboard :1617

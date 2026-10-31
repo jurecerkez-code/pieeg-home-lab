@@ -5,7 +5,7 @@ Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears t
 ## You need
 
 - Raspberry Pi 3 Model B with the PiEEG-8 on top and the MicroSD inside
-- 3 electrode stickers, 3 alligator clip cables
+- 3 electrode stickers, 3 alligator clip cables, 3 extension jumpers (the 20 cm male to female jumpers)
 - Powerbank, **charged and not plugged into the wall**, and the Micro USB cable
 - MacBook on battery, **charger unplugged**, on the same WiFi as the Pi
 - An alcohol wipe
@@ -52,11 +52,13 @@ The clip bites the metal snap in the middle of the sticker, not the foam. Ref an
 
 ## 4. Where to put the Pi
 
-The clip cables are 20 cm, so the Pi sits near your head. Short is good: less wire, less hum.
+Each lead is 20 cm of clip cable plus one 20 cm extension jumper: about 40 cm per electrode. Measured over an adult head, that reaches the sitting position below with room for slack: 28 cm to Fp1, 14 cm to Ref, 33 cm to Bias. It does not reach a board behind the head (longest path about 45 cm), and lying down needs a second jumper on the forehead lead.
 
-- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, on a wooden or plastic surface
-- **Lying down:** Pi on the pillow next to your head. Best position for relaxed alpha
+- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, on a wooden or plastic surface, beside your head
+- **Lying down:** Pi on the pillow next to your head. Best position for relaxed alpha, but add a second jumper to the forehead lead if that path is over 30 cm
 - Cables hang loose, nothing pulls on a sticker
+
+**Keep the path short.** Every extra centimetre and every extra connector adds contact resistance and 50 Hz pickup, and EEG is in the microvolt range. Keep the path from pin to sticker under about 30 cm per extension, bundle the three leads loosely together, and keep them away from mains leads, chargers and monitors. If the signal is hummy, that is the first thing to fix.
 
 ## 5. Power
 

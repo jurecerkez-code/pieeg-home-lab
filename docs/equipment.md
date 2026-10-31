@@ -77,13 +77,28 @@ From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always che
 | Amount | 10, one for every pin on the electrode header |
 | Bought at | [BerryBase, DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
 
-The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. The Pi has to sit close to your head (shoulder, shelf, or pillow).
+The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. But 20 cm alone is not enough: measured over a real head, the longest path in the start montage (board at shoulder height, Bias behind the right ear) is 33 cm. One extension jumper per lead fixes that, see ⑤.
 
 > If your board ever turns out to have a socket instead of pins, you need the male version (BerryBase DUPAD20).
 
 ---
 
-## ⑤ Powerbank and Micro USB cable
+## ⑤ Dupont extension jumpers (20 cm)
+
+| | |
+|---|---|
+| Ends | Male ↔ female Dupont 2.54 mm, so each clip cable can be joined to one or more jumpers |
+| Length | 20 cm each, about 40 cm of lead per electrode with one jumper |
+| Amount | 5 in the kit, 3 in use for the start montage |
+| Bought at | BerryBase, separable male to female jumpers (SKU to confirm) |
+
+**Why they exist.** The 20 cm clip cables cannot reach Fp1, Ref and Bias from any single board position on an adult head. Extensions are standard kit in clinical EEG too, they just use shielded lead wire instead of Dupont jumpers.
+
+**What they cost you in signal.** Every extra connector adds contact resistance, and every extra centimetre of unshielded wire is more 50 Hz antenna, which matters in the microvolt range. Keep the run short, bundle the three leads loosely together, and keep them away from mains leads, chargers and monitors. If you ever want cleaner signal, the upgrade path is shielded lead wire with the same pinout.
+
+---
+
+## ⑥ Powerbank and Micro USB cable
 
 | | |
 |---|---|
@@ -95,7 +110,7 @@ A 10,000 mAh powerbank runs the Pi for several hours. Charge it **before** a ses
 
 ---
 
-## ⑥ Alcohol wipes
+## ⑦ Alcohol wipes
 
 Wipe each spot before sticking an electrode and let it dry. Removes skin oil, lowers contact impedance, cleaner signal.
 

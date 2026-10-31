@@ -59,8 +59,9 @@ There's no EEG cap in this kit on purpose. It starts with electrode stickers on 
 | ② | **PiEEG-8 board** | ADS1299, 24 bit, 250 Hz, 8 ch + Ref + Bias, 2.54 mm male header | [Elecrow](https://www.elecrow.com/pieeg.html) |
 | ③ | **Ag/AgCl electrode stickers**, 60 pcs | 2.6 cm foam, snap button, single use | [Somnomedics SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
 | ④ | **Dupont to alligator clip cables**, 10 pcs | female 2.54 mm ↔ clip, 20 cm | [BerryBase DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
-| ⑤ | **Powerbank** + official Micro USB cable | 5 V, 3 A recommended by PiEEG (Raspberry Pi specifies 2.5 A for the Pi 3) | [BerryBase RPI-MUSB-1](https://www.berrybase.de/offizielles-raspberry-pi-micro-usb-kabel-rot-1-0m) |
-| ⑥ | Alcohol wipes | skin prep | dm |
+| ⑤ | **Dupont extension jumpers**, 5 pcs | male to female 2.54 mm, 20 cm, separable ribbon | BerryBase, SKU to confirm |
+| ⑥ | **Powerbank** + official Micro USB cable | 5 V, 3 A recommended by PiEEG (Raspberry Pi specifies 2.5 A for the Pi 3) | [BerryBase RPI-MUSB-1](https://www.berrybase.de/offizielles-raspberry-pi-micro-usb-kabel-rot-1-0m) |
+| ⑦ | Alcohol wipes | skin prep | dm |
 
 <p>
 <img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_board.jpg" alt="PiEEG-8 board" height="170">
@@ -132,7 +133,9 @@ Black female end of the cable onto the pin, alligator clip onto the metal snap i
 
 ### Step 4 · Position and power
 
-The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at head height, or the pillow if you lie down. Power goes in last: plug the Micro USB cable into **PWR IN** and into the powerbank (charged, and not plugged into the wall). The LED on the PiEEG-8 lights up.
+Each lead is 20 cm of clip cable plus one 20 cm extension jumper (⑤), about 40 cm in total. Measured over a real head, that reaches all three electrodes from a shelf at shoulder height beside the head: 28 cm to Fp1, 14 cm to Ref, 33 cm to Bias. It does not reach a board behind the head (longest path about 45 cm), and the lying down position needs a second jumper on the forehead lead.
+
+Keep the path from pin to sticker under about 30 cm on one extension. If yours is longer, chain a second jumper onto that lead instead of letting the cable pull on the sticker. Power goes in last: plug the Micro USB cable into **PWR IN** and into the powerbank (charged, and not plugged into the wall). The LED on the PiEEG-8 lights up.
 
 <img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_led.png" alt="The PiEEG-8 LED lights up when the board has power" width="420">
 
