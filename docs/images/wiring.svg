@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="30" y="34" font-size="18" font-weight="bold">Electrode header on the PiEEG-8 (10 male pins, left edge of the board)</text>
+  <text x="30" y="56" fill="#555" font-size="13">Order top to bottom as printed on the board: Ref, Biasout, E8 ... E1. Check the silkscreen on your board.</text>
+  <!-- board edge -->
+  <rect x="60" y="80" width="220" height="410" rx="6" fill="#f2b84b" stroke="#333" stroke-width="2"/>
+  <text x="170" y="478" text-anchor="middle" font-weight="bold">PiEEG-8</text>
+  <g font-size="13">
+    <!-- pins: y from 110 step 36 -->
+    <g id="pins">
+      <rect x="220" y="104" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="115" text-anchor="end" font-weight="bold">Ref</text>
+      <rect x="220" y="140" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="151" text-anchor="end" font-weight="bold">Biasout</text>
+      <rect x="220" y="176" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="187" text-anchor="end">E8</text>
+      <rect x="220" y="212" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="223" text-anchor="end">E7</text>
+      <rect x="220" y="248" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="259" text-anchor="end">E6</text>
+      <rect x="220" y="284" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="295" text-anchor="end">E5</text>
+      <rect x="220" y="320" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="331" text-anchor="end">E4</text>
+      <rect x="220" y="356" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="367" text-anchor="end">E3</text>
+      <rect x="220" y="392" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="403" text-anchor="end" font-weight="bold">E2</text>
+      <rect x="220" y="428" width="12" height="12" fill="#c9a227" stroke="#333"/><text x="205" y="439" text-anchor="end" font-weight="bold">E1</text>
+    </g>
+  </g>
+  <!-- cables -->
+  <g stroke-width="4" fill="none">
+    <path d="M232 110 C 420 110, 480 140, 600 140" stroke="#2f6fb0"/>
+    <path d="M232 146 C 420 146, 480 210, 600 210" stroke="#7b4fa0"/>
+    <path d="M232 398 C 420 398, 480 300, 600 300" stroke="#5aa469" stroke-dasharray="9 6"/>
+    <path d="M232 434 C 420 434, 480 370, 600 370" stroke="#c0392b"/>
+  </g>
+  <g font-size="12" fill="#555">
+    <text x="300" y="100">female Dupont end onto the pin</text>
+  </g>
+  <!-- clip + sticker icons -->
+  <g>
+    <path d="M600 132 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="140" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="140" r="4" fill="#999"/>
+    <path d="M600 202 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="210" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="210" r="4" fill="#999"/>
+    <path d="M600 292 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="300" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="300" r="4" fill="#999"/>
+    <path d="M600 362 l22 8 l-22 8 z" fill="#888"/><circle cx="640" cy="370" r="12" fill="#eee" stroke="#333"/><circle cx="640" cy="370" r="4" fill="#999"/>
+  </g>
+  <g>
+    <text x="664" y="136" font-weight="bold" fill="#2f6fb0">Ref</text><text x="664" y="153" fill="#333" font-size="13">behind LEFT ear (mastoid bone)</text>
+    <text x="664" y="206" font-weight="bold" fill="#7b4fa0">Bias</text><text x="664" y="223" fill="#333" font-size="13">behind RIGHT ear (mastoid bone)</text>
+    <text x="664" y="296" font-weight="bold" fill="#5aa469">E2 (optional)</text><text x="664" y="313" fill="#333" font-size="13">right forehead, Fp2</text>
+    <text x="664" y="366" font-weight="bold" fill="#c0392b">E1</text><text x="664" y="383" fill="#333" font-size="13">left forehead, Fp1</text>
+  </g>
+  <text x="600" y="440" fill="#555" font-size="12">Alligator clip bites the metal snap</text>
+  <text x="600" y="456" fill="#555" font-size="12">on the electrode sticker.</text>
+  <text x="600" y="480" fill="#555" font-size="12">Unused pins E3 to E8 stay empty.</text>
+</svg>

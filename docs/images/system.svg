@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="900" height="300" fill="#ffffff"/>
+  <!-- head -->
+  <ellipse cx="90" cy="140" rx="62" ry="74" fill="#f3e3d3" stroke="#333" stroke-width="2"/>
+  <circle cx="70" cy="95" r="7" fill="#c8d6e5" stroke="#333"/>
+  <circle cx="30" cy="160" r="7" fill="#c8d6e5" stroke="#333"/>
+  <circle cx="150" cy="160" r="7" fill="#c8d6e5" stroke="#333"/>
+  <text x="90" y="240" text-anchor="middle" font-weight="bold">Her head</text>
+  <text x="90" y="258" text-anchor="middle" fill="#555" font-size="12">3 stickers + clips</text>
+  <!-- cables -->
+  <path d="M150 140 C 210 140, 210 140, 250 140" stroke="#d4a017" stroke-width="4" fill="none"/>
+  <text x="200" y="128" text-anchor="middle" fill="#555" font-size="12">20 cm</text>
+  <!-- stack -->
+  <rect x="250" y="90" width="190" height="40" rx="4" fill="#f2b84b" stroke="#333" stroke-width="2"/>
+  <text x="345" y="115" text-anchor="middle" font-weight="bold">PiEEG-8 board</text>
+  <rect x="250" y="134" width="190" height="56" rx="4" fill="#5aa469" stroke="#333" stroke-width="2"/>
+  <text x="345" y="167" text-anchor="middle" fill="#fff" font-weight="bold">Raspberry Pi 3 Model B</text>
+  <text x="250" y="214" fill="#555" font-size="12">runs PiEEG Server</text>
+  <!-- powerbank -->
+  <rect x="290" y="232" width="110" height="40" rx="8" fill="#3d4a5c" stroke="#333" stroke-width="2"/>
+  <text x="345" y="257" text-anchor="middle" fill="#fff">Powerbank</text>
+  <path d="M345 232 L345 192" stroke="#c0392b" stroke-width="3"/>
+  <text x="410" y="252" fill="#c0392b" font-size="11">Micro USB</text>
+  <!-- wifi -->
+  <path d="M440 160 L640 160" stroke="#2f6fb0" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="540" y="148" text-anchor="middle" fill="#2f6fb0" font-weight="bold">WiFi</text>
+  <text x="540" y="182" text-anchor="middle" fill="#555" font-size="12">ws :1616 data</text>
+  <text x="540" y="198" text-anchor="middle" fill="#555" font-size="12">http :1617 dashboard</text>
+  <!-- laptop -->
+  <rect x="650" y="95" width="200" height="120" rx="6" fill="#e9eef4" stroke="#333" stroke-width="2"/>
+  <rect x="665" y="108" width="170" height="92" fill="#ffffff" stroke="#999"/>
+  <polyline points="672,170 690,150 700,175 712,135 724,168 740,152 758,172 772,140 790,165 808,150 826,160" fill="none" stroke="#2f6fb0" stroke-width="2"/>
+  <rect x="630" y="215" width="240" height="12" rx="4" fill="#cfd8e3" stroke="#333"/>
+  <text x="750" y="255" text-anchor="middle" font-weight="bold">Her laptop</text>
+  <text x="750" y="273" text-anchor="middle" fill="#c0392b" font-size="12">charger unplugged while recording</text>
+</svg>
