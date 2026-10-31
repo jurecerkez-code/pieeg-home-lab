@@ -44,11 +44,11 @@ sudo apt install -y git python3-dev build-essential
 git clone https://github.com/pieeg-club/PiEEG-server.git ~/PiEEG-server
 cd ~/PiEEG-server
 git checkout -b homelab 9bf350310bb492e1373edfe5b0714857f1fe04e9
-./setup.sh
+bash setup.sh
 sudo reboot
 ```
 
-PiEEG's own one line installer (`curl ... install.sh | bash`) clones the newest version and then runs exactly this `setup.sh`. Running `setup.sh` from a checkout of one commit gives the same installation, pinned to version 0.49.0 from 16 September 2026, the code this repo's notes about filters and registers refer to. `python3-dev` and `build-essential` are there in case pip has to compile `spidev`.
+PiEEG's own one line installer (`curl ... install.sh | bash`) clones the newest version and then runs exactly this `setup.sh`. In the repository the script isn't marked executable, so it runs with `bash setup.sh`. Running `setup.sh` from a checkout of one commit gives the same installation, pinned to version 0.49.0 from 16 September 2026, the code this repo's notes about filters and registers refer to. `python3-dev` and `build-essential` are there in case pip has to compile `spidev`.
 
 What `setup.sh` does: enables SPI, builds a Python environment in `~/PiEEG-server/.venv`, installs the server, and creates the `pieeg-server` service that starts on every boot. It recognises the Pi 3 and sets the right GPIO chip (`/dev/gpiochip0`) by itself. It also adds `core_freq_fixed=1` to `/boot/firmware/config.txt`: the SPI clock is derived from the Pi's core clock, and when that clock scales up and down, ADS1299 frames get corrupted (PiEEG's note in `setup.sh`). The setting needs firmware from September 2024 or newer, which current Raspberry Pi OS has (`setup.sh` warns otherwise). Side effect: the core clock no longer drops when the Pi is idle.
 
@@ -106,10 +106,10 @@ On purpose only, it may change behaviour this repo relies on:
 ```bash
 cd ~/PiEEG-server
 git checkout main && git pull
-./setup.sh
+bash setup.sh
 ```
 
-`setup.sh` writes the service file again, so do step 4 once more. To go back: `git checkout homelab && ./setup.sh`, then step 4.
+`setup.sh` writes the service file again, so do step 4 once more. To go back: `git checkout homelab && bash setup.sh`, then step 4.
 
 ## Optional: the official Python SDK
 
