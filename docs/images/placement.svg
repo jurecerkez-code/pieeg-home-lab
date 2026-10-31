@@ -1,31 +1,83 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <rect width="900" height="420" fill="#ffffff"/>
-  <!-- front view -->
-  <text x="200" y="30" text-anchor="middle" font-size="16" font-weight="bold">Front</text>
-  <ellipse cx="200" cy="210" rx="120" ry="150" fill="#f3e3d3" stroke="#333" stroke-width="2"/>
-  <path d="M85 160 Q200 40 315 160" fill="#5b4636" opacity="0.85"/>
-  <ellipse cx="155" cy="230" rx="18" ry="9" fill="#fff" stroke="#333"/><circle cx="155" cy="230" r="5" fill="#333"/>
-  <ellipse cx="245" cy="230" rx="18" ry="9" fill="#fff" stroke="#333"/><circle cx="245" cy="230" r="5" fill="#333"/>
-  <path d="M185 300 Q200 312 215 300" stroke="#333" fill="none" stroke-width="2"/>
-  <circle cx="235" cy="185" r="13" fill="#e8eef5" stroke="#c0392b" stroke-width="3"/><circle cx="235" cy="185" r="3.5" fill="#999"/>
-  <circle cx="165" cy="185" r="13" fill="#e8eef5" stroke="#5aa469" stroke-width="3" stroke-dasharray="4 3"/><circle cx="165" cy="185" r="3.5" fill="#999"/>
-  <text x="258" y="190" fill="#c0392b" font-weight="bold">E1</text>
-  <text x="142" y="190" text-anchor="end" fill="#5aa469" font-weight="bold">E2</text>
-  <text x="200" y="372" text-anchor="middle" fill="#333" font-size="12">(you look at her: her left is on your right)</text>
-  <text x="200" y="392" text-anchor="middle" fill="#555" font-size="12">Forehead, 2 fingers above the eyebrows, below the hairline</text>
-  <text x="200" y="408" text-anchor="middle" fill="#555" font-size="12">E1 = Fp1 (her left), E2 = Fp2 (her right, optional)</text>
-  <!-- side view -->
-  <text x="650" y="30" text-anchor="middle" font-size="16" font-weight="bold">Side (face looks left)</text>
-  <ellipse cx="640" cy="200" rx="130" ry="140" fill="#f3e3d3" stroke="#333" stroke-width="2"/>
-  <path d="M515 150 Q640 20 765 140 Q700 95 600 105 Q545 115 515 150 Z" fill="#5b4636" opacity="0.85"/>
-  <path d="M512 200 q-14 12 0 24" fill="none" stroke="#333" stroke-width="2"/>
-  <ellipse cx="545" cy="185" rx="10" ry="6" fill="#fff" stroke="#333"/><circle cx="540" cy="185" r="3" fill="#333"/>
-  <path d="M640 175 q30 6 28 45 q-3 38 -30 38 q-12 0 -12 -12" fill="#f0d5bd" stroke="#333" stroke-width="2"/>
-  <circle cx="692" cy="262" r="13" fill="#e8eef5" stroke="#2f6fb0" stroke-width="3"/><circle cx="692" cy="262" r="3.5" fill="#999"/>
-  <path d="M705 262 L780 262" stroke="#2f6fb0" stroke-width="1.5"/>
-  <text x="785" y="258" fill="#2f6fb0" font-weight="bold">Ref / Bias</text>
-  <text x="785" y="275" fill="#333" font-size="12">bony bump</text>
-  <text x="785" y="290" fill="#333" font-size="12">behind the ear</text>
-  <text x="650" y="392" text-anchor="middle" fill="#555" font-size="12">Left ear: Ref. Right ear: Bias. Skin, not hair.</text>
-  <text x="650" y="408" text-anchor="middle" fill="#555" font-size="12">Wipe with an alcohol wipe and let it dry first.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 440" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <rect width="980" height="440" fill="#ffffff"/>
+
+  <!-- ============ TOP VIEW (10-20 style, nose up, her left on the left) ============ -->
+  <text x="200" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1b2a3a">Top view (10-20 system)</text>
+  <g stroke="#2b3542" stroke-width="2" fill="#f4f1ec">
+    <path d="M188 76 L200 54 L212 76"/>
+    <ellipse cx="58" cy="210" rx="11" ry="28"/>
+    <ellipse cx="342" cy="210" rx="11" ry="28"/>
+    <circle cx="200" cy="210" r="140"/>
+  </g>
+  <path d="M85 130 Q200 96 315 130 A140 140 0 1 1 85 130 Z" fill="#ecd08a" stroke="#b8923f" stroke-width="1.5"/>
+  <g stroke="#d4b061" stroke-width="1.2" fill="none" opacity="0.9">
+    <path d="M200 104 C 196 180, 204 260, 200 350"/>
+    <path d="M160 108 C 120 170, 110 260, 140 335"/><path d="M240 108 C 280 170, 290 260, 260 335"/>
+    <path d="M120 120 C 80 180, 80 250, 105 305"/><path d="M280 120 C 320 180, 320 250, 295 305"/>
+  </g>
+  <g stroke="#d5dbe2" stroke-width="1" fill="none" opacity="0.6">
+    <line x1="200" y1="70" x2="200" y2="350"/>
+    <line x1="60" y1="210" x2="340" y2="210"/>
+    <circle cx="200" cy="210" r="126" stroke-dasharray="3 4"/>
+  </g>
+  <!-- reference positions, grey -->
+  <g fill="#ffffff" stroke="#9aa6b2" stroke-width="1">
+    <circle cx="98" cy="136" r="5"/><circle cx="302" cy="136" r="5"/>
+    <circle cx="150" cy="155" r="5"/><circle cx="200" cy="147" r="5"/><circle cx="250" cy="155" r="5"/>
+    <circle cx="74" cy="210" r="5"/><circle cx="137" cy="210" r="5"/><circle cx="200" cy="210" r="5"/><circle cx="263" cy="210" r="5"/><circle cx="326" cy="210" r="5"/>
+    <circle cx="98" cy="284" r="5"/><circle cx="150" cy="265" r="5"/><circle cx="200" cy="273" r="5"/><circle cx="250" cy="265" r="5"/><circle cx="302" cy="284" r="5"/>
+    <circle cx="161" cy="330" r="5"/><circle cx="239" cy="330" r="5"/>
+  </g>
+  <g fill="#6b5a2e" font-size="10" text-anchor="middle">
+    <text x="98" y="126">F7</text><text x="302" y="126">F8</text>
+    <text x="150" y="145">F3</text><text x="200" y="138">Fz</text><text x="250" y="145">F4</text>
+    <text x="137" y="200">C3</text><text x="210" y="200">Cz</text><text x="263" y="200">C4</text>
+    <text x="150" y="282">P3</text><text x="200" y="290">Pz</text><text x="250" y="282">P4</text>
+    <text x="161" y="347">O1</text><text x="239" y="347">O2</text>
+  </g>
+  <!-- used positions -->
+  <circle cx="161" cy="90" r="9" fill="#c0392b" stroke="#fff" stroke-width="2"/>
+  <circle cx="239" cy="90" r="9" fill="#fff" stroke="#5aa469" stroke-width="3" stroke-dasharray="3 2"/>
+  <text x="144" y="94" text-anchor="end" font-weight="bold" fill="#c0392b">Fp1 · E1</text>
+  <text x="257" y="94" font-weight="bold" fill="#5aa469">Fp2 · E2</text>
+  <circle cx="50" cy="250" r="9" fill="#2f6fb0" stroke="#fff" stroke-width="2"/>
+  <circle cx="350" cy="250" r="9" fill="#7b4fa0" stroke="#fff" stroke-width="2"/>
+  <text x="50" y="284" text-anchor="middle" font-weight="bold" fill="#2f6fb0">M1 · Ref</text>
+  <text x="350" y="284" text-anchor="middle" font-weight="bold" fill="#7b4fa0">M2 · Bias</text>
+  <text x="200" y="380" text-anchor="middle" fill="#556">Nose at the top. Her left side is on the left.</text>
+  <text x="200" y="398" text-anchor="middle" fill="#556">White dots: other 10-20 positions, through hair, for later missions.</text>
+
+  <!-- ============ SIDE VIEW (profile, facing left) ============ -->
+  <text x="680" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1b2a3a">Side view (left side)</text>
+  <g transform="translate(450,10)">
+    <path d="M250 60 C 330 55, 392 110, 394 190 C 396 248, 372 285, 346 305 L 342 370 L 252 370 C 252 338, 246 318, 232 306 C 210 301, 194 294, 188 280 C 185 270, 191 263, 187 256 C 181 251, 183 246, 187 243 C 179 237, 183 231, 189 229 C 179 221, 166 213, 168 205 C 170 197, 182 191, 186 179 C 189 168, 182 160, 184 150 C 187 110, 202 64, 250 60 Z"
+          fill="#f4f1ec" stroke="#2b3542" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M190 112 C 196 70, 240 50, 290 52 C 360 54, 404 120, 410 200 C 414 260, 420 320, 428 368 L 352 368 C 356 330, 362 290, 362 262 C 362 230, 350 205, 332 188 C 318 176, 300 172, 290 178 C 280 140, 240 112, 194 116 Z"
+          fill="#ecd08a" stroke="#b8923f" stroke-width="1.5" stroke-linejoin="round"/>
+    <g stroke="#d4b061" stroke-width="1.2" fill="none">
+      <path d="M215 90 C 280 66, 350 90, 385 160"/><path d="M250 72 C 330 70, 395 140, 398 240"/>
+      <path d="M300 118 C 360 140, 385 210, 390 300"/><path d="M380 230 C 388 290, 396 330, 405 365"/>
+    </g>
+    <!-- eye and brow hints -->
+    <path d="M196 170 q10 -5 20 0" stroke="#2b3542" stroke-width="1.5" fill="none"/>
+    <path d="M198 182 q8 4 16 0" stroke="#2b3542" stroke-width="1.5" fill="none"/>
+    <!-- hairline -->
+    <!-- ear -->
+    <path d="M296 182 C 318 176, 330 196, 326 220 C 323 240, 314 252, 302 254 C 293 255, 290 246, 296 240 C 304 232, 300 222, 294 216 C 288 208, 288 188, 296 182 Z"
+          fill="#ece5db" stroke="#2b3542" stroke-width="2"/>
+    <!-- mastoid -->
+    <circle cx="340" cy="250" r="9" fill="#2f6fb0" stroke="#fff" stroke-width="2"/>
+    <line x1="350" y1="250" x2="432" y2="250" stroke="#2f6fb0" stroke-width="1.2"/>
+    <!-- Fp1 -->
+    <circle cx="193" cy="140" r="9" fill="#c0392b" stroke="#fff" stroke-width="2"/>
+    <line x1="183" y1="140" x2="130" y2="140" stroke="#c0392b" stroke-width="1.2"/>
+  </g>
+  <text x="576" y="142" text-anchor="end" font-weight="bold" fill="#c0392b">Fp1 · E1</text>
+  <text x="576" y="158" text-anchor="end" fill="#556" font-size="12">forehead, 2 fingers</text>
+  <text x="576" y="173" text-anchor="end" fill="#556" font-size="12">above the eyebrow</text>
+  <text x="888" y="246" font-weight="bold" fill="#2f6fb0">Ref</text>
+  <text x="888" y="263" fill="#556" font-size="12">bony bump</text>
+  <text x="888" y="278" fill="#556" font-size="12">behind the ear</text>
+  <text x="680" y="398" text-anchor="middle" fill="#556">Right side is the mirror image: Bias behind the right ear.</text>
+  <text x="680" y="416" text-anchor="middle" fill="#556">Skin, not hair. Wipe with alcohol, let it dry, press 5 s.</text>
 </svg>
