@@ -1,58 +1,185 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14">
-<rect width="1000" height="560" fill="#0b0d33"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" width="1000" height="900"><rect width="1000" height="900" fill="#0b0d33"/>
 <path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
 <path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M18 524 L18 542 L36 542" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 524 L982 542 L964 542" stroke="#2b3170" stroke-width="2" fill="none"/>
-<text x="44" y="48" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#9a9ccc">FIG. 05  ·  WIRING</text>
-<text x="44" y="86" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-weight="200" font-size="32" fill="#ecebf7">Which pin goes where</text>
-<text x="44" y="112" fill="#9a9ccc" font-size="14">10 male pins on the left edge of the PiEEG-8, printed top to bottom. Check the print on your board.</text>
-<rect x="60" y="150" width="230" height="370" rx="6" fill="#11144a" stroke="#d8b55a" stroke-width="1.5"/>
-<text x="175" y="505" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1.5" fill="#d8b55a" text-anchor="middle">PIEEG-8</text>
-<rect x="248" y="172" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
-<text x="236" y="182" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">REF</text>
-<rect x="248" y="204" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
-<text x="236" y="214" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">BIASOUT</text>
-<rect x="248" y="236" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="246" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E8</text>
-<rect x="248" y="268" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="278" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E7</text>
-<rect x="248" y="300" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="310" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E6</text>
-<rect x="248" y="332" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="342" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E5</text>
-<rect x="248" y="364" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="374" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E4</text>
-<rect x="248" y="396" width="12" height="12" fill="#0b0d33" stroke="#d8b55a"/>
-<text x="236" y="406" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#5d6199" text-anchor="end">E3</text>
-<rect x="248" y="428" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
-<text x="236" y="438" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">E2</text>
-<rect x="248" y="460" width="12" height="12" fill="#d8b55a" stroke="#d8b55a"/>
-<text x="236" y="470" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#ecebf7" text-anchor="end">E1</text>
-<path d="M260 178 C 480 178, 470 200, 600 200" stroke="#22d3ff" stroke-width="2.5" fill="none"/>
-<path d="M600 195 l26 -6 l2 4 l-26 7 z M600 205 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
-<circle cx="650" cy="200" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
-<circle cx="650" cy="200" r="4" fill="#cfc8b9"/>
-<text x="676" y="197" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#22d3ff" text-anchor="start">REF</text>
-<text x="676" y="216" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">behind LEFT ear · mastoid M1</text>
-<path d="M260 210 C 480 210, 470 270, 600 270" stroke="#c792ff" stroke-width="2.5" fill="none"/>
-<path d="M600 265 l26 -6 l2 4 l-26 7 z M600 275 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
-<circle cx="650" cy="270" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
-<circle cx="650" cy="270" r="4" fill="#cfc8b9"/>
-<text x="676" y="267" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#c792ff" text-anchor="start">BIAS</text>
-<text x="676" y="286" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">behind RIGHT ear · mastoid M2</text>
-<path d="M260 434 C 480 434, 470 380, 600 380" stroke="#8f96ff" stroke-width="2.5" fill="none" stroke-dasharray="8 6"/>
-<path d="M600 375 l26 -6 l2 4 l-26 7 z M600 385 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
-<circle cx="650" cy="380" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
-<circle cx="650" cy="380" r="4" fill="#cfc8b9"/>
-<text x="676" y="377" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#8f96ff" text-anchor="start">E2 · OPTIONAL</text>
-<text x="676" y="396" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">right forehead · Fp2</text>
-<path d="M260 466 C 480 466, 470 450, 600 450" stroke="#4b4bff" stroke-width="2.5" fill="none"/>
-<path d="M600 445 l26 -6 l2 4 l-26 7 z M600 455 l26 6 l2 -4 l-26 -7 z" fill="none" stroke="#ecebf7" stroke-width="1.2"/>
-<circle cx="650" cy="450" r="12" fill="#0b0d33" stroke="#ecebf7" stroke-width="1.5"/>
-<circle cx="650" cy="450" r="4" fill="#cfc8b9"/>
-<text x="676" y="447" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="1" fill="#4b4bff" text-anchor="start">E1</text>
-<text x="676" y="466" font-size="13" fill="#9a9ccc" text-anchor="start" font-weight="400">left forehead · Fp1</text>
-<text x="330" y="172" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">FEMALE DUPONT END ONTO THE PIN</text>
-<text x="600" y="520" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start">CLIP BITES THE METAL SNAP · E3 TO E8 STAY EMPTY</text>
-</svg>
+<path d="M18 864 L18 882 L36 882" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 864 L982 882 L964 882" stroke="#2b3170" stroke-width="2" fill="none"/>
+<text x="44.0" y="49.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="2.0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">FIG. 05  ·  WIRING</text>
+<text x="44.0" y="87.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="32" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Which pin goes where</text>
+<text x="44.0" y="113.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Ten male pins on the left edge of the PiEEG-8, printed Ref, Biasout, E8 to E1 from top to bottom.</text>
+<text x="44.0" y="150.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">A  ·  PIEEG-8, TOP VIEW</text>
+<rect x="60.0" y="196.0" width="208.0" height="179.2" rx="9.600000000000001" stroke="#d8b55a" stroke-width="1.5" fill="#11144a" opacity="1"/>
+<circle cx="71.2" cy="364.0" r="4.40" stroke="#d8b55a" stroke-width="1" fill="none" opacity="1"/>
+<circle cx="256.8" cy="364.0" r="4.40" stroke="#d8b55a" stroke-width="1" fill="none" opacity="1"/>
+<circle cx="71.2" cy="207.2" r="4.40" stroke="#d8b55a" stroke-width="1" fill="none" opacity="1"/>
+<circle cx="256.8" cy="207.2" r="4.40" stroke="#d8b55a" stroke-width="1" fill="none" opacity="1"/>
+<circle cx="86.8" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="86.8" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="94.9" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="94.9" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="103.0" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="103.0" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="111.2" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="111.2" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="119.3" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="119.3" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="127.4" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="127.4" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="135.6" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="135.6" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="143.7" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="143.7" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="151.8" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="151.8" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="159.9" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="159.9" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="168.1" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="168.1" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="176.2" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="176.2" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="184.3" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="184.3" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="192.4" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="192.4" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="200.6" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="200.6" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="208.7" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="208.7" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="216.8" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="216.8" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="225.0" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="225.0" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="233.1" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="233.1" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="241.2" cy="211.3" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<circle cx="241.2" cy="203.1" r="2.50" stroke="#d8b55a" stroke-width="0.9" fill="none" opacity="0.9"/>
+<rect x="84.1" y="208.5" width="5.4" height="5.4" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#11144a" opacity="1"/>
+<rect x="131.0" y="298.4" width="38.4" height="38.4" rx="0" stroke="#d8b55a" stroke-width="0.6" fill="none" opacity="0.55"/>
+<rect x="134.2" y="301.6" width="32.0" height="32.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#0b0d33" opacity="1"/>
+<rect x="191.8" y="314.1" width="5.1" height="2.6" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="233.0" y="235.1" width="16.3" height="8.1" rx="0" stroke="#d8b55a" stroke-width="0.9" fill="#0b0d33" opacity="0.85"/>
+<rect x="233.0" y="250.8" width="16.3" height="8.1" rx="0" stroke="#d8b55a" stroke-width="0.9" fill="#0b0d33" opacity="0.85"/>
+<rect x="233.0" y="266.5" width="16.3" height="8.1" rx="0" stroke="#d8b55a" stroke-width="0.9" fill="#0b0d33" opacity="0.85"/>
+<rect x="171.0" y="340.6" width="14.7" height="24.3" rx="0" stroke="#d8b55a" stroke-width="0.8" fill="none" opacity="0.6"/>
+<rect x="88.6" y="249.5" width="8.1" height="81.3" rx="0" stroke="#d8b55a" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<rect x="91.6" y="252.6" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="260.7" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="268.8" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="277.0" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="285.1" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="293.2" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="301.3" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="309.5" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="317.6" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<rect x="91.6" y="325.7" width="2.0" height="2.0" rx="0" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<text x="150.2" y="297.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#d8b55a" text-anchor="middle" opacity="1" xml:space="preserve">ADS1299</text>
+<rect x="85.0" y="245.9" width="15.4" height="88.5" rx="0" stroke="#ecebf7" stroke-width="1" fill="none" opacity="1" stroke-dasharray="3 3"/>
+<text x="87.0" y="239.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">B</text>
+<path d="M162.4 207.2 L162.4 180.0 L174.4 180.0" stroke="#d8b55a" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="162.4" cy="207.2" r="2.20" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<text x="178.4" y="184.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#d8b55a" text-anchor="start" opacity="1" xml:space="preserve">40 PIN SOCKET, UNDERNEATH → PI</text>
+<path d="M194.4 315.4 L194.4 397.2 L206.4 397.2" stroke="#d8b55a" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="194.4" cy="315.4" r="2.20" stroke="none" stroke-width="0" fill="#d8b55a" opacity="1"/>
+<text x="210.4" y="401.2" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#d8b55a" text-anchor="start" opacity="1" xml:space="preserve">LED, ON WITH POWER</text>
+<text x="436.0" y="150.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">B  ·  ELECTRODE HEADER, 2.54 MM PITCH</text>
+<rect x="450.0" y="176.0" width="40.0" height="328.0" rx="6" stroke="#d8b55a" stroke-width="1.5" fill="#11144a" opacity="1"/>
+<rect x="464.0" y="190.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#d8b55a" opacity="1"/>
+<text x="436.0" y="200.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="end" opacity="1" xml:space="preserve">REF</text>
+<rect x="464.0" y="222.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#d8b55a" opacity="1"/>
+<text x="436.0" y="232.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="end" opacity="1" xml:space="preserve">BIASOUT</text>
+<rect x="464.0" y="254.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="264.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E8</text>
+<rect x="464.0" y="286.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="296.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E7</text>
+<rect x="464.0" y="318.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="328.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E6</text>
+<rect x="464.0" y="350.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="360.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E5</text>
+<rect x="464.0" y="382.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="392.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E4</text>
+<rect x="464.0" y="414.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="none" opacity="1"/>
+<text x="436.0" y="424.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#5d6199" text-anchor="end" opacity="1" xml:space="preserve">E3</text>
+<rect x="464.0" y="446.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#d8b55a" opacity="1"/>
+<text x="436.0" y="456.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="end" opacity="1" xml:space="preserve">E2</text>
+<rect x="464.0" y="478.0" width="12.0" height="12.0" rx="0" stroke="#d8b55a" stroke-width="1.2" fill="#d8b55a" opacity="1"/>
+<text x="436.0" y="488.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="end" opacity="1" xml:space="preserve">E1</text>
+<line x1="504.0" y1="254.0" x2="504.0" y2="426.0" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<text x="514.0" y="343.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#5d6199" text-anchor="start" opacity="1" xml:space="preserve">E3 TO E8: EMPTY</text>
+<path d="M476.0 196.0 C485.0 196.0 506.7 196.3 530.0 196.0 C553.3 195.7 589.3 194.3 616.0 194.0 C642.7 193.7 677.7 194.0 690.0 194.0" stroke="#22d3ff" stroke-width="2.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="706.0" cy="194.0" rx="11.00" ry="11.00" stroke="#22d3ff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 706.0 194.0)"/>
+<ellipse cx="706.0" cy="194.0" rx="2.20" ry="2.20" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 706.0 194.0)"/>
+<text x="726.0" y="192.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">REF  →  M1, LEFT MASTOID</text>
+<text x="726.0" y="209.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Behind the left ear</text>
+<path d="M476.0 228.0 C485.0 228.0 506.7 222.7 530.0 228.0 C553.3 233.3 589.3 254.7 616.0 260.0 C642.7 265.3 677.7 260.0 690.0 260.0" stroke="#c792ff" stroke-width="2.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="706.0" cy="260.0" rx="11.00" ry="11.00" stroke="#c792ff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 706.0 260.0)"/>
+<ellipse cx="706.0" cy="260.0" rx="2.20" ry="2.20" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 706.0 260.0)"/>
+<text x="726.0" y="258.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#c792ff" text-anchor="start" opacity="1" xml:space="preserve">BIASOUT  →  M2, RIGHT MASTOID</text>
+<text x="726.0" y="275.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Behind the right ear</text>
+<path d="M476.0 452.0 C485.0 452.0 506.7 462.0 530.0 452.0 C553.3 442.0 589.3 402.0 616.0 392.0 C642.7 382.0 677.7 392.0 690.0 392.0" stroke="#8f96ff" stroke-width="2.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 6"/>
+<ellipse cx="706.0" cy="392.0" rx="11.00" ry="11.00" stroke="#8f96ff" stroke-width="1.5" fill="none" opacity="1" transform="rotate(0 706.0 392.0)" stroke-dasharray="8 6"/>
+<text x="726.0" y="390.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#8f96ff" text-anchor="start" opacity="1" xml:space="preserve">E2  →  FP2</text>
+<text x="726.0" y="407.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Right forehead, optional</text>
+<path d="M476.0 484.0 C485.0 484.0 506.7 488.3 530.0 484.0 C553.3 479.7 589.3 462.3 616.0 458.0 C642.7 453.7 677.7 458.0 690.0 458.0" stroke="#4b4bff" stroke-width="2.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="706.0" cy="458.0" rx="11.00" ry="11.00" stroke="#4b4bff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 706.0 458.0)"/>
+<ellipse cx="706.0" cy="458.0" rx="2.20" ry="2.20" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 706.0 458.0)"/>
+<text x="726.0" y="456.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="start" opacity="1" xml:space="preserve">E1  →  FP1</text>
+<text x="726.0" y="473.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Left forehead</text>
+<text x="436.0" y="530.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">FEMALE DUPONT END ONTO THE PIN  ·  CLIP BITES THE METAL SNAP</text>
+<line x1="44.0" y1="552.0" x2="956.0" y2="552.0" stroke="#2b3170" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<text x="44.0" y="578.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">C  ·  INSIDE THE ADS1299, WITH THE REGISTER VALUES PIEEG SERVER WRITES</text>
+<rect x="196.0" y="600.0" width="520.0" height="232.0" rx="6" stroke="#d8b55a" stroke-width="1.5" fill="none" opacity="1"/>
+<text x="208.0" y="618.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#d8b55a" text-anchor="start" opacity="1" xml:space="preserve">ADS1299</text>
+<circle cx="196.0" cy="652.0" r="5.00" stroke="#4b4bff" stroke-width="2" fill="#0b0d33" opacity="1"/>
+<text x="182.0" y="656.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="end" opacity="1" xml:space="preserve">E1</text>
+<text x="182.0" y="671.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">FROM FP1</text>
+<circle cx="196.0" cy="718.0" r="5.00" stroke="#22d3ff" stroke-width="2" fill="#0b0d33" opacity="1"/>
+<text x="182.0" y="722.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#22d3ff" text-anchor="end" opacity="1" xml:space="preserve">REF</text>
+<text x="182.0" y="737.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">FROM M1</text>
+<circle cx="196.0" cy="792.0" r="5.00" stroke="#c792ff" stroke-width="2" fill="#0b0d33" opacity="1"/>
+<text x="182.0" y="796.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#c792ff" text-anchor="end" opacity="1" xml:space="preserve">BIASOUT</text>
+<text x="182.0" y="811.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">TO M2</text>
+<path d="M400 622 L466 652.0 L400 682 Z" stroke="#ecebf7" stroke-width="1" fill="#0b0d33" opacity="0.3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M395 627 L461 657.0 L395 687 Z" stroke="#ecebf7" stroke-width="1" fill="#0b0d33" opacity="0.55" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M390 632 L456 662.0 L390 692 Z" stroke="#ecebf7" stroke-width="1.5" fill="#0b0d33" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="397.0" y="656.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">+</text>
+<text x="397.0" y="683.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">−</text>
+<line x1="201.0" y1="652.0" x2="390.0" y2="652.0" stroke="#4b4bff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+<text x="216.0" y="644.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#4b4bff" text-anchor="start" opacity="1" xml:space="preserve">IN1P</text>
+<line x1="201.0" y1="718.0" x2="350.0" y2="718.0" stroke="#22d3ff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+<line x1="350.0" y1="718.0" x2="350.0" y2="678.0" stroke="#22d3ff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+<line x1="350.0" y1="678.0" x2="390.0" y2="678.0" stroke="#22d3ff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+<text x="216.0" y="710.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">SRB1</text>
+<text x="357.0" y="671.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">IN1N</text>
+<rect x="216.0" y="734.0" width="240.8" height="15.0" rx="0" stroke="#2b3170" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="221.0" y="744.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">MISC1 = 0x20  ·  SRB1 TO ALL 8 − INPUTS</text>
+<rect x="382.0" y="606.0" width="152.0" height="15.0" rx="0" stroke="#2b3170" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="387.0" y="616.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">CH1SET = 0x00  ·  GAIN 1</text>
+<text x="410.0" y="720.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">CHANNELS 2 TO 8: THE SAME, INPUTS OPEN</text>
+<line x1="456.0" y1="662.0" x2="500.0" y2="662.0" stroke="#ecebf7" stroke-width="1.5" stroke-linecap="round" opacity="1"/>
+<rect x="500.0" y="638.0" width="112.0" height="48.0" rx="0" stroke="#ecebf7" stroke-width="1.5" fill="#0b0d33" opacity="1"/>
+<text x="556.0" y="659.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#ecebf7" text-anchor="middle" opacity="1" xml:space="preserve">ΔΣ ADC</text>
+<text x="556.0" y="675.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">24 BIT</text>
+<rect x="456.3" y="694.0" width="199.4" height="15.0" rx="0" stroke="#2b3170" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="461.3" y="704.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">CONFIG1 = 0x96  ·  250 SAMPLES/S</text>
+<line x1="612.0" y1="662.0" x2="744.0" y2="662.0" stroke="#ecebf7" stroke-width="1.5" stroke-linecap="round" opacity="1"/>
+<path d="M750.0 662.0 L743.0 664.9 L743.0 659.1 Z" stroke="none" stroke-width="0" fill="#ecebf7" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="758.0" y="656.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">SPI → PI</text>
+<text x="758.0" y="672.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">27 BYTES PER SAMPLE</text>
+<text x="758.0" y="686.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">SEE FIG. 06</text>
+<path d="M444 770 L380 792 L444 814 Z" stroke="#ecebf7" stroke-width="1.5" fill="#0b0d33" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="382.0" y="764.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">BIAS AMP</text>
+<line x1="201.0" y1="792.0" x2="380.0" y2="792.0" stroke="#c792ff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+<path d="M204.0 792.0 L212.0 788.6 L212.0 795.4 Z" stroke="none" stroke-width="0" fill="#c792ff" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="444.0" y1="783.0" x2="516.0" y2="783.0" stroke="#ecebf7" stroke-width="1.2" stroke-linecap="round" opacity="1"/>
+<rect x="516.0" y="767.0" width="150.0" height="30.0" rx="0" stroke="#ecebf7" stroke-width="1.2" fill="#0b0d33" opacity="1"/>
+<text x="591.0" y="786.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#ecebf7" text-anchor="middle" opacity="1" xml:space="preserve">(AVDD + AVSS) / 2</text>
+<rect x="500.0" y="748.0" width="205.3" height="15.0" rx="0" stroke="#2b3170" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="505.0" y="758.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">CONFIG3 = 0xFF  ·  BIASREF INSIDE</text>
+<line x1="444.0" y1="801.0" x2="490.0" y2="801.0" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1" stroke-dasharray="3 3"/>
+<rect x="452.0" y="808.0" width="229.0" height="15.0" rx="0" stroke="#2b3170" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="457.0" y="818.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">BIAS_SENSP/N = 0x00  ·  NONE FED BACK</text>
+<text x="758.0" y="758.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#5d6199" text-anchor="start" opacity="1" xml:space="preserve">RESULT</text>
+<text x="758.0" y="778.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="start" opacity="1" xml:space="preserve">CH1 = V(FP1) − V(M1)</text>
+<text x="758.0" y="798.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Forehead minus left mastoid.</text>
+<text x="758.0" y="815.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Bias holds the body at</text>
+<text x="758.0" y="832.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">the chip's mid supply.</text>
+<text x="44.0" y="868.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">SOURCES  ·  PIEEG DOCS: ELECTRODES &amp; PINOUT  ·  PIEEG SERVER 0.49.0 HARDWARE.PY  ·  TI ADS1299 DATASHEET</text></svg>

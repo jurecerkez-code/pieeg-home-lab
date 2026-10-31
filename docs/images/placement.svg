@@ -1,150 +1,195 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14">
-<rect width="1000" height="520" fill="#0b0d33"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 880" width="1000" height="880"><defs><pattern id="hair" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4.5" stroke="#e3c46f" stroke-width="0.9" opacity="0.42"/></pattern></defs><rect width="1000" height="880" fill="#0b0d33"/>
 <path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
 <path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M18 484 L18 502 L36 502" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 484 L982 502 L964 502" stroke="#2b3170" stroke-width="2" fill="none"/>
-<text x="44" y="48" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#9a9ccc">FIG. 04  ·  ELECTRODE PLACEMENT</text>
-<text x="44" y="86" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-weight="200" font-size="32" fill="#ecebf7">Three stickers on bare skin</text>
-<line x1="394.0" y1="300.0" x2="422.0" y2="300.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="393.4" y1="314.3" x2="421.3" y2="316.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="391.5" y1="328.5" x2="419.1" y2="333.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="388.4" y1="342.4" x2="415.5" y2="349.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="384.1" y1="356.1" x2="410.4" y2="365.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="378.6" y1="369.3" x2="404.0" y2="381.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="372.0" y1="382.0" x2="396.3" y2="396.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="364.3" y1="394.1" x2="387.3" y2="410.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="355.6" y1="405.4" x2="377.1" y2="423.4" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="346.0" y1="416.0" x2="365.8" y2="435.8" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="335.4" y1="425.6" x2="353.4" y2="447.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="324.1" y1="434.3" x2="340.1" y2="457.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="312.0" y1="442.0" x2="326.0" y2="466.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="299.3" y1="448.6" x2="311.1" y2="474.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="286.1" y1="454.1" x2="295.7" y2="480.4" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="272.4" y1="458.4" x2="279.7" y2="485.5" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="258.5" y1="461.5" x2="263.3" y2="489.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="244.3" y1="463.4" x2="246.7" y2="491.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="230.0" y1="464.0" x2="230.0" y2="492.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="215.7" y1="463.4" x2="213.3" y2="491.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="201.5" y1="461.5" x2="196.7" y2="489.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="187.6" y1="458.4" x2="180.3" y2="485.5" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="173.9" y1="454.1" x2="164.3" y2="480.4" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="160.7" y1="448.6" x2="148.9" y2="474.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="148.0" y1="442.0" x2="134.0" y2="466.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="135.9" y1="434.3" x2="119.9" y2="457.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="124.6" y1="425.6" x2="106.6" y2="447.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="114.0" y1="416.0" x2="94.2" y2="435.8" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="104.4" y1="405.4" x2="82.9" y2="423.4" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="95.7" y1="394.1" x2="72.7" y2="410.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="88.0" y1="382.0" x2="63.7" y2="396.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="81.4" y1="369.3" x2="56.0" y2="381.1" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="75.9" y1="356.1" x2="49.6" y2="365.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="71.6" y1="342.4" x2="44.5" y2="349.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="68.5" y1="328.5" x2="40.9" y2="333.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="66.6" y1="314.3" x2="38.7" y2="316.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="66.0" y1="300.0" x2="38.0" y2="300.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="66.6" y1="285.7" x2="38.7" y2="283.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="68.5" y1="271.5" x2="40.9" y2="266.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="71.6" y1="257.6" x2="44.5" y2="250.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="75.9" y1="243.9" x2="49.6" y2="234.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="81.4" y1="230.7" x2="56.0" y2="218.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="88.0" y1="218.0" x2="63.7" y2="204.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="95.7" y1="205.9" x2="72.7" y2="189.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="104.4" y1="194.6" x2="82.9" y2="176.6" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="114.0" y1="184.0" x2="94.2" y2="164.2" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="124.6" y1="174.4" x2="106.6" y2="152.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="135.9" y1="165.7" x2="119.9" y2="142.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="148.0" y1="158.0" x2="134.0" y2="133.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="160.7" y1="151.4" x2="148.9" y2="126.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="173.9" y1="145.9" x2="164.3" y2="119.6" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="187.6" y1="141.6" x2="180.3" y2="114.5" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="201.5" y1="138.5" x2="196.7" y2="110.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="215.7" y1="136.6" x2="213.3" y2="108.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="230.0" y1="136.0" x2="230.0" y2="108.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="244.3" y1="136.6" x2="246.7" y2="108.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="258.5" y1="138.5" x2="263.3" y2="110.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="272.4" y1="141.6" x2="279.7" y2="114.5" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="286.1" y1="145.9" x2="295.7" y2="119.6" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="299.3" y1="151.4" x2="311.1" y2="126.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="312.0" y1="158.0" x2="326.0" y2="133.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="324.1" y1="165.7" x2="340.1" y2="142.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="335.4" y1="174.4" x2="353.4" y2="152.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="346.0" y1="184.0" x2="365.8" y2="164.2" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="355.6" y1="194.6" x2="377.1" y2="176.6" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="364.3" y1="205.9" x2="387.3" y2="189.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="372.0" y1="218.0" x2="396.3" y2="204.0" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="378.6" y1="230.7" x2="404.0" y2="218.9" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="384.1" y1="243.9" x2="410.4" y2="234.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="388.4" y1="257.6" x2="415.5" y2="250.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="391.5" y1="271.5" x2="419.1" y2="266.7" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<line x1="393.4" y1="285.7" x2="421.3" y2="283.3" stroke="#2b3170" stroke-width="1" opacity="0.8"/>
-<path d="M218 162 L230 138 L242 162" fill="#e7e2d6" stroke="#cfc8b9" stroke-width="1.5"/>
-<ellipse cx="78" cy="300" rx="11" ry="28" fill="#cfc8b9"/>
-<ellipse cx="382" cy="300" rx="11" ry="28" fill="#cfc8b9"/>
-<circle cx="230" cy="300" r="150" fill="#e7e2d6" stroke="#cfc8b9" stroke-width="2"/>
-<path d="M106.8 214.5 Q230 180.5 353.2 214.5 A150 150 0 1 1 106.8 214.5 Z" fill="#e3c46f" stroke="#bf9b45" stroke-width="1.5"/>
-<g stroke="#bf9b45" stroke-width="1.2" fill="none" opacity="0.8"><path d="M230 194.5 C 226 280, 234 380, 230 446"/><path d="M190 200.5 C 150 270, 140 360, 170 430"/><path d="M270 200.5 C 310 270, 320 360, 290 430"/><path d="M150 216.5 C 105 290, 105 350, 130 400"/><path d="M310 216.5 C 355 290, 355 350, 330 400"/></g>
-<circle cx="120.8" cy="220.6" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="120.8" y="212.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">F7</text>
-<circle cx="339.2" cy="220.6" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="339.2" y="212.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">F8</text>
-<circle cx="95.0" cy="300.0" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="95.0" y="292.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">T3</text>
-<circle cx="365.0" cy="300.0" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="365.0" y="292.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">T4</text>
-<circle cx="120.8" cy="379.4" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="120.8" y="371.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">T5</text>
-<circle cx="339.2" cy="379.4" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="339.2" y="371.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">T6</text>
-<circle cx="188.3" cy="428.4" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="188.3" y="420.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">O1</text>
-<circle cx="271.7" cy="428.4" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="271.7" y="420.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">O2</text>
-<circle cx="182.3" cy="243.1" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="182.3" y="235.1" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">F3</text>
-<circle cx="277.7" cy="243.1" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="277.7" y="235.1" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">F4</text>
-<circle cx="169.2" cy="300.0" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="169.2" y="292.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">C3</text>
-<circle cx="290.8" cy="300.0" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="290.8" y="292.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">C4</text>
-<circle cx="182.3" cy="356.9" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="182.3" y="348.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">P3</text>
-<circle cx="277.7" cy="356.9" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="277.7" y="348.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">P4</text>
-<circle cx="230.0" cy="239.2" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="230.0" y="231.2" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">Fz</text>
-<circle cx="230.0" cy="300.0" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="230.0" y="292.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">Cz</text>
-<circle cx="230.0" cy="360.8" r="4.5" fill="#0b0d33" stroke="#bf9b45" stroke-width="1"/>
-<text x="230.0" y="352.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" fill="#5b4a1c" text-anchor="middle">Pz</text>
-<circle cx="188.3" cy="171.6" r="9" fill="#4b4bff" stroke="#ecebf7" stroke-width="2"/>
-<circle cx="271.7" cy="171.6" r="9" fill="#0b0d33" stroke="#8f96ff" stroke-width="2.5" stroke-dasharray="3 2"/>
-<line x1="184.3" y1="161.6" x2="180.3" y2="145.6" stroke="#ecebf7" stroke-width="1"/>
-<line x1="275.7" y1="161.6" x2="279.7" y2="145.6" stroke="#8f96ff" stroke-width="1"/>
-<text x="180.2827057593821" y="141.6073703001543" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#ecebf7" text-anchor="end">FP1 · E1</text>
-<text x="279.7172942406179" y="141.6073703001543" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#8f96ff" text-anchor="start">FP2 · E2</text>
-<circle cx="70" cy="342" r="9" fill="#22d3ff" stroke="#ecebf7" stroke-width="2"/>
-<circle cx="390" cy="342" r="9" fill="#c792ff" stroke="#ecebf7" stroke-width="2"/>
-<text x="70" y="386" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#22d3ff" text-anchor="middle">M1 · REF</text>
-<text x="390" y="386" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#c792ff" text-anchor="middle">M2 · BIAS</text>
-<text x="230" y="480" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle">TOP VIEW · NOSE UP · HER LEFT ON THE LEFT</text>
-<g transform="translate(470,120) scale(0.86)">
-<path d="M250 60 C 330 55, 392 110, 394 190 C 396 248, 372 285, 346 305 L 342 370 L 252 370 C 252 338, 246 318, 232 306 C 210 301, 194 294, 188 280 C 185 270, 191 263, 187 256 C 181 251, 183 246, 187 243 C 179 237, 183 231, 189 229 C 179 221, 166 213, 168 205 C 170 197, 182 191, 186 179 C 189 168, 182 160, 184 150 C 187 110, 202 64, 250 60 Z" fill="#e7e2d6" stroke="#cfc8b9" stroke-width="2" stroke-linejoin="round"/>
-<g stroke="#bdb5a4" stroke-width="1" opacity="0.55"><line x1="352" y1="300" x2="258" y2="300"/><line x1="351" y1="306" x2="258" y2="306"/><line x1="351" y1="312" x2="258" y2="312"/><line x1="350" y1="318" x2="257" y2="318"/><line x1="350" y1="324" x2="257" y2="324"/><line x1="349" y1="330" x2="257" y2="330"/><line x1="348" y1="336" x2="257" y2="336"/><line x1="348" y1="342" x2="257" y2="342"/><line x1="347" y1="348" x2="256" y2="348"/><line x1="347" y1="354" x2="256" y2="354"/><line x1="346" y1="360" x2="256" y2="360"/><line x1="345" y1="366" x2="256" y2="366"/></g>
-<path d="M190 112 C 196 70, 240 50, 290 52 C 360 54, 404 120, 410 200 C 414 260, 420 320, 428 368 L 352 368 C 356 330, 362 290, 362 262 C 362 230, 350 205, 332 188 C 318 176, 300 172, 290 178 C 280 140, 240 112, 194 116 Z" fill="#e3c46f" stroke="#bf9b45" stroke-width="1.5" stroke-linejoin="round"/>
-<g stroke="#bf9b45" stroke-width="1.2" fill="none" opacity="0.9"><path d="M215 90 C 280 66, 350 90, 385 160"/><path d="M250 72 C 330 70, 395 140, 398 240"/><path d="M300 118 C 360 140, 385 210, 390 300"/><path d="M380 230 C 388 290, 396 330, 405 365"/></g>
-<path d="M196 170 q10 -5 20 0" stroke="#5a5446" stroke-width="1.6" fill="none"/>
-<path d="M296 182 C 318 176, 330 196, 326 220 C 323 240, 314 252, 302 254 C 293 255, 290 246, 296 240 C 304 232, 300 222, 294 216 C 288 208, 288 188, 296 182 Z" fill="#cfc8b9" stroke="#a8a091" stroke-width="1.6"/>
-</g>
-<circle cx="636.0" cy="240.4" r="9" fill="#4b4bff" stroke="#ecebf7" stroke-width="2"/>
-<line x1="626.0" y1="240.4" x2="566.0" y2="240.4" stroke="#4b4bff" stroke-width="1.2"/>
-<text x="559.98" y="244.39999999999998" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#ecebf7" text-anchor="end">FP1 · E1</text>
-<text x="559.98" y="262.4" font-size="12" fill="#9a9ccc" text-anchor="end" font-weight="400">2 fingers above the brow</text>
-<circle cx="762.4" cy="335.0" r="9" fill="#22d3ff" stroke="#ecebf7" stroke-width="2"/>
-<line x1="772.4" y1="335.0" x2="868" y2="335.0" stroke="#22d3ff" stroke-width="1.2"/>
-<text x="874" y="331.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="11" letter-spacing="0" fill="#22d3ff" text-anchor="start">M1 · REF</text>
-<text x="874" y="349.0" font-size="12" fill="#9a9ccc" text-anchor="start" font-weight="400">bony bump</text>
-<text x="874" y="365.0" font-size="12" fill="#9a9ccc" text-anchor="start" font-weight="400">behind the ear</text>
-<text x="642.0" y="480" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle">SIDE VIEW · RIGHT SIDE MIRRORED: BIAS</text>
-</svg>
+<path d="M18 844 L18 862 L36 862" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path d="M982 844 L982 862 L964 862" stroke="#2b3170" stroke-width="2" fill="none"/>
+<text x="44.0" y="49.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="2.0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">FIG. 04  ·  ELECTRODE PLACEMENT</text>
+<text x="44.0" y="87.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="32" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Three stickers, placed by landmarks</text>
+<text x="44.0" y="113.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Front and side view of the same head at the same scale, and the 10-20 map seen from above.</text>
+<line x1="118.0" y1="320.4" x2="880.0" y2="320.4" stroke="#4b4bff" stroke-width="0.8" stroke-linecap="round" opacity="0.6" stroke-dasharray="3 5"/>
+<text x="886.0" y="323.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#4b4bff" text-anchor="start" opacity="1" xml:space="preserve">FP1 LEVEL</text>
+<line x1="118.0" y1="393.6" x2="880.0" y2="393.6" stroke="#22d3ff" stroke-width="0.8" stroke-linecap="round" opacity="0.6" stroke-dasharray="3 5"/>
+<text x="886.0" y="396.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">M1 LEVEL</text>
+<rect x="407.1" y="314.2" width="71.8" height="14.4" rx="0" stroke="none" stroke-width="0" fill="#0b0d33" opacity="1"/>
+<text x="444.0" y="324.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="middle" opacity="1" xml:space="preserve">E1 · FP1</text>
+<rect x="407.1" y="387.4" width="71.8" height="14.4" rx="0" stroke="none" stroke-width="0" fill="#0b0d33" opacity="1"/>
+<text x="444.0" y="397.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#22d3ff" text-anchor="middle" opacity="1" xml:space="preserve">REF · M1</text>
+<path d="M236.0 191.7 C221.6 191.7 206.2 195.5 192.8 202.8 C179.4 210.1 164.3 223.5 155.5 235.7 C146.7 247.9 143.6 261.4 140.0 276.0 C136.4 290.6 133.9 311.0 133.9 323.4 C133.9 335.8 136.8 341.9 140.0 350.4 C143.2 358.9 149.6 365.8 153.2 374.4 C156.8 383.0 158.6 392.8 161.6 402.0 C164.6 411.2 168.2 422.0 171.2 429.6 C174.2 437.2 175.0 441.4 179.6 447.6 C184.2 453.8 192.2 461.3 198.8 466.8 C205.4 472.3 213.0 477.8 219.2 480.6 C225.4 483.4 230.4 483.6 236.0 483.6 C241.6 483.6 246.6 483.4 252.8 480.6 C259.0 477.8 266.6 472.3 273.2 466.8 C279.8 461.3 287.8 453.8 292.4 447.6 C297.0 441.4 297.8 437.2 300.8 429.6 C303.8 422.0 307.4 411.2 310.4 402.0 C313.4 392.8 315.2 383.0 318.8 374.4 C322.4 365.8 328.8 358.9 332.0 350.4 C335.2 341.9 338.1 335.8 338.1 323.4 C338.1 311.0 335.6 290.6 332.0 276.0 C328.4 261.4 325.3 247.9 316.5 235.7 C307.7 223.5 292.6 210.1 279.2 202.8 C265.8 195.5 250.4 191.7 236.0 191.7 Z" stroke="none" stroke-width="0" fill="#1a1c3e" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M236.0 182.4 C220.0 182.4 202.6 186.8 188.0 194.4 C173.4 202.0 158.2 214.8 148.4 228.0 C138.6 241.2 133.0 259.6 129.2 273.6 C125.4 287.6 125.8 301.6 125.6 312.0 C125.4 322.4 126.4 329.4 128.0 336.0 C129.6 342.6 132.0 348.0 135.2 351.6 C138.4 355.2 144.8 359.2 147.2 357.6 C149.6 356.0 147.6 348.4 149.6 342.0 C151.6 335.6 154.4 326.6 159.2 319.2 C164.0 311.8 170.6 303.2 178.4 297.6 C186.2 292.0 196.4 288.0 206.0 285.6 C215.6 283.2 226.0 283.2 236.0 283.2 C246.0 283.2 256.4 283.2 266.0 285.6 C275.6 288.0 285.8 292.0 293.6 297.6 C301.4 303.2 308.0 311.8 312.8 319.2 C317.6 326.6 320.4 335.6 322.4 342.0 C324.4 348.4 322.4 356.0 324.8 357.6 C327.2 359.2 333.6 355.2 336.8 351.6 C340.0 348.0 342.4 342.6 344.0 336.0 C345.6 329.4 346.6 322.4 346.4 312.0 C346.2 301.6 346.6 287.6 342.8 273.6 C339.0 259.6 333.4 241.2 323.6 228.0 C313.8 214.8 298.6 202.0 284.0 194.4 C269.4 186.8 252.0 182.4 236.0 182.4 Z" stroke="none" stroke-width="0" fill="url(#hair)" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M236.0 182.4 C220.0 182.4 202.6 186.8 188.0 194.4 C173.4 202.0 158.2 214.8 148.4 228.0 C138.6 241.2 133.0 259.6 129.2 273.6 C125.4 287.6 125.8 301.6 125.6 312.0 C125.4 322.4 126.4 329.4 128.0 336.0 C129.6 342.6 132.0 348.0 135.2 351.6 C138.4 355.2 144.8 359.2 147.2 357.6 C149.6 356.0 147.6 348.4 149.6 342.0 C151.6 335.6 154.4 326.6 159.2 319.2 C164.0 311.8 170.6 303.2 178.4 297.6 C186.2 292.0 196.4 288.0 206.0 285.6 C215.6 283.2 226.0 283.2 236.0 283.2 C246.0 283.2 256.4 283.2 266.0 285.6 C275.6 288.0 285.8 292.0 293.6 297.6 C301.4 303.2 308.0 311.8 312.8 319.2 C317.6 326.6 320.4 335.6 322.4 342.0 C324.4 348.4 322.4 356.0 324.8 357.6 C327.2 359.2 333.6 355.2 336.8 351.6 C340.0 348.0 342.4 342.6 344.0 336.0 C345.6 329.4 346.6 322.4 346.4 312.0 C346.2 301.6 346.6 287.6 342.8 273.6 C339.0 259.6 333.4 241.2 323.6 228.0 C313.8 214.8 298.6 202.0 284.0 194.4 C269.4 186.8 252.0 182.4 236.0 182.4 Z" stroke="#bf9b45" stroke-width="0.8999999999999999" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M184.4 452.4 C184.7 457.0 186.2 470.8 186.2 480.0 C186.2 489.2 184.7 503.0 184.4 507.6" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M287.6 452.4 C287.3 457.0 285.8 470.8 285.8 480.0 C285.8 489.2 287.3 503.0 287.6 507.6" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M236.0 191.7 C221.6 191.7 206.2 195.5 192.8 202.8 C179.4 210.1 164.3 223.5 155.5 235.7 C146.7 247.9 143.6 261.4 140.0 276.0 C136.4 290.6 133.9 311.0 133.9 323.4 C133.9 335.8 136.8 341.9 140.0 350.4 C143.2 358.9 149.6 365.8 153.2 374.4 C156.8 383.0 158.6 392.8 161.6 402.0 C164.6 411.2 168.2 422.0 171.2 429.6 C174.2 437.2 175.0 441.4 179.6 447.6 C184.2 453.8 192.2 461.3 198.8 466.8 C205.4 472.3 213.0 477.8 219.2 480.6 C225.4 483.4 230.4 483.6 236.0 483.6 C241.6 483.6 246.6 483.4 252.8 480.6 C259.0 477.8 266.6 472.3 273.2 466.8 C279.8 461.3 287.8 453.8 292.4 447.6 C297.0 441.4 297.8 437.2 300.8 429.6 C303.8 422.0 307.4 411.2 310.4 402.0 C313.4 392.8 315.2 383.0 318.8 374.4 C322.4 365.8 328.8 358.9 332.0 350.4 C335.2 341.9 338.1 335.8 338.1 323.4 C338.1 311.0 335.6 290.6 332.0 276.0 C328.4 261.4 325.3 247.9 316.5 235.7 C307.7 223.5 292.6 210.1 279.2 202.8 C265.8 195.5 250.4 191.7 236.0 191.7 Z" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M141.2 327.6 C139.4 327.8 133.4 326.8 130.4 328.8 C127.4 330.8 124.7 334.8 123.2 339.6 C121.7 344.4 121.2 351.6 121.4 357.6 C121.6 363.6 122.9 370.0 124.4 375.6 C125.9 381.2 128.0 387.6 130.4 391.2 C132.8 394.8 137.4 396.2 138.8 397.2 L141.2 327.6" stroke="#ecebf7" stroke-width="1.35" fill="#1a1c3e" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M135.2 336.0 C134.2 338.0 130.3 342.8 129.2 348.0 C128.1 353.2 127.8 361.2 128.6 367.2 C129.4 373.2 133.1 381.2 134.0 384.0" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.6" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M220.4 341.4 C218.6 340.7 213.6 338.2 209.6 337.2 C205.6 336.2 200.6 335.5 196.4 335.4 C192.2 335.3 187.8 335.7 184.4 336.6 C181.0 337.5 177.4 340.1 176.0 340.8" stroke="#ecebf7" stroke-width="1.875" fill="none" opacity="0.9" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M215.6 358.2 C214.2 357.4 210.4 354.4 207.2 353.4 C204.0 352.4 199.8 352.0 196.4 352.2 C193.0 352.4 189.4 353.6 186.8 354.6 C184.2 355.6 181.8 357.6 180.8 358.2" stroke="#ecebf7" stroke-width="1.275" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M180.8 358.2 C182.4 358.9 186.8 361.6 190.4 362.4 C194.0 363.2 199.0 363.2 202.4 363.0 C205.8 362.8 208.6 362.0 210.8 361.2 C213.0 360.4 214.8 358.7 215.6 358.2" stroke="#ecebf7" stroke-width="0.9750000000000001" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="198.8" cy="357.8" r="2.76" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.85"/>
+<circle cx="198.8" cy="357.8" r="0.96" stroke="none" stroke-width="0" fill="#ecebf7" opacity="0.85"/>
+<path d="M228.2 356.4 C228.3 360.0 229.1 371.0 228.8 378.0 C228.5 385.0 226.8 395.0 226.4 398.4" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.35" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M330.8 327.6 C332.6 327.8 338.6 326.8 341.6 328.8 C344.6 330.8 347.3 334.8 348.8 339.6 C350.3 344.4 350.8 351.6 350.6 357.6 C350.4 363.6 349.1 370.0 347.6 375.6 C346.1 381.2 344.0 387.6 341.6 391.2 C339.2 394.8 334.6 396.2 333.2 397.2 L330.8 327.6" stroke="#ecebf7" stroke-width="1.35" fill="#1a1c3e" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M336.8 336.0 C337.8 338.0 341.7 342.8 342.8 348.0 C343.9 353.2 344.2 361.2 343.4 367.2 C342.6 373.2 338.9 381.2 338.0 384.0" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.6" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M251.6 341.4 C253.4 340.7 258.4 338.2 262.4 337.2 C266.4 336.2 271.4 335.5 275.6 335.4 C279.8 335.3 284.2 335.7 287.6 336.6 C291.0 337.5 294.6 340.1 296.0 340.8" stroke="#ecebf7" stroke-width="1.875" fill="none" opacity="0.9" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M256.4 358.2 C257.8 357.4 261.6 354.4 264.8 353.4 C268.0 352.4 272.2 352.0 275.6 352.2 C279.0 352.4 282.6 353.6 285.2 354.6 C287.8 355.6 290.2 357.6 291.2 358.2" stroke="#ecebf7" stroke-width="1.275" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M291.2 358.2 C289.6 358.9 285.2 361.6 281.6 362.4 C278.0 363.2 273.0 363.2 269.6 363.0 C266.2 362.8 263.4 362.0 261.2 361.2 C259.0 360.4 257.2 358.7 256.4 358.2" stroke="#ecebf7" stroke-width="0.9750000000000001" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="273.2" cy="357.8" r="2.76" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.85"/>
+<circle cx="273.2" cy="357.8" r="0.96" stroke="none" stroke-width="0" fill="#ecebf7" opacity="0.85"/>
+<path d="M243.8 356.4 C243.7 360.0 242.9 371.0 243.2 378.0 C243.5 385.0 245.2 395.0 245.6 398.4" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.35" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M254.0 404.4 C254.5 405.5 257.6 408.9 257.0 411.0 C256.4 413.1 252.9 416.3 250.4 417.0 C247.9 417.7 244.4 415.1 242.0 415.2 C239.6 415.3 238.0 417.6 236.0 417.6 C234.0 417.6 232.4 415.3 230.0 415.2 C227.6 415.1 224.1 417.7 221.6 417.0 C219.1 416.3 215.6 413.1 215.0 411.0 C214.4 408.9 217.5 405.5 218.0 404.4" stroke="#ecebf7" stroke-width="1.2000000000000002" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M263.6 433.8 C260.8 433.2 251.4 430.5 246.8 430.2 C242.2 429.9 239.6 432.2 236.0 432.2 C232.4 432.2 229.8 429.9 225.2 430.2 C220.6 430.5 211.2 433.2 208.4 433.8" stroke="#ecebf7" stroke-width="1.2000000000000002" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M263.6 433.8 C260.6 433.9 250.2 434.7 245.6 434.6 C241.0 434.6 239.2 433.7 236.0 433.7 C232.8 433.7 231.0 434.6 226.4 434.6 C221.8 434.7 211.4 433.9 208.4 433.8" stroke="#ecebf7" stroke-width="1.35" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M252.8 440.4 C250.0 440.9 241.6 443.4 236.0 443.4 C230.4 443.4 222.0 440.9 219.2 440.4" stroke="#ecebf7" stroke-width="0.9750000000000001" fill="none" opacity="0.55" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="339.3" cy="393.6" rx="9.36" ry="15.60" stroke="#22d3ff" stroke-width="1.5" fill="none" opacity="1" transform="rotate(0 339.3 393.6)" stroke-dasharray="3 3"/>
+<ellipse cx="133.1" cy="393.6" rx="9.36" ry="15.60" stroke="#c792ff" stroke-width="1.5" fill="none" opacity="1" transform="rotate(0 133.1 393.6)" stroke-dasharray="3 3"/>
+<ellipse cx="271.3" cy="320.4" rx="14.98" ry="15.60" stroke="#4b4bff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 271.3 320.4)"/>
+<ellipse cx="271.3" cy="320.4" rx="3.00" ry="3.12" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 271.3 320.4)"/>
+<ellipse cx="200.2" cy="320.5" rx="14.98" ry="15.60" stroke="#8f96ff" stroke-width="1.5" fill="none" opacity="1" transform="rotate(0 200.2 320.5)" stroke-dasharray="8 6"/>
+<line x1="271.3" y1="351.8" x2="271.3" y2="337.0" stroke="#4b4bff" stroke-width="0.8" stroke-linecap="round" opacity="0.85" stroke-dasharray="2 2"/>
+<path d="M190.2 308.5 L160.2 260.5 L122.0 260.5" stroke="#8f96ff" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="190.2" cy="308.5" r="2.20" stroke="none" stroke-width="0" fill="#8f96ff" opacity="1"/>
+<text x="118.0" y="264.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#8f96ff" text-anchor="end" opacity="1" xml:space="preserve">E2 · FP2</text>
+<text x="118.0" y="278.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">OPTIONAL</text>
+<path d="M341.3 407.6 L353.3 459.6 L363.3 459.6" stroke="#22d3ff" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="341.3" cy="407.6" r="2.20" stroke="none" stroke-width="0" fill="#22d3ff" opacity="1"/>
+<text x="367.3" y="463.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">HIDDEN BEHIND</text>
+<text x="367.3" y="477.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">THE LEFT EAR</text>
+<path d="M131.1 407.6 L124.0 459.6" stroke="#c792ff" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="131.1" cy="407.6" r="2.20" stroke="none" stroke-width="0" fill="#c792ff" opacity="1"/>
+<text x="44.0" y="473.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#c792ff" text-anchor="start" opacity="1" xml:space="preserve">BIAS · M2</text>
+<text x="44.0" y="487.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">BEHIND THE EAR</text>
+<text x="236.0" y="546.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">A  ·  FRONT VIEW</text>
+<line x1="404.0" y1="542.0" x2="464.0" y2="542.0" stroke="#9a9ccc" stroke-width="1.2" stroke-linecap="round" opacity="1"/>
+<line x1="404.0" y1="537.0" x2="404.0" y2="547.0" stroke="#9a9ccc" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="434.0" y1="539.0" x2="434.0" y2="545.0" stroke="#9a9ccc" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="464.0" y1="537.0" x2="464.0" y2="547.0" stroke="#9a9ccc" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<text x="472.0" y="545.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">50 MM</text>
+<path d="M611.9 510.0 C612.0 509.6 613.1 510.2 612.5 507.4 C611.9 504.6 611.4 496.2 608.3 493.0 C605.2 489.8 600.3 489.6 593.9 488.2 C587.5 486.8 576.3 486.2 569.9 484.6 C563.5 483.0 559.0 481.4 555.5 478.6 C552.0 475.8 549.3 472.0 548.9 467.8 C548.5 463.6 553.8 457.4 553.1 453.4 C552.4 449.4 545.8 446.6 544.7 443.8 C543.6 441.0 546.9 438.5 546.5 436.6 C546.1 434.7 542.7 433.8 542.3 432.4 C541.9 431.0 543.1 431.3 544.1 428.2 C545.1 425.1 549.0 416.4 548.3 413.8 C547.6 411.2 543.1 414.0 539.9 412.6 C536.7 411.2 530.1 407.6 529.1 405.4 C528.1 403.2 530.9 403.6 533.9 399.4 C536.9 395.2 543.1 387.8 547.1 380.2 C551.1 372.6 557.2 361.2 557.9 353.8 C558.6 346.4 552.0 342.4 551.3 335.8 C550.7 329.2 552.1 325.1 554.1 314.1 C556.1 303.0 557.1 283.1 563.1 269.5 C569.0 255.9 579.1 242.9 589.8 232.2 C600.5 221.6 613.6 212.4 627.1 205.6 C640.7 198.8 656.1 193.9 671.0 191.7 C685.9 189.6 702.4 189.2 716.8 192.7 C731.2 196.2 746.4 203.1 757.3 212.9 C768.3 222.6 775.9 237.7 782.6 251.3 C789.4 264.9 794.6 279.7 797.9 294.4 C801.1 309.1 802.3 327.7 802.3 339.7 C802.2 351.6 800.3 355.7 797.5 366.1 C794.7 376.5 789.9 389.5 785.5 402.1 C781.1 414.7 774.0 423.7 771.1 441.7 C768.2 459.7 768.6 498.6 768.1 510.0 Z" stroke="none" stroke-width="0" fill="#1a1c3e" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M564.0 280.8 C558.6 278.0 558.0 275.4 561.9 266.5 C565.8 257.6 576.7 238.6 587.4 227.4 C598.1 216.3 612.0 206.6 625.9 199.6 C639.9 192.6 655.5 187.9 671.0 185.7 C686.5 183.6 704.0 183.0 719.2 186.7 C734.4 190.4 750.6 197.9 762.1 208.1 C773.7 218.2 781.5 233.5 788.6 247.7 C795.8 261.9 801.1 283.3 805.1 293.2 C809.0 303.1 808.4 304.5 812.4 307.2 C816.4 309.9 824.4 307.2 829.2 309.6 C834.0 312.0 838.8 316.8 841.2 321.6 C843.6 326.4 844.6 333.0 843.6 338.4 C842.6 343.8 839.2 350.2 835.2 354.0 C831.2 357.8 824.2 360.2 819.6 361.2 C815.0 362.2 810.8 358.2 807.6 360.0 C804.4 361.8 802.6 368.8 800.4 372.0 C798.2 375.2 799.4 376.4 794.4 379.2 C789.4 382.0 778.0 388.0 770.4 388.8 C762.8 389.6 754.4 388.0 748.8 384.0 C743.2 380.0 739.6 372.4 736.8 364.8 C734.0 357.2 734.8 345.2 732.0 338.4 C729.2 331.6 724.6 326.0 720.0 324.0 C715.4 322.0 708.8 324.0 704.4 326.4 C700.0 328.8 696.2 333.6 693.6 338.4 C691.0 343.2 690.4 355.2 688.8 355.2 C687.2 355.2 687.6 344.4 684.0 338.4 C680.4 332.4 675.2 326.2 667.2 319.2 C659.2 312.2 648.2 302.4 636.0 296.4 C623.8 290.4 606.0 285.8 594.0 283.2 C582.0 280.6 569.4 283.6 564.0 280.8 Z" stroke="none" stroke-width="0" fill="url(#hair)" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M564.0 280.8 C558.6 278.0 558.0 275.4 561.9 266.5 C565.8 257.6 576.7 238.6 587.4 227.4 C598.1 216.3 612.0 206.6 625.9 199.6 C639.9 192.6 655.5 187.9 671.0 185.7 C686.5 183.6 704.0 183.0 719.2 186.7 C734.4 190.4 750.6 197.9 762.1 208.1 C773.7 218.2 781.5 233.5 788.6 247.7 C795.8 261.9 801.1 283.3 805.1 293.2 C809.0 303.1 808.4 304.5 812.4 307.2 C816.4 309.9 824.4 307.2 829.2 309.6 C834.0 312.0 838.8 316.8 841.2 321.6 C843.6 326.4 844.6 333.0 843.6 338.4 C842.6 343.8 839.2 350.2 835.2 354.0 C831.2 357.8 824.2 360.2 819.6 361.2 C815.0 362.2 810.8 358.2 807.6 360.0 C804.4 361.8 802.6 368.8 800.4 372.0 C798.2 375.2 799.4 376.4 794.4 379.2 C789.4 382.0 778.0 388.0 770.4 388.8 C762.8 389.6 754.4 388.0 748.8 384.0 C743.2 380.0 739.6 372.4 736.8 364.8 C734.0 357.2 734.8 345.2 732.0 338.4 C729.2 331.6 724.6 326.0 720.0 324.0 C715.4 322.0 708.8 324.0 704.4 326.4 C700.0 328.8 696.2 333.6 693.6 338.4 C691.0 343.2 690.4 355.2 688.8 355.2 C687.2 355.2 687.6 344.4 684.0 338.4 C680.4 332.4 675.2 326.2 667.2 319.2 C659.2 312.2 648.2 302.4 636.0 296.4 C623.8 290.4 606.0 285.8 594.0 283.2 C582.0 280.6 569.4 283.6 564.0 280.8 Z" stroke="#bf9b45" stroke-width="0.8999999999999999" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M813.6 314.4 C816.0 316.0 824.2 320.0 828.0 324.0 C831.8 328.0 835.0 336.0 836.4 338.4" stroke="#bf9b45" stroke-width="0.75" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M817.2 326.4 C818.8 328.8 825.2 336.4 826.8 340.8 C828.4 345.2 826.8 350.8 826.8 352.8" stroke="#bf9b45" stroke-width="0.75" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M611.9 510.0 C612.0 509.6 613.1 510.2 612.5 507.4 C611.9 504.6 611.4 496.2 608.3 493.0 C605.2 489.8 600.3 489.6 593.9 488.2 C587.5 486.8 576.3 486.2 569.9 484.6 C563.5 483.0 559.0 481.4 555.5 478.6 C552.0 475.8 549.3 472.0 548.9 467.8 C548.5 463.6 553.8 457.4 553.1 453.4 C552.4 449.4 545.8 446.6 544.7 443.8 C543.6 441.0 546.9 438.5 546.5 436.6 C546.1 434.7 542.7 433.8 542.3 432.4 C541.9 431.0 543.1 431.3 544.1 428.2 C545.1 425.1 549.0 416.4 548.3 413.8 C547.6 411.2 543.1 414.0 539.9 412.6 C536.7 411.2 530.1 407.6 529.1 405.4 C528.1 403.2 530.9 403.6 533.9 399.4 C536.9 395.2 543.1 387.8 547.1 380.2 C551.1 372.6 557.2 361.2 557.9 353.8 C558.6 346.4 552.0 342.4 551.3 335.8 C550.7 329.2 552.1 325.1 554.1 314.1 C556.1 303.0 557.1 283.1 563.1 269.5 C569.0 255.9 579.1 242.9 589.8 232.2 C600.5 221.6 613.6 212.4 627.1 205.6 C640.7 198.8 656.1 193.9 671.0 191.7 C685.9 189.6 702.4 189.2 716.8 192.7 C731.2 196.2 746.4 203.1 757.3 212.9 C768.3 222.6 775.9 237.7 782.6 251.3 C789.4 264.9 794.6 279.7 797.9 294.4 C801.1 309.1 802.3 327.7 802.3 339.7 C802.2 351.6 800.3 355.7 797.5 366.1 C794.7 376.5 789.9 389.5 785.5 402.1 C781.1 414.7 774.0 423.7 771.1 441.7 C768.2 459.7 768.6 498.6 768.1 510.0" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M559.1 340.6 C560.9 339.8 565.7 336.7 569.9 335.8 C574.1 334.9 579.9 334.7 584.3 335.2 C588.7 335.7 594.3 338.2 596.3 338.8" stroke="#ecebf7" stroke-width="1.7999999999999998" fill="none" opacity="0.9" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M567.5 357.4 C568.7 356.5 571.9 352.7 574.7 352.0 C577.5 351.3 581.7 352.0 584.3 353.2 C586.9 354.4 589.3 358.2 590.3 359.2" stroke="#ecebf7" stroke-width="1.2000000000000002" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M590.3 359.2 C588.7 359.8 583.9 362.4 580.7 362.8 C577.5 363.2 573.3 362.5 571.1 361.6 C568.9 360.7 568.1 358.1 567.5 357.4" stroke="#ecebf7" stroke-width="0.9750000000000001" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M551.9 411.4 C552.3 410.4 555.0 407.1 554.3 405.4 C553.6 403.7 549.9 401.1 547.7 401.2 C545.5 401.3 542.2 405.2 541.1 406.0" stroke="#ecebf7" stroke-width="1.0499999999999998" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M546.5 436.6 C547.6 436.8 551.0 437.3 553.1 437.6 C555.2 437.9 558.1 438.3 559.1 438.4" stroke="#ecebf7" stroke-width="1.0499999999999998" fill="none" opacity="0.85" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M559.3 320.4 C567.6 321.3 589.0 325.2 609.0 325.7 C629.0 326.2 656.0 325.0 679.2 323.2 C702.4 321.4 728.9 318.6 748.1 315.0 C767.4 311.4 787.1 303.7 794.9 301.4" stroke="#9a9ccc" stroke-width="0.9" fill="none" opacity="0.75" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="2 4"/>
+<circle cx="609.0" cy="325.7" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="609.0" y="340.7" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">F7</text>
+<circle cx="679.2" cy="323.2" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="679.2" y="338.2" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">T7</text>
+<circle cx="748.1" cy="315.0" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="748.1" y="330.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">P7</text>
+<circle cx="794.9" cy="301.4" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="801.9" y="316.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">O1</text>
+<path d="M540.1 361.0 C539.3 353.4 534.2 331.6 534.9 315.3 C535.7 299.1 538.1 279.5 544.8 263.6 C551.5 247.6 562.9 232.3 575.2 219.7 C587.6 207.2 603.0 196.2 618.8 188.3 C634.6 180.4 652.8 174.8 670.2 172.5 C687.7 170.2 706.7 170.3 723.3 174.6 C740.0 179.0 757.3 187.1 770.0 198.4 C782.7 209.8 791.9 226.8 799.7 242.5 C807.5 258.2 813.5 275.6 817.0 292.6 C820.5 309.6 820.2 336.0 820.8 344.6" stroke="#5d6199" stroke-width="1" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="545.1" y1="359.0" x2="535.1" y2="363.1" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="540.3" y1="315.0" x2="529.6" y2="315.7" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="579.3" y1="223.3" x2="571.1" y2="216.2" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="670.4" y1="177.9" x2="670.0" y2="167.1" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="766.4" y1="202.5" x2="773.6" y2="194.4" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="811.6" y1="293.1" x2="822.4" y2="292.1" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<line x1="815.6" y1="343.2" x2="826.0" y2="346.0" stroke="#5d6199" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<text x="524.5" y="344.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">10%</text>
+<text x="541.1" y="266.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">20%</text>
+<text x="616.4" y="186.3" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">20%</text>
+<text x="725.5" y="175.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">20%</text>
+<text x="806.4" y="242.3" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">20%</text>
+<text x="832.3" y="323.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">10%</text>
+<circle cx="589.8" cy="232.2" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="598.0" y="242.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Fz</text>
+<circle cx="671.0" cy="191.7" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="671.4" y="206.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Cz</text>
+<circle cx="757.3" cy="212.9" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="750.2" y="224.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Pz</text>
+<circle cx="797.9" cy="294.4" r="2.40" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="787.1" y="298.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Oz</text>
+<ellipse cx="714.0" cy="393.6" rx="13.26" ry="15.60" stroke="#22d3ff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 714.0 393.6)"/>
+<ellipse cx="714.0" cy="393.6" rx="2.65" ry="3.12" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 714.0 393.6)"/>
+<path d="M690.9 363.2 C691.2 361.0 692.1 358.5 693.0 356.3 C693.9 354.0 694.5 352.5 696.2 349.6 C698.0 346.7 700.6 341.7 703.4 338.8 C706.3 336.0 710.3 333.3 713.4 332.4 C716.4 331.5 719.5 331.8 721.7 333.5 C723.9 335.2 725.8 338.8 726.6 342.5 C727.3 346.3 726.9 351.6 726.2 355.9 C725.4 360.3 724.1 364.5 722.2 368.6 C720.3 372.7 717.7 377.3 714.8 380.5 C711.9 383.8 707.7 386.0 704.6 388.2 C701.5 390.4 698.4 393.4 696.1 393.7 C693.7 394.0 691.6 392.8 690.7 390.1 C689.8 387.5 690.8 381.4 690.8 377.9 C690.9 374.4 690.8 371.7 690.8 369.3 C690.8 366.8 690.5 365.3 690.9 363.2 Z" stroke="#ecebf7" stroke-width="1.35" fill="#1a1c3e" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M698.8 348.9 C700.2 347.1 704.6 340.0 707.3 337.8 C710.0 335.6 712.7 335.7 715.1 335.8 C717.5 335.9 720.4 336.6 721.9 338.5 C723.4 340.3 723.7 345.5 724.0 346.9" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.7" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M707.3 340.9 C708.9 340.5 714.7 337.4 717.0 338.7 C719.2 340.0 720.6 344.9 721.0 348.7 C721.3 352.6 720.1 357.7 718.8 361.7 C717.5 365.8 715.4 369.8 713.4 372.9 C711.3 375.9 707.5 378.8 706.3 379.9" stroke="#ecebf7" stroke-width="0.8999999999999999" fill="none" opacity="0.7" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M697.5 357.8 C698.8 355.3 702.4 355.3 704.0 356.2 C705.7 357.0 707.6 360.5 707.5 363.0 C707.4 365.5 705.1 370.0 703.3 371.3 C701.4 372.7 697.5 373.4 696.6 371.1 C695.6 368.9 696.3 360.3 697.5 357.8 Z" stroke="#ecebf7" stroke-width="0.8250000000000001" fill="none" opacity="0.6" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="560.8" cy="320.4" rx="5.46" ry="15.60" stroke="#4b4bff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 560.8 320.4)"/>
+<ellipse cx="560.8" cy="320.4" rx="1.30" ry="3.12" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 560.8 320.4)"/>
+<path d="M726.0 405.6 L754.0 449.6 L768.0 449.6" stroke="#22d3ff" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="726.0" cy="405.6" r="2.20" stroke="none" stroke-width="0" fill="#22d3ff" opacity="1"/>
+<text x="772.0" y="453.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">MASTOID BONE</text>
+<text x="772.0" y="467.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">ON SKIN, NOT HAIR</text>
+<path d="M555.9 353.8 L527.9 363.8" stroke="#9a9ccc" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="555.9" cy="353.8" r="2.20" stroke="none" stroke-width="0" fill="#9a9ccc" opacity="1"/>
+<text x="523.9" y="367.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">NASION</text>
+<path d="M804.3 339.7 L846.3 353.7" stroke="#9a9ccc" stroke-width="1.0" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="804.3" cy="339.7" r="2.20" stroke="none" stroke-width="0" fill="#9a9ccc" opacity="1"/>
+<text x="850.3" y="357.7" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">INION</text>
+<text x="680.0" y="546.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">B  ·  LEFT SIDE VIEW</text>
+<line x1="44.0" y1="572.0" x2="956.0" y2="572.0" stroke="#2b3170" stroke-width="1" stroke-linecap="round" opacity="1"/>
+<circle cx="176.0" cy="712.0" r="70.00" stroke="#ecebf7" stroke-width="1.5" fill="#11144a" opacity="1"/>
+<circle cx="176.0" cy="712.0" r="35.00" stroke="#2b3170" stroke-width="1" fill="none" opacity="1" stroke-dasharray="2 4"/>
+<line x1="106.0" y1="712.0" x2="246.0" y2="712.0" stroke="#2b3170" stroke-width="1" stroke-linecap="round" opacity="1" stroke-dasharray="2 4"/>
+<line x1="176.0" y1="642.0" x2="176.0" y2="782.0" stroke="#2b3170" stroke-width="1" stroke-linecap="round" opacity="1" stroke-dasharray="2 4"/>
+<path d="M159.1 644.1 L176.0 632.9 L192.9 644.1" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M106.3 700.8 C105.5 701.1 102.2 700.8 101.1 702.9 C100.0 705.0 99.5 710.1 99.7 713.4 C99.9 716.7 101.3 720.8 102.5 722.5 C103.7 724.2 106.0 723.7 106.7 723.9" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M245.7 700.8 C246.5 701.1 249.8 700.8 250.9 702.9 C252.0 705.0 252.5 710.1 252.3 713.4 C252.1 716.7 250.7 720.8 249.5 722.5 C248.3 724.2 246.0 723.7 245.3 723.9" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="176.0" y="624.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">NOSE</text>
+<circle cx="122.9" cy="663.8" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="122.9" y="658.3" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">F7</text>
+<circle cx="148.7" cy="673.5" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="148.7" y="668.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">F3</text>
+<circle cx="176.1" cy="676.6" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="176.1" y="671.1" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">Fz</text>
+<circle cx="204.0" cy="672.9" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="204.0" y="667.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">F4</text>
+<circle cx="229.2" cy="663.9" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="229.2" y="658.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">F8</text>
+<circle cx="106.0" cy="713.3" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="115.0" y="716.3" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">T7</text>
+<circle cx="142.3" cy="713.7" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="142.3" y="708.2" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">C3</text>
+<circle cx="176.2" cy="713.6" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="176.2" y="708.1" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">Cz</text>
+<circle cx="210.5" cy="713.2" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="210.5" y="707.7" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">C4</text>
+<circle cx="246.0" cy="712.4" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="237.0" y="715.4" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="end" opacity="1" xml:space="preserve">T8</text>
+<circle cx="123.1" cy="760.4" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="123.1" y="754.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">P7</text>
+<circle cx="149.3" cy="751.0" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="149.3" y="745.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">P3</text>
+<circle cx="176.1" cy="748.0" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="176.1" y="742.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">Pz</text>
+<circle cx="203.6" cy="750.3" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="203.6" y="744.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">P4</text>
+<circle cx="229.2" cy="760.0" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="229.2" y="754.5" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">P8</text>
+<circle cx="157.6" cy="781.4" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="157.6" y="775.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">O1</text>
+<circle cx="194.7" cy="781.3" r="2.20" stroke="#9a9ccc" stroke-width="1" fill="#0b0d33" opacity="1"/>
+<text x="194.7" y="775.8" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">O2</text>
+<ellipse cx="157.4" cy="642.6" rx="6.16" ry="6.16" stroke="#4b4bff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 157.4 642.6)"/>
+<ellipse cx="157.4" cy="642.6" rx="1.30" ry="1.30" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 157.4 642.6)"/>
+<text x="146.4" y="636.6" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="end" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">E1</text>
+<ellipse cx="194.7" cy="642.7" rx="6.16" ry="6.16" stroke="#8f96ff" stroke-width="1.5" fill="none" opacity="1" transform="rotate(0 194.7 642.7)" stroke-dasharray="8 6"/>
+<text x="205.7" y="636.7" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#8f96ff" text-anchor="start" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">E2</text>
+<ellipse cx="89.0" cy="740.9" rx="6.16" ry="6.16" stroke="#22d3ff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 89.0 740.9)"/>
+<ellipse cx="89.0" cy="740.9" rx="1.30" ry="1.30" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 89.0 740.9)"/>
+<text x="89.0" y="764.9" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#22d3ff" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">REF</text>
+<ellipse cx="263.0" cy="741.1" rx="6.16" ry="6.16" stroke="#c792ff" stroke-width="1.5" fill="#40405a" opacity="1" transform="rotate(0 263.0 741.1)"/>
+<ellipse cx="263.0" cy="741.1" rx="1.30" ry="1.30" stroke="#0b0d33" stroke-width="0.7" fill="#cfc8b9" opacity="1" transform="rotate(0 263.0 741.1)"/>
+<text x="263.0" y="765.1" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#c792ff" text-anchor="middle" opacity="1" stroke="#0b0d33" stroke-width="5" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">BIAS</text>
+<text x="176.0" y="812.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">CIRCLE: THE 10 % CIRCUMFERENCE</text>
+<text x="176.0" y="824.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">MASTOIDS LIE LOWER, OUTSIDE IT</text>
+<text x="44.0" y="606.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">C  ·  FROM ABOVE, NOSE UP</text>
+<text x="380.0" y="606.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">D  ·  HOW TO FIND EACH SPOT</text>
+<text x="380.0" y="640.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#4b4bff" text-anchor="start" opacity="1" xml:space="preserve">E1  →  LEFT FOREHEAD  ·  FP1</text>
+<text x="380.0" y="658.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Lower edge just above the left eyebrow, centered over the pupil.</text>
+<text x="380.0" y="686.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#22d3ff" text-anchor="start" opacity="1" xml:space="preserve">REF  →  BEHIND THE LEFT EAR  ·  M1</text>
+<text x="380.0" y="704.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">The bony bump right behind the earlobe, on skin. Tie long hair back.</text>
+<text x="380.0" y="732.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#c792ff" text-anchor="start" opacity="1" xml:space="preserve">BIASOUT  →  BEHIND THE RIGHT EAR  ·  M2</text>
+<text x="380.0" y="750.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">The same spot on the right side.</text>
+<text x="380.0" y="778.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.0" fill="#8f96ff" text-anchor="start" opacity="1" xml:space="preserve">E2  →  RIGHT FOREHEAD  ·  FP2, OPTIONAL</text>
+<text x="380.0" y="796.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Mirror image of Fp1.</text>
+<text x="380.0" y="826.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">Stickers at true size, Ø 26 mm. Short dashes: hidden. Long dashes: optional.</text>
+<text x="44.0" y="848.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="1.5" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">SOURCES  ·  ELECTRODE POSITIONS: MNE-PYTHON STANDARD 10-20 MONTAGE  ·  FACE AND EAR: ADULT PROPORTIONS, APPROXIMATE</text></svg>

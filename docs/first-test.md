@@ -34,8 +34,8 @@ The black female end of each cable slides onto a pin of the 10 pin header:
 
 ![placement](images/placement.png)
 
-1. Wipe the left forehead and the bony bump behind both ears. Let it dry for 30 seconds.
-2. Stick one electrode on the **left forehead** (Fp1), about two fingers above the eyebrow.
+1. Tie long hair back. Wipe the left forehead and the bony bump behind both ears. Let it dry for 30 seconds.
+2. Stick one electrode on the **left forehead** (Fp1): lower edge just above the left eyebrow, centered over the pupil.
 3. Stick one on the **bony bump behind the left ear** and one **behind the right ear** (mastoids, M1 and M2). Skin, not hair.
 4. Press each sticker for 5 seconds.
 5. Clip the alligator clips onto the metal snaps:

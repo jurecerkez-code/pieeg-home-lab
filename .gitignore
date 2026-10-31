@@ -6,3 +6,4 @@ code/nwb/
 recordings/
 nwb/
 .DS_Store
+docs/figures/data/*.dxf

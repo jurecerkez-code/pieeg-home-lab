@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/hero.png" alt="PiEEG Home Lab: classical marble bust wearing EEG electrodes, next to a forehead EEG trace that switches from eyes open to eyes closed alpha" width="100%">
+<img src="docs/images/hero.png" alt="PiEEG Home Lab: a classical bust of Athena with an electrode sticker on the left forehead, its cable routed over the ear, next to a real EEG trace with alpha bursts" width="100%">
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -108,7 +108,7 @@ Wipe the skin with an alcohol wipe and let it dry. Then three stickers:
 
 | Sticker | Position | Name |
 |---|---|---|
-| Left forehead, two fingers above the eyebrow | front left | **Fp1** |
+| Left forehead, lower edge just above the eyebrow, centered over the pupil | front left | **Fp1** |
 | Bony bump behind the left ear | left mastoid, M1 | **Ref** |
 | Bony bump behind the right ear | right mastoid, M2 | **Bias** |
 
@@ -330,7 +330,8 @@ pieeg-home-lab/
     ├── validation.md        what was checked on this kit's hardware
     ├── missions.md
     ├── troubleshooting.md
-    ├── images/              diagrams
+    ├── figures/             make_figures.py: draws every figure from its sources
+    ├── images/              figures, SVG + PNG
     └── photos/              photos of this kit
 ```
 
@@ -351,7 +352,7 @@ Conference on Electrical, Electronics, Communication, Computer Technologies and 
 Techniques (ICEECCOT), pp. 410–413. DOI: 10.1109/ICEECCOT52851.2021.9707969
 ```
 
-This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. The hero illustration was AI generated for this repo, and the EEG trace in it is simulated. Diagrams are original drawings in `docs/images` (SVG source + PNG). This is an unofficial starter kit, not affiliated with PiEEG.
+This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. The bust of Athena in the hero is an AI generated illustration, recolored for this repo; the EEG trace next to it is real data from PiEEG's published example recordings. Every figure is drawn by [`docs/figures/make_figures.py`](docs/figures/README.md) from documented sources: the Raspberry Pi's official mechanical drawing, MNE-Python's standard 10-20 montage, PiEEG's documentation and PiEEG Server. This is an unofficial starter kit, not affiliated with PiEEG.
 
 <div align="center">
 <br>

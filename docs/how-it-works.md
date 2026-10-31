@@ -47,7 +47,9 @@ Raw data is what research needs: you choose and document your own filters later,
 
 ## Raspberry Pi pins used
 
-<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_pinout.png" alt="Official PiEEG-8 pinout on the Raspberry Pi 40 pin header" width="600">
+![The Raspberry Pi 40 pin header with the five pins the PiEEG-8 uses, and one 27 byte sample on the wire](images/header.png)
+
+<sub>Drawn after PiEEG's [official pinout image](https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_pinout.png) and PiEEG Server 0.49.0.</sub>
 
 | Header pin | GPIO | Signal | Direction |
 |---|---|---|---|
