@@ -10,6 +10,7 @@ higher peak somewhere between 8 and 13 Hz.
 
 import argparse
 import csv
+import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -20,11 +21,40 @@ FS = 250
 
 
 def load(path, channel):
+    """One channel of a recording as a NumPy array (µV). Skips an incomplete last line."""
     with open(path) as f:
         r = csv.reader(f)
         header = next(r)
         col = header.index(f"ch{channel}")
-        return np.array([float(row[col]) for row in r])
+        values = []
+        for row in r:
+            if len(row) != len(header):
+                continue
+            try:
+                values.append(float(row[col]))
+            except ValueError:
+                continue
+        return np.array(values)
+
+
+def sidecar_notes(path):
+    """Warnings from the .json sidecar that change how to read the spectrum."""
+    side = Path(path).with_suffix(".json")
+    if not side.exists():
+        return []
+    try:
+        meta = json.loads(side.read_text())
+    except (OSError, json.JSONDecodeError):
+        return []
+    notes = []
+    filtering = str(meta.get("data_filtering", "none"))
+    if not filtering.startswith("none"):
+        notes.append("recorded WITH PiEEG Server filters, not raw")
+    if meta.get("possibly_filtered_samples"):
+        notes.append("part of it may be filtered (possibly_filtered_samples in the sidecar)")
+    if meta.get("missing_samples"):
+        notes.append(f"{meta['missing_samples']} samples missing (connection gaps), the spectrum treats it as continuous")
+    return notes
 
 
 def alpha_stats(x):
@@ -50,6 +80,8 @@ def main():
         f, p, peak, power = alpha_stats(x)
         name = Path(path).stem
         print(f"{name:40s} alpha peak {peak:5.1f} Hz   alpha power {power:8.1f} µV²")
+        for note in sidecar_notes(path):
+            print(f"{'':40s} note: {note}")
         ax.semilogy(f, p, label=f"{name} (peak {peak:.1f} Hz)")
     ax.axvspan(8, 13, alpha=0.12)
     ax.set_xlim(0, 45)

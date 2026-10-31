@@ -14,6 +14,8 @@ The files are downloaded from PiEEG's repository, not stored in this one.
 
 import argparse
 import json
+import os
+import ssl
 import sys
 import urllib.request
 from io import BytesIO
@@ -38,8 +40,22 @@ DATASETS = {
 }
 
 
+def ssl_context() -> ssl.SSLContext:
+    """Certificates from certifi. Python from python.org on a Mac doesn't use the system
+    certificates, and without this the download fails with CERTIFICATE_VERIFY_FAILED.
+    SSL_CERT_FILE, if set, wins (for networks with their own certificate)."""
+    cafile = os.environ.get("SSL_CERT_FILE")
+    if not cafile:
+        try:
+            import certifi
+            cafile = certifi.where()
+        except ImportError:
+            cafile = None
+    return ssl.create_default_context(cafile=cafile)
+
+
 def fetch(url: str) -> bytes:
-    with urllib.request.urlopen(url, timeout=60) as r:
+    with urllib.request.urlopen(url, timeout=60, context=ssl_context()) as r:
         return r.read()
 
 
@@ -83,11 +99,15 @@ def main():
     unknown = [n for n in a.names if n not in DATASETS]
     if unknown:
         p.error(f"unknown dataset {unknown}, choose from {list(DATASETS)}")
+    failed = []
     for name in a.names or DATASETS:
         try:
             convert(name, Path(a.out))
         except Exception as e:
             print(f"  could not get {name}: {e}", file=sys.stderr)
+            failed.append(name)
+    if failed:
+        sys.exit(f"Failed: {', '.join(failed)}. Check the internet connection, then run it again.")
 
 
 if __name__ == "__main__":

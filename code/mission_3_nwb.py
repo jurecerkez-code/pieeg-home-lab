@@ -13,7 +13,9 @@ Steps (each TODO is one small piece):
   2. Subject: subject_id from the sidecar (a pseudonym like sub-02), species "Homo sapiens"
   3. Device "PiEEG-8" and an ElectrodeGroup
   4. Electrodes table: one row per channel, with location from the sidecar
-  5. ElectricalSeries with the data, rate=250.0, unit conversion to volts
+     (record.py stores the positions under "electrodes", see --montage)
+  5. ElectricalSeries with the data, rate=250.0, unit conversion to volts,
+     and the sidecar's "data_filtering" in its filtering field
   6. Write it, then validate:  nwbinspector nwb/
   7. Bonus: open it with  pynwb.NWBHDF5IO(...).read()  and replot alpha
 
@@ -38,9 +40,10 @@ def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
     # TODO 2: nwbfile.subject = Subject(subject_id=meta.get("subject", "sub-01"), species=...)
     # TODO 3: device = nwbfile.create_device(...); group = nwbfile.create_electrode_group(...)
     # TODO 4: for each channel: nwbfile.add_electrode(...)
-    # TODO 5: ElectricalSeries(data=..., electrodes=..., rate=..., conversion=1e-6)
-    #         (what does conversion mean, and why 1e-6?)
+    # TODO 5: ElectricalSeries(data=..., electrodes=..., rate=..., conversion=1e-6, filtering=...)
+    #         (what does conversion mean, and why 1e-6? meta["data_filtering"] says what goes in filtering)
     # TODO 6: write with NWBHDF5IO
+    # Bonus: gaps and meta["possibly_filtered_samples"] -> nwbfile.add_invalid_time_interval(...)
     raise NotImplementedError("Mission 3 is yours. Start at TODO 1.")
 
 

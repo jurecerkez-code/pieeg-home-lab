@@ -12,10 +12,10 @@ Every part in the box, what it is, why it's there, and how it connects.
 
 | | |
 |---|---|
-| Board | Raspberry Pi 3 Model B, V1.2 (2015) |
+| Board | Raspberry Pi 3 Model B, revision V1.2, launched in 2016 (the board prints © 2015) |
 | CPU / RAM | Broadcom BCM2837, 4 × 1.2 GHz, 1 GB |
 | WiFi | 2.4 GHz only |
-| Power | 5 V via Micro USB (**PWR IN**), up to 2.5 A |
+| Power | 5 V via Micro USB (**PWR IN**). Raspberry Pi specifies a 2.5 A supply |
 | Storage | 16 GB MicroSD with Raspberry Pi OS Lite and PiEEG Server |
 | Role | Talks to the EEG chip over SPI, runs PiEEG Server, streams data over WiFi |
 
@@ -36,11 +36,11 @@ The 40 pin header on the right edge of the top photo is where the PiEEG-8 sits. 
 | Sample rate | 250 samples/s (default) |
 | Inputs | 8 channels + Reference + Bias, on a 10 pin 2.54 mm **male** header |
 | Gain | Programmable 1, 2, 4, 6, 8, 12, 24 |
-| Noise | about 0.4 µV internal (manufacturer figure) |
+| Noise | 0.4 µV internal and 0.8 µV external in PiEEG's paper ([arXiv:2201.02228](https://arxiv.org/abs/2201.02228), Table 1). The paper doesn't say whether RMS or peak to peak, nor the bandwidth. Your board's real number: `self_test.py` |
 | Link to Pi | SPI0 (pins 19, 21, 23, 24) + DRDY on GPIO 26 (pin 37) |
 | Bought at | [Elecrow](https://www.elecrow.com/pieeg.html) |
 
-**What it does:** your brain produces voltages of a few to a few tens of microvolts at the scalp. The ADS1299 amplifies each electrode against the reference, converts it to a 24 bit number 250 times per second, and tells the Pi "new sample ready" by pulling DRDY low. The Bias output drives your body slightly to cancel noise that appears on all electrodes at once, mainly 50 Hz from the mains.
+**What it does:** your brain produces voltages of a few to a few tens of microvolts at the scalp. The ADS1299 amplifies each electrode against the reference, converts it to a 24 bit number 250 times per second, and tells the Pi "new sample ready" by pulling DRDY low. The Bias output holds your body at a fixed voltage from the chip, which reduces noise that appears on all electrodes at once, mainly 50 Hz from the mains.
 
 **Electrode header** (left edge of the board, printed as `1-8 Elec`):
 
@@ -50,7 +50,7 @@ The 40 pin header on the right edge of the top photo is where the PiEEG-8 sits. 
 
 From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always check against the print on your own board.
 
-**Ref** is the shared reference for all 8 channels (the ADS1299's SRB1 input). **Biasout** drives the body to cancel noise common to all electrodes, such as 50 Hz hum. PiEEG's official setup uses ear clips on the earlobes for these two. This kit uses stickers on the mastoids behind the ears instead.
+**Ref** is the shared reference for all 8 channels (the ADS1299's SRB1 input). **Biasout** holds the body at the chip's reference voltage, which reduces noise common to all electrodes, such as 50 Hz hum ([details](safety.md#what-the-bias-electrode-does)). PiEEG's official setup uses ear clips on the earlobes for these two. This kit uses stickers on the mastoids behind the ears instead.
 
 ---
 
@@ -87,8 +87,8 @@ The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: 
 
 | | |
 |---|---|
-| Powerbank | 5 V USB A powerbank. Raspberry Pi recommends **2.5 A** for the Pi 3, PiEEG recommends **3 A**. Check the label of the port you use |
-| Cable | Official Raspberry Pi Micro USB cable, 1 m ([BerryBase RPI-MUSB-1](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel)) |
+| Powerbank | 5 V USB A powerbank. PiEEG asks for a **3 A** powerbank, Raspberry Pi specifies 2.5 A for the Pi 3. Check the label of the port you use |
+| Cable | Official Raspberry Pi Micro USB cable, 1 m ([BerryBase RPI-MUSB-1](https://www.berrybase.de/offizielles-raspberry-pi-micro-usb-kabel-rot-1-0m)) |
 | Why | The board has no electrical isolation. A battery is the only safe power source with electrodes on, and it also gives a cleaner signal |
 
 A 10,000 mAh powerbank runs the Pi for several hours. Charge it **before** a session, never while it powers the Pi with electrodes on ([safety](safety.md)).

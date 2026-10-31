@@ -1,6 +1,6 @@
 # First test
 
-Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears the electrodes. With a pacemaker or other implant, don't wear them without a physician's approval: be the researcher and [record someone else](recording-someone-else.md). About 10 minutes. Based on the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to the stick-on electrodes in this kit.
+Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears the electrodes. With a pacemaker or other implant, don't wear them without a physician's approval: be the researcher and [record someone else](recording-someone-else.md). About 10 minutes. Based on the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to the stick on electrodes in this kit.
 
 ## You need
 
@@ -10,13 +10,27 @@ Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears t
 - MacBook on battery, **charger unplugged**, on the same WiFi as the Pi
 - An alcohol wipe
 
+Power goes in last and comes out first ([connection order](safety.md#connection-order)).
+
 ## 1. Check the board
 
 Pi unplugged. The PiEEG-8 sits on all 40 pins of the Pi's GPIO header, pushed down evenly, no pins visible at either end. Never put it on or take it off while the Pi has power. Hold it by the edges.
 
 ![assembly](images/assembly.png)
 
-## 2. Electrodes
+## 2. Cables on the board
+
+![wiring](images/wiring.png)
+
+The black female end of each cable slides onto a pin of the 10 pin header:
+
+| Cable | Pin |
+|---|---|
+| 1 | **E1** |
+| 2 | **Ref** |
+| 3 | **Biasout** |
+
+## 3. Electrodes
 
 ![placement](images/placement.png)
 
@@ -24,20 +38,17 @@ Pi unplugged. The PiEEG-8 sits on all 40 pins of the Pi's GPIO header, pushed do
 2. Stick one electrode on the **left forehead** (Fp1), about two fingers above the eyebrow.
 3. Stick one on the **bony bump behind the left ear** and one **behind the right ear** (mastoids, M1 and M2). Skin, not hair.
 4. Press each sticker for 5 seconds.
+5. Clip the alligator clips onto the metal snaps:
 
-**Why behind the ears and not on the earlobes?** The official PiEEG setup uses ear clips on the earlobes for Ref and Bias. A 2.6 cm sticker doesn't fit an earlobe, and the mastoid bone right behind it is the other standard reference site in EEG (M1, M2). Same job, better grip.
-
-## 3. Clips
-
-![wiring](images/wiring.png)
-
-| Sticker | Clip goes to pin |
+| Sticker | Clip from pin |
 |---|---|
 | Left forehead | **E1** |
 | Behind left ear | **Ref** |
 | Behind right ear | **Biasout** |
 
-The black female end of each cable slides onto a pin of the 10 pin header. The alligator clip bites the metal snap in the middle of the sticker. Ref and Bias matter most: if one of them is loose, every channel gets noisy.
+The clip bites the metal snap in the middle of the sticker, not the foam. Ref and Bias matter most: if one of them is loose, every channel gets noisy.
+
+**Why behind the ears and not on the earlobes?** The official PiEEG setup uses ear clips on the earlobes for Ref and Bias. A 2.6 cm sticker doesn't fit an earlobe, and the mastoid bone right behind it is the other standard reference site in EEG (M1, M2). Same job, better grip.
 
 ## 4. Where to put the Pi
 
@@ -52,21 +63,23 @@ The clip cables are 20 cm, so the Pi sits near your head. Short is good: less wi
 1. Plug the Micro USB cable into the Pi (port **PWR IN**) and into the powerbank.
 2. The red LED on the Pi and the LED on the PiEEG-8 light up. Wait about 60 seconds for the Pi to boot and join the WiFi.
 
-## 6. Board self-test (optional, 10 seconds)
+## 6. Board self test (optional, 10 seconds)
 
 ```bash
 cd pieeg-home-lab/code && source .venv/bin/activate
 python self_test.py
 ```
 
-Every channel under 5 µV RMS means the board is healthy. This is PiEEG's official noise check: the chip shorts its own inputs, so the result doesn't depend on the stickers.
+Every channel under 5 µV RMS means the board is healthy. This is PiEEG's official noise check: the chip shorts its own inputs, so the result doesn't depend on the stickers. While it runs, every program reading the stream gets that shorted signal, so never run it during a recording.
 
 ## 7. Open the dashboard
 
 1. On the MacBook open **http://raspberrypi.local:1617** in Safari or Chrome and click **Connect**.
 2. Check that the dashboard shows **8 channels**. Sixteen means the server isn't in PiEEG-8 mode, see [troubleshooting](troubleshooting.md#pieeg-server).
-3. Click **Bandpass** → **Enabled** (1 to 40 Hz is the default).
-4. Click **Notch** → choose **50 Hz** → **Enabled**. The dashboard defaults to 60 Hz (USA). Germany runs at 50 Hz.
+3. **Bandpass**: already on. PiEEG Server starts with a 1 to 40 Hz bandpass, and the button shows that range. Leave it. Careful: inside the Bandpass menu, the button labelled **Enabled** shows the current state, and clicking it switches the filter off.
+4. **Notch**: open it, set **Freq** to **50**, then click **Disabled** so it turns into **Enabled**. The dashboard starts at 60 Hz (USA). Germany runs at 50 Hz.
+
+These filters run on the Pi and change the data for every program that reads the stream, not just the dashboard. That's why `record.py` switches them off while it records and back on afterwards ([how it works](how-it-works.md#filters-on-the-server)).
 
 Doesn't load? See [troubleshooting](troubleshooting.md#the-dashboard-does-not-open).
 
@@ -76,8 +89,8 @@ Sit still, relax your jaw, look at one point. Watch channel 1.
 
 | Do this | You should see on channel 1 |
 |---|---|
-| Sit still, eyes open | A small wiggly line, roughly ±10 to ±50 µV |
-| Blink hard | A large slow spike, often 100 µV or more |
+| Sit still, eyes open | A small, restless line |
+| Blink hard | A big slow spike, several times taller than the resting line |
 | Look left, then right | Slow steps up and down: eye movement (EOG) |
 | Clench your jaw | A burst of fast, fuzzy noise: muscle (EMG), not brain |
 | Close your eyes, relax 20 to 30 s | A rounder rhythm around 10 Hz, a bump at 8 to 13 Hz in the spectrum |
@@ -85,6 +98,8 @@ Sit still, relax your jaw, look at one point. Watch channel 1.
 Channels 2 to 8 have nothing connected and look like noise. That's normal.
 
 > Alpha is strongest at the back of the head (O1, O2), where this kit has no electrode. On the forehead it's weaker, so give it time and watch the spectrum. Blinks, eye movements and jaw clenches are your first proof that the system records real biosignals.
+
+**About the µV numbers.** Textbook sizes at the forehead are tens of µV for the background EEG and around 100 µV or more for a blink. The dashboard's µV come from PiEEG's conversion formula, and [Mission 5](missions.md#mission-5-read-the-datasheet) checks that formula against the ADS1299 datasheet. Until then, treat absolute amplitudes as provisional. Shapes, timing and frequencies don't depend on it.
 
 ## 9. Done for today
 

@@ -15,7 +15,7 @@ Done when: the script prints PASS for both checks.
 Hints, only if you want them:
   - scipy.signal.iirnotch(w0=50, Q=..., fs=250) and filtfilt
   - what happens at 100 Hz? (harmonics, and also: what is Nyquist here?)
-  - bonus: compare a notch with simply low-passing at 40 Hz. When is each better?
+  - bonus: compare a notch with simply low pass filtering at 40 Hz. When is each better?
 """
 
 import sys
@@ -23,7 +23,7 @@ import sys
 import numpy as np
 from scipy import signal
 
-from spectrum import load
+from spectrum import load, sidecar_notes
 
 FS = 250
 
@@ -42,6 +42,8 @@ def band_power(x, lo, hi):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
+    for note in sidecar_notes(sys.argv[1]):
+        print("Note:", note)
     x = load(sys.argv[1], channel=1)
     y = remove_mains(x)
     hum_before, hum_after = band_power(x, 49, 51), band_power(y, 49, 51)

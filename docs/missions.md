@@ -41,11 +41,14 @@ python mission_1_notch.py recordings/<file>_hum_test.csv
 
 Fill in `remove_mains()` in [`code/mission_1_notch.py`](../code/mission_1_notch.py). Done when both checks print **PASS**: hum reduced by more than 95 %, alpha changed by less than 10 %.
 
+`record.py` records the raw signal (it switches PiEEG Server's filters off while it records), so your file has the real hum. On battery the hum on a person can be small. For a file with plenty of it, use `example_dry.csv` from Mission 0, or record 30 s with **no electrodes on anyone** and the cables hanging free: open inputs pick up the room's 50 Hz like antennas.
+
 <details><summary>Hints</summary>
 
 - `scipy.signal.iirnotch` plus `filtfilt`
 - What's the Nyquist frequency at 250 Hz, and what happens to the 100 Hz harmonic?
-- Bonus: compare the notch with a plain 40 Hz low-pass. When would you pick which?
+- Bonus: compare the notch with a plain 40 Hz low pass. When would you pick which?
+- Bonus: record 60 s with `--keep-server-filters` and compare the 50 Hz power with a raw recording. PiEEG Server's 1 to 40 Hz bandpass (Butterworth, order 5, applied live) is on by default. How much hum does it leave, and what does a live filter do to the phase?
 </details>
 
 ---
@@ -79,8 +82,10 @@ The skeleton in [`code/mission_3_nwb.py`](../code/mission_3_nwb.py) has 6 TODOs,
 
 <details><summary>Hints</summary>
 
-- `record.py` already writes a `.json` sidecar with sample rate, units and electrode positions. Use it.
+- `record.py` already writes a `.json` sidecar with sample rate, units, electrode positions and filtering. Use it.
 - `ElectricalSeries` wants volts. The CSV is in microvolts. Look at the `conversion` argument.
+- `ElectricalSeries` has a `filtering` field. The sidecar's `data_filtering` belongs there.
+- Gaps and `possibly_filtered_samples` from the sidecar: mark them with `nwbfile.add_invalid_time_interval(...)` so anyone analysing the file can skip them.
 - Bonus: write a small `PiEEGInterface` in the style of [NeuroConv](https://github.com/catalystneuro/neuroconv) so any PiEEG CSV converts with one call. That would make a nice GitHub link in an application.
 </details>
 
@@ -96,6 +101,12 @@ You have 60 stickers and 10 clip cables, but stickers only hold on skin without 
 | E2 | right forehead | Fp2 | blinks, compare left vs right |
 | E3 | left temple, at the outer corner of the eye | LOC / near F7 | horizontal eye movements |
 | E4 | right temple, at the outer corner of the eye | ROC / near F8 | horizontal eye movements, opposite sign |
+
+Record with `--montage bare_skin`, so the sidecar (and later the NWB file) knows where each channel was:
+
+```bash
+python record.py --montage bare_skin --seconds 60 --label eye_movements
+```
 
 Tasks:
 1. Record 60 s while looking left, centre, right in a fixed rhythm. Plot E3 minus E4: that's horizontal EOG, a simple eye tracker.
@@ -116,7 +127,9 @@ Each sample arrives as 3 bytes per channel from the ADS1299. PiEEG converts them
 2. Find the data format and the LSB size in the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf) (sections on data format and input full scale range).
 3. Write down every step: bytes, two's complement, gain, VREF, µV.
 
-Done when you can explain each step and you've checked whether the PiEEG formula (about 0.268 µV per count at gain 1) matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub.
+Done when you can explain each step and you've checked whether the PiEEG formula (about 0.268 µV per count at gain 1) matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub. Until then, every absolute µV value in this repo is provisional.
+
+Bonus: PiEEG sets `BIAS_SENSP` and `BIAS_SENSN` to `0x00` (in PiEEG Server and in the official scripts). Look both registers up in the datasheet. What does the bias amplifier do with that setting, and what would change with `0xFF`?
 
 ---
 
@@ -124,5 +137,5 @@ Done when you can explain each step and you've checked whether the PiEEG formula
 
 - Blink detector that toggles something on the laptop
 - Eyes closed alarm: alpha above a threshold for 5 s
-- Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection. **Never on anyone with a pacemaker or other implant**
+- Heart rate (ECG): sticker on the left wrist → E1, right wrist → Ref, a leg or ankle → Bias. One channel, then R peak detection. Record with `--electrodes "ch1=left wrist,ref=right wrist,bias=left ankle"`. **Never on anyone with a pacemaker or other implant**
 - Stream to [LSL](https://labstreaminglayer.org/) from the dashboard and analyse live in MNE

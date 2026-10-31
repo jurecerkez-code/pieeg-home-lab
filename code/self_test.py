@@ -1,7 +1,7 @@
 """
-Hardware self-test: is the PiEEG-8 board itself healthy?
+Hardware self test: is the PiEEG-8 board itself healthy?
 
-Runs PiEEG Server's built-in noise test. The server shorts every input inside
+Runs PiEEG Server's built in noise test. The server shorts every input inside
 the ADS1299 (CHnSET = 0x01, as in the official PiEEG noise check), measures the
 remaining noise for a few seconds, then switches back to normal recording.
 
@@ -9,9 +9,14 @@ remaining noise for a few seconds, then switches back to normal recording.
     python self_test.py --host 192.168.0.42
 
 Electrodes can stay on or off, the inputs are disconnected inside the chip.
-Expected on a healthy board: every channel well under 5 µV RMS.
+Expected on a healthy board: every channel well under 5 µV RMS (PiEEG Server's
+thresholds: under 5 ok, 5 to 15 marginal, above 15 a hardware problem).
 If it passes but your recordings are noisy, the noise comes from electrodes,
 cables or surroundings, not from the board. See docs/troubleshooting.md.
+
+Not during a recording: while the test runs, the server sends the shorted input
+signal to every client, so a recording running at the same time would get a few
+seconds of it without any marker.
 """
 
 import argparse
@@ -25,7 +30,8 @@ async def run(host: str, port: int, duration: float):
     url = f"ws://{host}:{port}"
     async with websockets.connect(url, max_queue=None) as ws:
         await ws.send(json.dumps({"cmd": "noise_test", "duration": duration}))
-        print(f"Running {duration:.0f} s noise test on {host} ...")
+        print(f"Running {duration:g} s noise test on {host} ...")
+        print("(For these seconds every client, dashboard and record.py included, gets the shorted signal.)")
         while True:
             raw = await asyncio.wait_for(ws.recv(), timeout=duration + 30)
             try:
@@ -44,7 +50,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--host", default="raspberrypi.local")
     p.add_argument("--port", type=int, default=1616)
-    p.add_argument("--seconds", type=float, default=3)
+    p.add_argument("--seconds", type=float, default=3, help="1 to 10, the server limits it to that range")
     a = p.parse_args()
     try:
         r = asyncio.run(run(a.host, a.port, a.seconds))
