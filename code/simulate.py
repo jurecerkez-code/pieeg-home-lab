@@ -35,7 +35,8 @@ def make_sample(n: int, rng: random.Random):
         blink = 150.0 * math.sin(math.pi * (phase - 1.0) / 0.25)
     out = []
     for ch in range(N_CH):
-        v = alpha_amp * math.sin(2 * math.pi * 10.0 * t + ch * 0.3)
+        wax = 0.65 + 0.35 * math.sin(2 * math.pi * 0.35 * t + ch)  # alpha waxes and wanes
+        v = alpha_amp * wax * math.sin(2 * math.pi * 10.0 * t + ch * 0.3)
         v += 12.0 * math.sin(2 * math.pi * 50.0 * t)          # mains hum
         v += 8.0 * math.sin(2 * math.pi * 0.2 * t + ch)        # slow drift
         v += rng.gauss(0, 4.0)

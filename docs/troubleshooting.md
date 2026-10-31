@@ -31,7 +31,7 @@ The Pi 3 needs a steady 5 V at up to 2.5 A. Check `journalctl -k | grep -i volta
 ## Flat line on every channel, or "no data"
 
 - Board not fully seated on the 40 pins. Unplug power, press it down evenly.
-- Service running in the wrong mode. `grep ExecStart /etc/systemd/system/pieeg-server.service` must end with `--device pieeg8`. See [setup step 4](setup-raspberry-pi.md#4-switch-the-service-to-8-channels).
+- Service running in the wrong mode. `grep ExecStart /etc/systemd/system/pieeg-server.service` must contain `--device pieeg8`. See [setup step 4](setup-raspberry-pi.md#4-switch-the-service-to-8-channels).
 - SPI off: `ls /dev/spidev*` must list `spidev0.0`. If not: `sudo raspi-config` → Interface Options → SPI → Yes, then reboot.
 - Run `pieeg-server doctor` and read what it flags.
 

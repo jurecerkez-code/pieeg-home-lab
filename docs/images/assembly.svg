@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="1000" height="300" fill="#f6f7f9"/>
+  <text x="30" y="36" font-size="18" font-weight="bold" fill="#1b2a3a">Mounting the PiEEG-8 on the Raspberry Pi (side view)</text>
+  <!-- step a -->
+  <g transform="translate(40,70)">
+    <rect x="0" y="40" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
+    <rect x="170" y="56" width="40" height="14" fill="#222"/>
+    <text x="110" y="34" text-anchor="middle" font-size="12" fill="#556">PiEEG-8 (socket underneath)</text>
+    <path d="M190 80 L190 112" stroke="#2f6fb0" stroke-width="3" marker-end="url(#a)"/>
+    <rect x="175" y="118" width="30" height="16" fill="#c9a227"/>
+    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
+    <text x="110" y="172" text-anchor="middle" font-size="12" fill="#556">Raspberry Pi (40 pins on top)</text>
+    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">1  Line up</text>
+    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">socket exactly over all 40 pins</text>
+  </g>
+  <!-- step b -->
+  <g transform="translate(370,70)">
+    <path d="M60 10 L60 48 M110 10 L110 48 M160 10 L160 48" stroke="#2f6fb0" stroke-width="3"/>
+    <rect x="0" y="92" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
+    <rect x="170" y="108" width="40" height="14" fill="#222"/>
+    <rect x="175" y="118" width="30" height="16" fill="#c9a227" opacity="0.4"/>
+    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
+    <text x="110" y="70" text-anchor="middle" font-size="12" fill="#556">press evenly, straight down</text>
+    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">2  Press down</text>
+    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">Pi unplugged · never at an angle</text>
+  </g>
+  <!-- step c -->
+  <g transform="translate(700,70)">
+    <rect x="0" y="92" width="220" height="16" rx="3" fill="#f2b84b" stroke="#a87b1f"/>
+    <rect x="0" y="134" width="220" height="16" rx="3" fill="#4c9a5c" stroke="#2e5f39"/>
+    <rect x="170" y="108" width="40" height="26" fill="#222"/>
+    <g fill="#c9a227"><rect x="12" y="66" width="4" height="26"/><rect x="22" y="66" width="4" height="26"/><rect x="32" y="66" width="4" height="26"/></g>
+    <text x="40" y="62" font-size="12" fill="#556">electrode pins point up</text>
+    <text x="110" y="205" text-anchor="middle" font-weight="bold" fill="#1b2a3a">3  Done</text>
+    <text x="110" y="222" text-anchor="middle" font-size="12" fill="#556">no pins visible at the sides · LED lights on power</text>
+  </g>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2f6fb0"/></marker></defs>
+</svg>

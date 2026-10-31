@@ -43,8 +43,8 @@ The service starts in 16 channel mode by default. PiEEG-8 has one ADS1299, so ad
 ```bash
 ssh <username>@raspberrypi.local
 grep ExecStart /etc/systemd/system/pieeg-server.service       # look first
-sudo sed -i '/^ExecStart=/ s/$/ --device pieeg8/' /etc/systemd/system/pieeg-server.service
-grep ExecStart /etc/systemd/system/pieeg-server.service       # now ends with --device pieeg8
+sudo sed -i 's|bin/pieeg-server|bin/pieeg-server --device pieeg8|' /etc/systemd/system/pieeg-server.service
+grep ExecStart /etc/systemd/system/pieeg-server.service       # now contains --device pieeg8
 sudo systemctl daemon-reload
 sudo systemctl restart pieeg-server
 ```

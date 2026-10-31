@@ -1,152 +1,281 @@
 <div align="center">
 
-# PiEEG Home Lab
+<img src="docs/images/hero.png" alt="PiEEG Home Lab: forehead EEG traces with eyes open and eyes closed, and the alpha peak in the power spectrum" width="100%">
 
-**Your own 8-channel EEG on a Raspberry Pi. Stick, clip, plug in, see your brain.**
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Hardware](https://img.shields.io/badge/hardware-PiEEG--8%20·%20ADS1299-f2b84b)
+![Host](https://img.shields.io/badge/host-Raspberry%20Pi%203-c51a4a)
+![Data](https://img.shields.io/badge/data-CSV%20·%20NWB-8a2be2)
+![Not a medical device](https://img.shields.io/badge/not%20a-medical%20device-lightgrey)
 
-<img src="docs/images/system.svg" alt="Electrodes on the head, clipped to the PiEEG-8 on a Raspberry Pi, powered by a powerbank, streaming over WiFi to a laptop" width="760">
+**An EEG lab on a Raspberry Pi. Stick, clip, plug in, see your brain.**
+
+[Equipment](docs/equipment.md) · [Step by step](#step-by-step) · [How it works](docs/how-it-works.md) · [Code](#code) · [Missions](docs/missions.md) · [Troubleshooting](docs/troubleshooting.md)
 
 </div>
 
-Everything in the box is already set up and tested. The first signal takes about 5 minutes. After that, the real fun is yours: filtering, spectra, your own alpha peak, and turning recordings into proper NWB files.
+---
+
+## Contents
+
+1. [Overview](#overview)
+2. [Equipment](#equipment)
+3. [Safety](#safety)
+4. [Step by step](#step-by-step): from the box to your first alpha wave
+5. [Code](#code): live view, recording and analysis on the MacBook
+6. [Missions](#missions)
+7. [Repository structure](#repository-structure)
+8. [References and citation](#references-and-citation)
+
+---
+
+## Overview
+
+This kit records EEG with the open source **[PiEEG-8](https://docs.pieeg.com/hardware/devices/pieeg-8/)** shield, built around the Texas Instruments **ADS1299**, the same 24 bit biopotential converter used in OpenBCI and many research amplifiers. The Raspberry Pi runs **[PiEEG Server](https://github.com/pieeg-club/PiEEG-server)** and streams 250 samples per second over WiFi. Everything else happens on the MacBook: a browser dashboard for the first look, and Python for live plots, recording, spectral analysis and conversion to the **[NWB](https://www.nwb.org/)** research data standard.
+
+There's no EEG cap in this kit on purpose. It starts with stick-on electrodes on skin without hair (forehead and behind the ears), which is enough for blinks, eye movements, muscle activity and the alpha rhythm. Getting through hair to more positions is [Mission 4](docs/missions.md#mission-4-go-beyond-the-forehead).
+
+<img src="docs/images/system.svg" alt="System overview: electrodes, PiEEG-8 on Raspberry Pi, powerbank, WiFi, MacBook" width="100%">
+
+| | |
+|---|---|
+| Channels | 8 + Reference + Bias available, 1 to 2 used to start (Fp1, Fp2) |
+| Resolution / rate | 24 bit, 250 Hz |
+| Electrodes | Ag/AgCl stick-on, forehead and mastoids |
+| Power | Battery only (powerbank) |
+| Analysis | Python 3.10+, NumPy, SciPy, Matplotlib, PyNWB |
+
+---
+
+## Equipment
+
+<img src="docs/images/kit.svg" alt="All parts in the box" width="100%">
+
+| # | Part | Spec | Source |
+|---|---|---|---|
+| ① | **Raspberry Pi 3 Model B** + 16 GB MicroSD | BCM2837, 1 GB, 2.4 GHz WiFi, set up with PiEEG Server | own |
+| ② | **PiEEG-8 board** | ADS1299, 24 bit, 250 Hz, 8 ch + Ref + Bias, 2.54 mm male header | [Elecrow](https://www.elecrow.com/pieeg.html) |
+| ③ | **Ag/AgCl electrode stickers**, 60 pcs | 2.6 cm foam, snap button, single use | [Somnomedics SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
+| ④ | **Dupont to alligator clip cables**, 10 pcs | female 2.54 mm ↔ clip, 20 cm | [BerryBase DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
+| ⑤ | **Powerbank** + official Micro USB cable | USB A, 2.4 A or more | [BerryBase RPI-MUSB-1](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel) |
+| ⑥ | Alcohol wipes | skin prep | dm |
+
+<p>
+<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_board.jpg" alt="PiEEG-8 board" height="170">
+<img src="docs/photos/raspberry-pi-3b-top.jpg" alt="The Raspberry Pi 3 Model B in this kit" height="170">
+<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_on_pi.jpg" alt="PiEEG-8 mounted on a Raspberry Pi" height="170">
+</p>
+<sub>Left and right: PiEEG-8, photos by PiEEG (<a href="https://docs.pieeg.com/hardware/devices/pieeg-8/">official documentation</a>). Middle: the Raspberry Pi in this kit.</sub>
+
+What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.md)**
+
+---
+
+## Safety
 
 > [!CAUTION]
-> **Battery only, always.** While electrodes are on your skin, the Raspberry Pi runs from the **powerbank** and your laptop runs **on battery with the charger unplugged**. Nothing on the setup is connected to a wall socket. The PiEEG board has no electrical isolation. Details in [docs/safety.md](docs/safety.md).
+> **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from the **powerbank** and the MacBook runs **on battery, charger unplugged**. No wall power anywhere in the setup. [docs/safety.md](docs/safety.md)
 
 > [!NOTE]
 > PiEEG is a research and education tool, **not a medical device**. Nothing it shows is a diagnosis.
 
 ---
 
-## What's in the box
+## Step by step
 
-| | Part | Where it came from | What it does |
-|---|---|---|---|
-| 🟩 | **Raspberry Pi 3 Model B** (V1.2) with a 16 GB MicroSD, already set up | Jure's drawer | Runs PiEEG Server, streams data over WiFi |
-| 🟧 | **[PiEEG-8 board](https://www.elecrow.com/pieeg.html)**: ADS1299, 24 bit, 250 Hz, 8 channels + Ref + Bias | Elecrow | The EEG amplifier. Sits on the Pi's 40 pin header |
-| ⚪ | **[Ag/AgCl adhesive electrodes](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C)**, 2.6 cm, snap button, 2 packs × 30 (SEN010C) | Somnomedics | Single use stickers for forehead and behind the ears |
-| 🐊 | **[Dupont female to alligator clip cables](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338)**, 20 cm, 10 pcs (DUPAC20) | BerryBase | One per pin: female end onto the board, clip onto the sticker snap |
-| 🔌 | **[Official Raspberry Pi Micro USB cable](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel)**, 1 m (RPI-MUSB-1) | BerryBase | Powerbank to Pi (port **PWR IN**) |
-| 🔋 | **Powerbank**, USB A port with at least 2.4 A | | The only power source while recording |
-| 🧽 | Alcohol wipes, if they made it into the box | dm | Clean skin = clean signal |
+The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). From opening the box to the first alpha wave takes about 10 minutes.
 
-You also need: your **MacBook** (on battery while recording) and a **2.4 GHz WiFi** network, since the Pi 3 can't see 5 GHz.
+### Step 1 · Mount the board
 
-Your Raspberry Pi, top and bottom:
+Pi unplugged. Line the PiEEG-8 up with the 40 pin header so it sits over the Pi, then press it straight down until every pin is seated.
 
-<p>
-<img src="docs/photos/raspberry-pi-3b-top.jpg" alt="Raspberry Pi 3 Model B, top side with the 40 pin GPIO header on the right" width="300">
-<img src="docs/photos/raspberry-pi-3b-bottom.jpg" alt="Raspberry Pi 3 Model B, bottom side with the MicroSD card slot" width="300">
-</p>
+<img src="docs/images/assembly.svg" alt="Line up, press down, done" width="100%">
 
-The 40 pin header (right edge, top photo) is where the PiEEG board goes. The MicroSD sits underneath.
+<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_on_pi.jpg" alt="PiEEG-8 correctly mounted on the Raspberry Pi" width="380">
+
+<sub>Correctly mounted. Photo: PiEEG.</sub>
+
+### Step 2 · Place the electrodes
+
+Wipe the skin with an alcohol wipe and let it dry. Then three stickers:
+
+| Sticker | Position | 10-20 name |
+|---|---|---|
+| Left forehead, two fingers above the eyebrow | front left | **Fp1** |
+| Bony bump behind the left ear | left mastoid | **Ref** |
+| Bony bump behind the right ear | right mastoid | **Bias** |
+
+<img src="docs/images/placement.svg" alt="Electrode positions on the forehead and behind the ears" width="100%">
+
+### Step 3 · Connect the cables
+
+Black female end of the cable onto the pin, alligator clip onto the metal snap in the middle of the sticker.
+
+<img src="docs/images/wiring.svg" alt="Electrode header: Ref, Biasout, E8 to E1, and which sticker each clip goes to" width="100%">
+
+| Pin on the board | Clip goes to |
+|---|---|
+| **E1** | left forehead (Fp1) |
+| **Ref** | behind left ear |
+| **Biasout** | behind right ear |
+| E2 | optional: right forehead (Fp2) |
+| E3 to E8 | empty |
+
+### Step 4 · Position and power
+
+The cables are 20 cm, so the Pi goes close to your head: shoulder, a shelf at head height, or the pillow if you lie down. Plug the Micro USB cable into **PWR IN** and into the powerbank. The LED on the PiEEG-8 lights up.
+
+<img src="https://raw.githubusercontent.com/pieeg-club/PiEEG-docs/main/public/images/hardware/2026/10/pieeg8_led.png" alt="The PiEEG-8 LED lights up when the board has power" width="420">
+
+<sub>Image: PiEEG.</sub>
+
+Wait about a minute while the Pi boots and joins the WiFi.
+
+### Step 5 · Open the dashboard
+
+On the MacBook (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Turn on the band-pass filter (1 to 40 Hz) and the **50 Hz** notch filter.
+
+<img src="https://github.com/user-attachments/assets/0556e2b9-2ae2-4864-84d0-267abfedc177" alt="PiEEG Server dashboard" width="100%">
+
+<sub>PiEEG Server dashboard. Screenshot: <a href="https://github.com/pieeg-club/PiEEG-server">PiEEG Server</a>. With one electrode, only channel 1 shows a real signal, channels 2 to 8 are empty inputs and look like noise.</sub>
+
+### Step 6 · Check the signal
+
+Sit still, relax your face, look at one point.
+
+| Test | What you should see on channel 1 |
+|---|---|
+| Sit still, eyes open | A small wiggly line, roughly ±10 to ±50 µV |
+| Blink hard | A large slow spike, often 100 µV or more |
+| Look left, then right | Slow steps up and down: eye movement (EOG) |
+| Clench your jaw | A burst of fast noise: muscle (EMG), not brain |
+| Close your eyes, relax 20 to 30 s | A rhythm around 10 Hz and a peak at 8 to 13 Hz in the spectrum: **alpha** |
+
+Alpha is strongest at the back of the head. On the forehead it's weaker, so give it time and watch the spectrum rather than the raw line. Full checklist: **[docs/first-test.md](docs/first-test.md)**. Something off: **[docs/troubleshooting.md](docs/troubleshooting.md)**.
+
+### Step 7 · Finish
+
+Unplug the powerbank, peel off the stickers (single use), recharge the powerbank.
 
 ---
 
-## Quick start: first signal in 5 minutes
+## Code
 
-1. **Board on.** If it isn't already: Pi unplugged, press the PiEEG board straight down onto all 40 pins. It should cover the Pi like a lid.
-2. **Stickers on.** Wipe the skin, let it dry. One sticker on the left forehead, one on the bony bump behind each ear.
-3. **Clip.** Left forehead → **E1**. Behind left ear → **Ref**. Behind right ear → **Biasout**.
-4. **Power.** Put the Pi and powerbank close to your head (the clip cables are 20 cm: shoulder, a shelf at head height, or the pillow if you lie down). Plug the powerbank into **PWR IN**. Wait about a minute until it has booted and joined the WiFi.
-5. **Look.** On your MacBook (charger unplugged, same WiFi) open **http://raspberrypi.local:1617** in Safari or Chrome and click **Connect**.
+The Pi handles the hardware. Your Python runs on the MacBook and reads the live stream over WiFi.
 
-Now blink. Big spikes. Close your eyes and relax for 20 seconds: a 10 Hz rhythm grows in the spectrum. That's your alpha rhythm. 🧠
-
-Step by step with checks and what "good" looks like: **[docs/first-test.md](docs/first-test.md)**
-
-### Where everything plugs in
-
-<img src="docs/images/wiring.svg" alt="PiEEG-8 electrode header with pins Ref, Biasout, E8 to E1, and which sticker each clip goes to" width="760">
-
-<img src="docs/images/placement.svg" alt="Electrode positions: E1 left forehead, E2 right forehead, Ref and Bias on the bone behind each ear" width="760">
-
----
-
-## Coding on your MacBook
-
-The Pi does the hardware. Your Python runs on the Mac and reads the live stream over WiFi.
-
-**One time setup** (Terminal):
+### Setup (once)
 
 ```bash
-python3 --version          # need 3.10 or newer
+python3 --version          # 3.10 or newer
 ```
 
-If it's older or missing, install Python 3.12 from [python.org](https://www.python.org/downloads/macos/) (or `brew install python@3.12`). The `python3` that ships with Apple's developer tools is too old for NumPy 2.
+If it's older or missing, install Python 3.12 from [python.org](https://www.python.org/downloads/macos/) or with `brew install python@3.12`.
 
 ```bash
-git clone <this repo>
+git clone https://github.com/jurecerkez-code/pieeg-home-lab.git
 cd pieeg-home-lab/code
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Every time** (Terminal, inside `pieeg-home-lab/code`):
+> [!IMPORTANT]
+> The first time Python connects to the Pi, macOS asks **"Allow Python to find devices on your local network?"** Click **Allow**. Missed it? System Settings → Privacy & Security → Local Network → turn on Terminal.
+
+### Run
 
 ```bash
 source .venv/bin/activate
-python live_view.py                                     # window with live traces + spectrum
-python record.py --seconds 60 --label eyes_closed       # saves recordings/*.csv
+python live_view.py --channels 1 2                      # live traces + running spectrum
+python record.py --seconds 60 --label eyes_open         # → recordings/*.csv + .json
+python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
-The first time Python talks to the Pi, macOS may ask **"Allow Python to find devices on your local network?"**. Click **Allow**, otherwise nothing connects. If you missed it: System Settings → Privacy & Security → Local Network → turn on Terminal (and Python).
-
-No hardware nearby? Run the simulator in one Terminal tab and point everything at `localhost` in another (⌘T for a new tab):
+### Without hardware
 
 ```bash
-python simulate.py                     # tab 1: fake PiEEG with alpha, blinks and 50 Hz hum
-python live_view.py --host localhost   # tab 2
+python simulate.py                     # Terminal tab 1: fake PiEEG (alpha, blinks, 50 Hz hum)
+python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 ```
 
-| File | What it is |
+| Script | Purpose |
 |---|---|
-| [`code/eeg_stream.py`](code/eeg_stream.py) | Small client for the PiEEG Server WebSocket (`ws://raspberrypi.local:1616`) |
-| [`code/live_view.py`](code/live_view.py) | Live filtered traces and a running spectrum |
-| [`code/record.py`](code/record.py) | Records to CSV plus a JSON sidecar with the metadata |
-| [`code/spectrum.py`](code/spectrum.py) | Welch spectrum, alpha peak frequency and power |
-| [`code/simulate.py`](code/simulate.py) | Fake server with realistic test signals |
-| [`code/mission_1_notch.py`](code/mission_1_notch.py) | Mission 1, with an automatic PASS/FAIL check |
-| [`code/mission_3_nwb.py`](code/mission_3_nwb.py) | Mission 3 skeleton: CSV to NWB |
+| [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://raspberrypi.local:1616`) |
+| [`live_view.py`](code/live_view.py) | Live band-pass filtered traces and a Welch spectrum |
+| [`record.py`](code/record.py) | Record to CSV with a JSON metadata sidecar |
+| [`spectrum.py`](code/spectrum.py) | Power spectrum, alpha peak frequency and alpha power |
+| [`simulate.py`](code/simulate.py) | Simulated PiEEG stream for testing without hardware |
+| [`mission_1_notch.py`](code/mission_1_notch.py) | Mission 1 with automatic PASS/FAIL check |
+| [`mission_3_nwb.py`](code/mission_3_nwb.py) | Mission 3 skeleton: CSV → NWB |
+
+Stream format, CSV columns and sidecar fields: [docs/how-it-works.md](docs/how-it-works.md#data-formats-in-this-repo).
 
 ---
 
-## Missions 🎯
+## Missions
 
 | # | Mission | Done when |
 |---|---|---|
 | 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice |
-| 2 | **Find your alpha peak** | You know your own alpha frequency to 0.5 Hz, eyes open vs closed |
-| 3 | **Make it NWB** | Your recording passes `nwbinspector` with no errors |
-| 4 | **Go beyond the forehead** | Two more channels, and alpha is clearer than at Fp1 |
-| 5 | **Read the datasheet** | You can explain every step from 3 raw bytes to one µV value |
+| 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
+| 3 | **Make it NWB** | Your recording passes `nwbinspector` |
+| 4 | **Go beyond the forehead** | Three channels, alpha clearer than at Fp1 |
+| 5 | **Read the datasheet** | Every step from 3 raw bytes to one µV value explained |
 
-Details, hints and bonus ideas: **[docs/missions.md](docs/missions.md)**
+Details and hints: **[docs/missions.md](docs/missions.md)**
 
 ---
 
-## Docs
+## Repository structure
 
-| | |
-|---|---|
-| [First test](docs/first-test.md) | The 5 minute start, with checks |
-| [Safety](docs/safety.md) | The few rules that matter |
-| [Raspberry Pi setup](docs/setup-raspberry-pi.md) | How the MicroSD was prepared, to redo it from scratch |
-| [Missions](docs/missions.md) | What to build next |
-| [Troubleshooting](docs/troubleshooting.md) | Flat lines, noise, WiFi, Pi 3 specifics |
+```
+pieeg-home-lab/
+├── README.md
+├── CITATION.cff
+├── LICENSE
+├── code/
+│   ├── eeg_stream.py        WebSocket client
+│   ├── live_view.py         live plot
+│   ├── record.py            CSV + JSON recording
+│   ├── spectrum.py          alpha analysis
+│   ├── simulate.py          hardware-free test stream
+│   ├── mission_1_notch.py
+│   ├── mission_3_nwb.py
+│   └── requirements.txt
+└── docs/
+    ├── equipment.md         every part, specs, why
+    ├── how-it-works.md      signal chain, pins, data formats, sources
+    ├── first-test.md        detailed first session
+    ├── setup-raspberry-pi.md
+    ├── safety.md
+    ├── missions.md
+    ├── troubleshooting.md
+    ├── images/              diagrams
+    └── photos/              photos of this kit
+```
 
-## Built on
+---
 
-- [PiEEG](https://github.com/pieeg-club/PiEEG) hardware and Python SDK by Ildar Rakhmatulin and contributors
-- [PiEEG Server](https://github.com/pieeg-club/PiEEG-server): dashboard, WebSocket stream, recording
-- [PiEEG docs](https://docs.pieeg.com/hardware/devices/pieeg-8/)
+## References and citation
 
-This repo is an unofficial starter kit and is not affiliated with PiEEG. Code here is MIT licensed.
+- PiEEG-8 documentation: [docs.pieeg.com](https://docs.pieeg.com/hardware/devices/pieeg-8/)
+- PiEEG Python SDK: [github.com/pieeg-club/PiEEG](https://github.com/pieeg-club/PiEEG) · PiEEG Server: [github.com/pieeg-club/PiEEG-server](https://github.com/pieeg-club/PiEEG-server)
+- ADS1299 datasheet: [Texas Instruments](https://www.ti.com/lit/ds/symlink/ads1299.pdf)
+- NWB: [nwb.org](https://www.nwb.org/) · DANDI Archive: [dandiarchive.org](https://dandiarchive.org/)
+
+If you use the PiEEG hardware in research, cite:
+
+```
+I. Rakhmatulin et al. Raspberry Pi Shield – for measure EEG (PIEEG). 2021 5th International
+Conference on Electrical, Electronics, Communication, Computer Technologies and Optimization
+Techniques (ICEECCOT), pp. 410–413. DOI: 10.1109/ICEECCOT52851.2021.9707969
+```
+
+This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. This is an unofficial starter kit, not affiliated with PiEEG.
 
 <div align="center">
-
+<br>
 Merry Christmas 🎄
-
 </div>
