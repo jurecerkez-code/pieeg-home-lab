@@ -7,7 +7,7 @@ Goal: see a blink and your alpha rhythm in the browser. About 5 minutes.
 - Raspberry Pi 3 Model B with the PiEEG-8 board on top and the MicroSD inside
 - 3 electrode stickers, 3 alligator clip cables
 - Powerbank (charged) and the Micro USB cable
-- Laptop on battery, **charger unplugged**, on the same WiFi as the Pi
+- MacBook on battery, **charger unplugged**, on the same WiFi as the Pi (2.4 GHz)
 - An alcohol wipe
 
 ## 1. Check the board
@@ -35,15 +35,23 @@ Pi unplugged. The PiEEG board sits on all 40 pins of the Pi's GPIO header, pushe
 
 The female end of each cable slides onto a pin of the 10 pin header. The alligator clip bites the metal snap on the sticker. Let the cables hang loosely, without pulling on the stickers.
 
-## 4. Power and connect
+## 4. Where to put the Pi
+
+The clip cables are 20 cm, so the Pi has to be near your head. Short is good: less wire, less hum.
+
+- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, or in a small pouch on your shoulder
+- **Lying down:** Pi on the pillow next to your head. Best position for relaxed alpha
+- Cables hang loose, nothing pulls on a sticker
+
+## 5. Power and connect
 
 1. Plug the Micro USB cable into the Pi (port labelled **PWR IN**) and into the powerbank.
 2. The red LED on the Pi lights up. Wait about 60 seconds.
-3. On the laptop open **http://raspberrypi.local:1617** and click **Connect**.
+3. On the MacBook open **http://raspberrypi.local:1617** in Safari or Chrome and click **Connect**.
 
 Doesn't load? See [troubleshooting](troubleshooting.md#the-dashboard-does-not-open).
 
-## 5. What good looks like
+## 6. What good looks like
 
 Sit still, relax your jaw, look at one point.
 
@@ -58,7 +66,7 @@ In the dashboard, turn on the **band-pass filter** (1 to 40 Hz) and the **notch 
 
 > Alpha is strongest at the back of the head. On the forehead it's weaker, so give it 20 to 30 seconds with eyes closed. Mission 4 is about getting a better spot.
 
-## 6. Done for today
+## 7. Done for today
 
 1. Unplug the powerbank.
 2. Unclip, peel off the stickers and throw them away. They're single use.

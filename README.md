@@ -20,14 +20,17 @@ Everything in the box is already set up and tested. The first signal takes about
 
 ## What's in the box
 
-| | Part | What it does |
-|---|---|---|
-| 🟩 | **Raspberry Pi 3 Model B** with prepared MicroSD | Runs PiEEG Server, streams data over WiFi |
-| 🟧 | **[PiEEG-8 board](https://www.elecrow.com/pieeg.html)** (ADS1299, 24 bit, 250 Hz) | The EEG amplifier. Sits on the Pi's 40 pin header |
-| ⚪ | **[Ag/AgCl adhesive electrodes](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C)**, 2.6 cm, snap, 60 pcs | Single use stickers. Forehead and behind the ears |
-| 🔌 | **[Dupont to alligator clip cables](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338)**, 10 pcs | Clip onto the sticker snap, plug onto the board pin |
-| 🔋 | **Powerbank** + [Micro USB cable](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel) | The only power source while recording |
-| 🧽 | Alcohol wipes | Clean skin = clean signal |
+| | Part | Where it came from | What it does |
+|---|---|---|---|
+| 🟩 | **Raspberry Pi 3 Model B** (V1.2) with a 16 GB MicroSD, already set up | Jure's drawer | Runs PiEEG Server, streams data over WiFi |
+| 🟧 | **[PiEEG-8 board](https://www.elecrow.com/pieeg.html)**: ADS1299, 24 bit, 250 Hz, 8 channels + Ref + Bias | Elecrow | The EEG amplifier. Sits on the Pi's 40 pin header |
+| ⚪ | **[Ag/AgCl adhesive electrodes](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C)**, 2.6 cm, snap button, 2 packs × 30 (SEN010C) | Somnomedics | Single use stickers for forehead and behind the ears |
+| 🐊 | **[Dupont female to alligator clip cables](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338)**, 20 cm, 10 pcs (DUPAC20) | BerryBase | One per pin: female end onto the board, clip onto the sticker snap |
+| 🔌 | **[Official Raspberry Pi Micro USB cable](https://www.berrybase.de/search?search=raspberry+pi+micro+usb+kabel)**, 1 m (RPI-MUSB-1) | BerryBase | Powerbank to Pi (port **PWR IN**) |
+| 🔋 | **Powerbank**, USB A port with at least 2.4 A | | The only power source while recording |
+| 🧽 | Alcohol wipes, if they made it into the box | dm | Clean skin = clean signal |
+
+You also need: your **MacBook** (on battery while recording) and a **2.4 GHz WiFi** network, since the Pi 3 can't see 5 GHz.
 
 Your Raspberry Pi, top and bottom:
 
@@ -45,8 +48,8 @@ The 40 pin header (right edge, top photo) is where the PiEEG board goes. The Mic
 1. **Board on.** If it isn't already: Pi unplugged, press the PiEEG board straight down onto all 40 pins. It should cover the Pi like a lid.
 2. **Stickers on.** Wipe the skin, let it dry. One sticker on the left forehead, one on the bony bump behind each ear.
 3. **Clip.** Left forehead → **E1**. Behind left ear → **Ref**. Behind right ear → **Biasout**.
-4. **Power.** Plug the powerbank into the Pi. Wait about a minute until it has booted and joined the WiFi.
-5. **Look.** On your laptop (charger unplugged) open **http://raspberrypi.local:1617** and click **Connect**.
+4. **Power.** Put the Pi and powerbank close to your head (the clip cables are 20 cm: shoulder, a shelf at head height, or the pillow if you lie down). Plug the powerbank into **PWR IN**. Wait about a minute until it has booted and joined the WiFi.
+5. **Look.** On your MacBook (charger unplugged, same WiFi) open **http://raspberrypi.local:1617** in Safari or Chrome and click **Connect**.
 
 Now blink. Big spikes. Close your eyes and relax for 20 seconds: a 10 Hz rhythm grows in the spectrum. That's your alpha rhythm. 🧠
 
@@ -60,26 +63,42 @@ Step by step with checks and what "good" looks like: **[docs/first-test.md](docs
 
 ---
 
-## Coding on your laptop
+## Coding on your MacBook
 
-The Pi does the hardware. Your Python runs on the laptop and reads the live stream over WiFi.
+The Pi does the hardware. Your Python runs on the Mac and reads the live stream over WiFi.
+
+**One time setup** (Terminal):
+
+```bash
+python3 --version          # need 3.10 or newer
+```
+
+If it's older or missing, install Python 3.12 from [python.org](https://www.python.org/downloads/macos/) (or `brew install python@3.12`). The `python3` that ships with Apple's developer tools is too old for NumPy 2.
 
 ```bash
 git clone <this repo>
 cd pieeg-home-lab/code
-python3 -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+```
 
-python live_view.py                                     # live traces + spectrum
-python record.py --seconds 60 --label eyes_closed       # save to recordings/*.csv
+**Every time** (Terminal, inside `pieeg-home-lab/code`):
+
+```bash
+source .venv/bin/activate
+python live_view.py                                     # window with live traces + spectrum
+python record.py --seconds 60 --label eyes_closed       # saves recordings/*.csv
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
-No hardware nearby? Run the simulator and point everything at `localhost`:
+The first time Python talks to the Pi, macOS may ask **"Allow Python to find devices on your local network?"**. Click **Allow**, otherwise nothing connects. If you missed it: System Settings → Privacy & Security → Local Network → turn on Terminal (and Python).
+
+No hardware nearby? Run the simulator in one Terminal tab and point everything at `localhost` in another (⌘T for a new tab):
 
 ```bash
-python simulate.py                 # terminal 1: fake PiEEG with alpha, blinks and 50 Hz hum
-python live_view.py --host localhost   # terminal 2
+python simulate.py                     # tab 1: fake PiEEG with alpha, blinks and 50 Hz hum
+python live_view.py --host localhost   # tab 2
 ```
 
 | File | What it is |

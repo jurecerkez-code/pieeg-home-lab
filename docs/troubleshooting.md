@@ -7,9 +7,13 @@
 3. `raspberrypi.local` not resolving, see below.
 4. SSH in and check the server: `systemctl status pieeg-server` and `journalctl -u pieeg-server -n 50`.
 
+## live_view.py or record.py can't connect, but the dashboard works
+
+macOS blocks local network access until you allow it. System Settings → Privacy & Security → **Local Network** → turn on Terminal (and Python if listed). Then run the script again.
+
 ## raspberrypi.local is not found
 
-Some networks and some Windows setups don't resolve `.local` names. Find the Pi's IP address instead:
+Macs resolve `.local` names out of the box, but some routers and guest networks block it. Find the Pi's IP address instead:
 
 - Router admin page, list of connected devices, look for `raspberrypi`
 - Or on the Pi (with a screen, or via a working SSH session): `hostname -I`

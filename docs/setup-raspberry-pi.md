@@ -6,7 +6,7 @@ Hardware: **Raspberry Pi 3 Model B** (V1.2, 1 GB RAM, 2.4 GHz WiFi only), PiEEG-
 
 ## 1. Flash the MicroSD
 
-1. On the laptop install **[Raspberry Pi Imager](https://www.raspberrypi.com/software/)**.
+1. On the Mac install **[Raspberry Pi Imager](https://www.raspberrypi.com/software/)** and put the MicroSD in an SD adapter / card reader.
 2. Device: **Raspberry Pi 3**. OS: **Raspberry Pi OS Lite (64-bit)** under *Raspberry Pi OS (other)*. Lite has no desktop, which leaves more of the 1 GB RAM for the server. You use everything from the laptop anyway.
 3. Storage: the MicroSD. Click **Next**, then **Edit settings**:
    - Hostname: `raspberrypi`
@@ -18,7 +18,7 @@ Hardware: **Raspberry Pi 3 Model B** (V1.2, 1 GB RAM, 2.4 GHz WiFi only), PiEEG-
 
 ## 2. First boot
 
-Power the Pi from the powerbank (no electrodes needed for setup). Wait 2 minutes, then on the laptop:
+Power the Pi from the powerbank (no electrodes needed for setup). Wait 2 minutes, then in Terminal on the Mac:
 
 ```bash
 ssh <username>@raspberrypi.local
