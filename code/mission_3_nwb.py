@@ -2,53 +2,178 @@
 MISSION 3: turn a recording into a Neurodata Without Borders (NWB) file.
 
 NWB is the standard format neuroscience labs use to share data, and DANDI is
-the archive where those files get published. Converting messy lab formats into
-clean NWB is exactly the work CatalystNeuro does.
+the archive where those files get published. Turning lab data into clean NWB is
+exactly what CatalystNeuro does.
 
 Input:  recordings/<file>.csv  plus its .json sidecar (written by record.py)
 Output: nwb/<file>.nwb
 
-Steps (each TODO is one small piece):
-  1. NWBFile with session description, start time, identifier
-  2. Subject: subject_id from the sidecar (a pseudonym like sub-02), species "Homo sapiens"
-  3. Device "PiEEG-8" and an ElectrodeGroup
-  4. Electrodes table: one row per channel, with location from the sidecar
-     (record.py stores the positions under "electrodes", see --montage)
-  5. ElectricalSeries with the data, rate=250.0, unit conversion to volts,
-     and the sidecar's "data_filtering" in its filtering field
-  6. Write it, then validate:  nwbinspector nwb/
-  7. Bonus: open it with  pynwb.NWBHDF5IO(...).read()  and replot alpha
+    python mission_3_nwb.py recordings/example_alpha.csv
+    nwbinspector nwb/
+
+Done when nwbinspector reports no critical issues. Read the file back with
+pynwb.NWBHDF5IO(path).read() and the channel data is in .acquisition["eeg"].
 
 Docs: https://pynwb.readthedocs.io  ·  https://nwbinspector.readthedocs.io
 Install: pip install pynwb nwbinspector
 """
 
+import csv
 import json
 import sys
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
+from pynwb import NWBFile, NWBHDF5IO
+from pynwb.ecephys import ElectricalSeries
+from pynwb.file import Subject
 
 from spectrum import load
 
 
+def _start_time(meta: dict) -> datetime:
+    """The sidecar carries an ISO time with a UTC offset, which NWB requires.
+
+    Example datasets have no start time at all. Rather than invent one, the
+    conversion time is used and the session description says so.
+    """
+    raw = meta.get("start_time")
+    if raw:
+        return datetime.fromisoformat(raw)
+    return datetime.now(timezone.utc)
+
+
+def _locations(meta: dict, n_channels: int) -> list:
+    """One location string per channel, from the sidecar's electrode map."""
+    electrodes = meta.get("electrodes")
+    out = []
+    for i in range(1, n_channels + 1):
+        loc = "not documented"
+        if isinstance(electrodes, dict):
+            loc = electrodes.get(f"ch{i}") or "not documented"
+        out.append(loc)
+    return out
+
+
+def _sample_numbers(csv_path: Path):
+    """The n column is PiEEG Server's sample counter. A jump means lost samples."""
+    with open(csv_path) as f:
+        rows = csv.reader(f)
+        header = next(rows)
+        if "n" not in header:
+            return None
+        col = header.index("n")
+        out = []
+        for row in rows:
+            if len(row) != len(header):
+                continue
+            try:
+                out.append(int(float(row[col])))
+            except ValueError:
+                continue
+    return np.array(out) if out else None
+
+
+def _invalid_intervals(csv_path: Path, meta: dict, fs: float) -> list:
+    """Time ranges a reader should skip: gaps in the sample counter, and the
+    ranges another client may have filtered while recording."""
+    out = []
+    ns = _sample_numbers(csv_path)
+    if ns is not None and len(ns) > 1:
+        for i in np.nonzero(np.diff(ns) != 1)[0]:
+            start, stop = (ns[i] + 1) / fs, ns[i + 1] / fs
+            if stop > start:
+                out.append((float(start), float(stop), "gap in the sample counter"))
+    for first, last in meta.get("possibly_filtered_samples") or []:
+        last = first if last is None else last
+        out.append((float(first) / fs, float(last + 1) / fs,
+                    "possibly filtered by another client during the recording"))
+    return out
+
+
+def _subject(meta: dict) -> Subject:
+    """Subject with whatever the sidecar knows.
+
+    NWB has no value for "not recorded": sex "U" is its vocabulary for unknown,
+    and an age range with both bounds blank is the format's open range. Both are
+    set to the unknown form when record.py was not asked for them.
+    """
+    return Subject(
+        subject_id=str(meta.get("subject", "sub-01")),
+        species="Homo sapiens",
+        description=str(meta.get("recorded_by", "recorded with pieeg-home-lab")),
+        sex=str(meta.get("subject_sex", "U")).upper(),
+        age=str(meta.get("subject_age", "/")),
+    )
+
+
 def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
     meta = json.loads(csv_path.with_suffix(".json").read_text())
-    data_uv = np.column_stack([load(csv_path, c) for c in range(1, meta["n_channels"] + 1)])
+    if str(meta.get("units", "")).lower() not in ("microvolts", "uv", "µv"):
+        raise ValueError(f"conversion to volts assumes microvolts, sidecar says {meta.get('units')!r}")
+    n_channels = int(meta["n_channels"])
+    fs = float(meta["sample_rate_hz"])
+    data_uv = np.column_stack([load(csv_path, c) for c in range(1, n_channels + 1)])
 
-    # TODO 1: nwbfile = NWBFile(...)   session_start_time wants a datetime with a time zone:
-    #         datetime.fromisoformat(meta["start_time"]) gives you one, the sidecar carries the offset
-    # TODO 2: nwbfile.subject = Subject(subject_id=meta.get("subject", "sub-01"), species=...)
-    # TODO 3: device = nwbfile.create_device(...); group = nwbfile.create_electrode_group(...)
-    # TODO 4: for each channel: nwbfile.add_electrode(...)
-    # TODO 5: ElectricalSeries(data=..., electrodes=..., rate=..., conversion=1e-6, filtering=...)
-    #         (what does conversion mean, and why 1e-6? meta["data_filtering"] says what goes in filtering)
-    # TODO 6: write with NWBHDF5IO
-    # Bonus: gaps and meta["possibly_filtered_samples"] -> nwbfile.add_invalid_time_interval(...)
-    raise NotImplementedError("Mission 3 is yours. Start at TODO 1.")
+    described = meta.get("description") or meta.get("label", "PiEEG recording")
+    if "start_time" not in meta:
+        described += " (start time unknown: set to the conversion time)"
+
+    notes = str(meta.get("notes", "") or "")
+    nwbfile = NWBFile(
+        session_description=described,
+        identifier=str(uuid.uuid4()),
+        session_start_time=_start_time(meta),
+        experiment_description=notes or None,
+    )
+
+    nwbfile.subject = _subject(meta)
+
+    device = nwbfile.create_device(
+        name="PiEEG-8",
+        description="8 channel ADS1299 EEG shield for the Raspberry Pi",
+        manufacturer="PiEEG",
+    )
+    group = nwbfile.create_electrode_group(
+        name="electrodes",
+        description="10-20 positions on skin without hair, reference and bias on the mastoids",
+        device=device,
+        location="scalp",
+    )
+    for location in _locations(meta, n_channels):
+        nwbfile.add_electrode(group=group, location=location, group_name=group.name)
+    electrodes = nwbfile.electrodes.create_region(
+        name="electrodes",
+        region=list(range(n_channels)),
+        description="the channels of this series",
+    )
+
+    nwbfile.add_acquisition(ElectricalSeries(
+        name="eeg",
+        description="EEG from the PiEEG-8. Stored in microvolts, conversion scales to volts.",
+        data=data_uv,
+        electrodes=electrodes,
+        rate=fs,
+        conversion=1e-6,
+        filtering=str(meta.get("data_filtering", "not documented in the sidecar")),
+    ))
+
+    for start, stop, why in _invalid_intervals(csv_path, meta, fs):
+        # the invalid_times table has no description column, its labels are tags
+        nwbfile.add_invalid_time_interval(start_time=start, stop_time=stop, tags=[why])
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"{csv_path.stem}.nwb"
+    with NWBHDF5IO(out, "w") as io:
+        io.write(nwbfile)
+    return out
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
-    print("Wrote", csv_to_nwb(Path(sys.argv[1])))
+    written = csv_to_nwb(Path(sys.argv[1]))
+    print("Wrote", written)
+    print("Next: nwbinspector nwb/")

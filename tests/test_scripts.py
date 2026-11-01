@@ -76,10 +76,12 @@ def test_mission_1_runs_on_a_raw_recording(recording, tmp_path):
     assert "Note:" not in r.stdout                 # raw data, nothing to warn about
 
 
-def test_mission_3_starts_as_a_skeleton(recording, tmp_path):
+def test_mission_3_converts_the_recording(recording, tmp_path):
     r = script("mission_3_nwb.py", recording, cwd=tmp_path)
-    assert r.returncode != 0
-    assert "Mission 3 is yours" in r.stderr
+    assert r.returncode == 0, r.stdout + r.stderr
+    nwb = tmp_path / "nwb" / (recording.stem + ".nwb")
+    assert nwb.exists() and nwb.stat().st_size > 0
+    assert "nwbinspector" in r.stdout
 
 
 def test_live_view_rejects_channel_0(tmp_path):

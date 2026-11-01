@@ -78,15 +78,20 @@ python mission_3_nwb.py recordings/<file>.csv
 nwbinspector nwb/
 ```
 
-The skeleton in [`code/mission_3_nwb.py`](../code/mission_3_nwb.py) has 6 TODOs, one small step each. Done when `nwbinspector` reports no critical issues.
+The converter in [`code/mission_3_nwb.py`](../code/mission_3_nwb.py) is done. `nwbinspector` reports no critical issues on the converted example datasets, and the numbers in the file are the numbers in the recording when it is read back.
 
-<details><summary>Hints</summary>
+What it writes:
 
-- `record.py` already writes a `.json` sidecar with sample rate, units, electrode positions and filtering. Use it.
-- `ElectricalSeries` wants volts. The CSV is in microvolts. Look at the `conversion` argument.
-- `ElectricalSeries` has a `filtering` field. The sidecar's `data_filtering` belongs there.
-- Gaps and `possibly_filtered_samples` from the sidecar: mark them with `nwbfile.add_invalid_time_interval(...)` so anyone analysing the file can skip them.
-- Bonus: write a small `PiEEGInterface` in the style of [NeuroConv](https://github.com/catalystneuro/neuroconv) so any PiEEG CSV converts with one call. That would make a nice GitHub link in an application.
+- **Subject, device and electrodes from the sidecar**: subject id, electrode positions per channel, `data_filtering` in the series' `filtering` field.
+- **`ElectricalSeries` in volts.** The CSV stays in microvolts and `conversion=1e-6` does the step, so nothing is rescaled on disk.
+- **Gaps and maybes marked.** A jump in the sample counter, and the ranges `possibly_filtered_samples` names, become invalid time intervals tagged with the reason. Anyone analysing the file can skip them.
+- **Unknown metadata is written as unknown.** NWB has no value for "not recorded": when the sidecar has no `subject_age` and `subject_sex`, the file gets `U` and an open age range `/`, and the inspector still passes. Real values from the sidecar are written instead.
+
+<details><summary>What is still open</summary>
+
+- `PiEEGInterface` in the style of [NeuroConv](https://github.com/catalystneuro/neuroconv), so any PiEEG CSV converts with one call. That would make a nice GitHub link in an application.
+- `record.py` does not yet ask for the subject's age and sex, so every file carries the unknown form. One flag each would fix it.
+
 </details>
 
 ---
