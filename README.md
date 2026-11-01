@@ -328,6 +328,8 @@ pieeg-home-lab/
 │   └── requirements-lock.txt  exact tested versions
 ├── tests/                   pytest suite, runs against simulate.py
 ├── .github/workflows/       runs the tests on every push
+├── page/                    Tina's page on the Pi (port 8080), its drawings and the script that renders them
+├── deploy/                  how the page and the SSH welcome are installed on the Pi
 └── docs/
     ├── equipment.md         every part, specs, why
     ├── how-it-works.md      signal chain, pins, data formats, sources

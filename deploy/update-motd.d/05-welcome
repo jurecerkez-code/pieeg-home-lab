@@ -1,0 +1,29 @@
+#!/bin/sh
+# Welcome for whoever logs in over SSH: what runs on this Pi, where to look, how to stop it safely.
+B=$(printf '\033[1m'); D=$(printf '\033[2m'); R=$(printf '\033[0m')
+IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+srv=$(systemctl is-active pieeg-server 2>/dev/null)
+page=$(systemctl is-active tina-page 2>/dev/null)
+cat <<TXT
+
+  ${B}Hi Tina. This is your EEG lab: a PiEEG-8 on a Raspberry Pi 3.${R}
+
+  ${B}Your page${R}      http://raspberrypi.local:8080     ${D}(or http://$IP:8080)${R}
+  ${B}Dashboard${R}      http://raspberrypi.local:1617
+  ${B}Data stream${R}    ws://raspberrypi.local:1616       ${D}for Python on your laptop${R}
+
+  PiEEG Server   $srv          Page   $page
+
+  ${B}Before any electrode goes on${R}
+    Pi on the powerbank, and the powerbank not charging.
+    Laptop on battery, charger unplugged. No HDMI, no Ethernet cable.
+
+  ${B}First time?${R}  Open your page, or docs/first-test.md in the pieeg-home-lab repo.
+
+  ${B}Useful here${R}
+    systemctl status pieeg-server        is the server running
+    journalctl -u pieeg-server -n 50     its last messages
+    sudo systemctl restart pieeg-server  restart it
+    sudo shutdown -h now                 switch off, then wait for the green light to stop
+
+TXT
