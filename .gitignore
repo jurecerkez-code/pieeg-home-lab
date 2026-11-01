@@ -7,3 +7,4 @@ recordings/
 nwb/
 .DS_Store
 docs/figures/data/*.dxf
+docs/figures/data/*.obj

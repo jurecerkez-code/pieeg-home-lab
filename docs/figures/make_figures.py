@@ -781,135 +781,215 @@ def fig_mounting():
     return s
 
 
+# ---------------------------------------------------------------- the rendered head (FIG. 01, 04)
+import render3d as R3                                   # noqa: E402
+
+HEAD = {}
+LEADS = {"E1": ("Fp1", E1C), "E2": ("Fp2", E2C), "REF": ("M1", REFC), "BIAS": ("M2", BIASC)}
+for _lead, (_ch, _col) in LEADS.items():
+    R3.material("rim_" + _lead, _col, 0.6, 0.0, 8, 0.7, emit=0.55)
+NECK_CUT = ((0, 0, 1), 606.0)          # the bust is cut flat 606 mm above the mesh's origin
+
+
+def head():
+    """MakeHuman's CC0 head with the 10-20 montage fitted to it (data/head_*, extract_reference_data)."""
+    if not HEAD:
+        V, F = R3.load_head()
+        HEAD.update(V=V, F=F, skin=R3.Skin(V, F), E=R3.load_electrodes())
+    return HEAD
+
+
+def hpos(ch):
+    return np.array(head()["E"]["channels"][ch]["pos"], float)
+
+
+def hmark(name):
+    E = head()["E"]
+    return np.array(E["landmarks"].get(name) or E["midline_arc"]["marks"][name], float)
+
+
+def head_scene(leads=("E1", "REF", "BIAS")):
+    h = head()
+    sc = R3.Scene().add(h["V"], h["F"], "skin", smooth=True)
+    for lead in leads:
+        v, f, m, c, n = R3.sticker_mesh(h["skin"], hpos(LEADS[lead][0]), "rim_" + lead)
+        sc.add(v, f, m)
+    return sc
+
+
+def place(s, r):
+    x, y, w, h = r.image_box()
+    s.image(x, y, w, h, r.png())
+
+
+def on_skin(P, lift=0.0):
+    q, n = head()["skin"].project(P)
+    return q + n * lift, n
+
+
+def runs(mask):
+    """Index runs where mask is true, on a closed loop."""
+    n = len(mask)
+    if mask.all():
+        return [list(range(n)) + [0]]
+    start = int(np.argmin(mask))
+    out, cur = [], []
+    for i in range(start, start + n + 1):
+        j = i % n
+        if mask[j]:
+            cur.append(j)
+        elif cur:
+            out.append(cur)
+            cur = []
+    if cur:
+        out.append(cur)
+    return [r for r in out if len(r) > 1]
+
+
+def sticker_outline(s, r, ch, col, style):
+    """The rim of a sticker on the skin, as a vector line. hidden: short dashes where the head hides
+    it. optional: long dashes (8 6) where it can be seen, for the optional E2 lead."""
+    c, n = on_skin(hpos(ch))
+    ring, _ = on_skin(R3.disc_points(c[0], n[0], R3.STICKER_R, 120), R3.FOAM_T)
+    xy = r.to_svg(ring)
+    vis = r.visible(ring, tol=1.0)
+    want = ~vis if style == "hidden" else vis
+    for run in runs(want):
+        s.poly([tuple(xy[j]) for j in run], col, 1.4 if style == "hidden" else 1.6,
+               dash="3 3" if style == "hidden" else "8 6")
+
+
+def silhouette_x(r, y_svg, side):
+    """Leftmost (side=-1) or rightmost (side=1) point of a render's silhouette on an SVG row."""
+    x0, y0, w, h = r.image_box()
+    row = int((y_svg - y0) * r.ss)
+    cols = np.nonzero(r.mask[row])[0]
+    edge = cols.max() if side > 0 else cols.min()
+    return x0 + edge / r.ss
+
+
+def chip_dot(s, x, y, label=None, dx=0, dy=-6, anchor="middle", color=MUTED):
+    s.circle(x, y, 2.3, GROUND, 1.1, fill=MARBLE1)
+    if label:
+        s.text(x + dx, y + dy, label, "chip", color, anchor, caps=False, halo=True)
+
+
 # ---------------------------------------------------------------- FIG. 04 electrode placement
 def fig_placement():
-    s = sheet(880, 4, "ELECTRODE PLACEMENT", "Three stickers, placed by landmarks",
-              "Front and side view of the same head at the same scale, and the 10-20 map seen from above.")
-    k, Y0 = 1.2, 312
-    XF, XS = 236, 660
-    fp1, fp2, m1, m2 = CH["Fp1"], CH["Fp2"], CH["M1"], CH["M2"]
-    rk = STICKER_R * k
-    for name, z, col in [("FP1 LEVEL", fp1[2], E1C), ("M1 LEVEL", m1[2], REFC)]:
-        yy = Y0 - z * k
-        s.line(XF - 118, yy, 880, yy, col, 0.8, dash="3 5", op=0.6)
-        s.text(886, yy + 3, name, "chip", col)
-    # one label per lead, set on its level line between the two views, serving both
-    for lab, z, col in [("E1 · FP1", fp1[2], E1C), ("REF · M1", m1[2], REFC)]:
-        s.text(444, Y0 - z * k + 4, lab, "pin", col, "middle", bg=True)
-    # ---- A front view
-    PF = draw_front_head(s, XF, Y0, k)
-    for p, col in [(m1, REFC), (m2, BIASC)]:
-        x, y = PF(p[0], p[2])
-        sticker(s, x, y, rk * 0.6, rk, col, style="hidden")
-    x, y = PF(fp1[0], fp1[2])
-    sticker(s, x, y, rk * 0.96, rk, E1C)
-    x2, y2 = PF(fp2[0], fp2[2])
-    sticker(s, x2, y2, rk * 0.96, rk, E2C, style="optional")
-    px, py = PF(fp1[0], -38.2)
-    s.line(px, py - 6, px, y + rk + 1, E1C, 0.8, dash="2 2", op=0.85)
-    leader(s, [(x2 - 10, y2 - 12), (x2 - 40, y2 - 60), (122, y2 - 60)], E2C)
-    s.text(118, y2 - 56, "E2 · FP2", "pin", E2C, "end")
-    s.text(118, y2 - 42, "OPTIONAL", "note", MUTED, "end")
-    xm, ym = PF(m1[0], m1[2])
-    leader(s, [(xm + 2, ym + 14), (xm + 14, ym + 66), (xm + 24, ym + 66)], REFC)
-    s.text(xm + 28, ym + 70, "HIDDEN BEHIND", "note")
-    s.text(xm + 28, ym + 84, "THE LEFT EAR", "note")
-    xb, yb = PF(m2[0], m2[2])
-    leader(s, [(xb - 2, yb + 14), (124, yb + 66)], BIASC)
-    s.text(44, yb + 80, "BIAS · M2", "pin", BIASC)
-    s.text(44, yb + 94, "BEHIND THE EAR", "note")
-    s.text(XF, 546, "A  ·  FRONT VIEW", "note", MUTED, "middle")
-    scale_bar(s, 404, 542, 50, k)
-    # ---- B left side view: stickers first, the ear hides the part behind it
-    PS, PSp = draw_side_head(s, XS, Y0, k)
-    lat = [PSp(CH[c]) for c in ["Fp1", "F7", "T7", "P7", "O1"]]
-    s.path(catmull(lat), MUTED, 0.9, dash="2 4", op=0.75)
-    for c in ["F7", "T7", "P7", "O1"]:
-        x, y = PSp(CH[c])
-        s.circle(x, y, 2.4, MUTED, 1, fill=GROUND)
-        s.text(x + (7 if c == "O1" else 0), y + 15, c, "chip", MUTED, "middle", caps=False, halo=True)
-    centre = np.array([0, -13.0, 5.0])
-
-    def outward(p, d):
-        v = p - centre
-        return p + v / np.linalg.norm(v) * d
-    arcpts = [FID["nasion"], CH["Fpz"], CH["AFz"], CH["Fz"], CH["FCz"], CH["Cz"], CH["CPz"], CH["Pz"], CH["POz"], CH["Oz"], CH["Iz"]]
-    s.path(catmull([PSp(outward(p, 16)) for p in arcpts]), FAINT, 1)
-    marks = [FID["nasion"], CH["Fpz"], CH["Fz"], CH["Cz"], CH["Pz"], CH["Oz"], CH["Iz"]]
+    s = sheet(930, 4, "ELECTRODE PLACEMENT", "Three stickers, placed by landmarks",
+              "One adult head at true scale, seen from the front, the left and above. Stickers at true size, Ø 26 mm.")
+    k, ztop = 1.5, 848.0
+    oy = 168 + ztop * k
+    sc = head_scene()
+    # ---- A front view (her left on the viewer's right) and B left side view, same scale, same rows
+    XF, XS = 238, 784
+    rf = R3.Render(sc, R3.FRONT, k, XF, oy, cut=NECK_CUT)
+    rs = R3.Render(sc, R3.LEFT, k, XS, oy, cut=NECK_CUT)
+    place(s, rf)
+    place(s, rs)
+    # level lines between the views: the same height in both, one label serving both
+    for lab, ch, col in [("E1 · FP1", "Fp1", E1C), ("REF · M1", "M1", REFC)]:
+        y = rf.to_svg(hpos(ch))[0, 1]
+        xa = silhouette_x(rf, y, 1) + 8
+        xb = silhouette_x(rs, y, -1) - 8
+        if ch == "M1":
+            xb = rs.to_svg(hpos(ch))[0, 0] - R3.STICKER_R * k - 8
+            s.line(silhouette_x(rs, y, -1) - 8, y, xb, y, col, 0.9, dash="2 4", op=0.0)
+        s.line(xa, y, xb, y, col, 0.9, dash="2 4")
+        s.text((xa + min(xb, silhouette_x(rs, y, -1) - 8)) / 2, y + 4, lab, "pin", col, "middle", bg=True)
+    # A: optional E2 and the hidden mastoid stickers
+    sticker_outline(s, rf, "Fp2", E2C, "optional")
+    sticker_outline(s, rf, "M1", REFC, "hidden")
+    sticker_outline(s, rf, "M2", BIASC, "hidden")
+    px, py = rf.to_svg(hmark("pupil_l"))[0]
+    fy = rf.to_svg(hpos("Fp1") - [0, 0, R3.STICKER_R])[0, 1]
+    s.line(px, py - 7, px, fy + 3, E1C, 1, dash="2 2")
+    x2, y2 = rf.to_svg(hpos("Fp2"))[0]
+    leader(s, [(x2 - 12, y2 - 10), (x2 - 44, y2 - 56), (98, y2 - 56)], E2C)
+    s.text(94, y2 - 52, "E2 · FP2", "pin", E2C, "end")
+    s.text(94, y2 - 38, "OPTIONAL", "note", MUTED, "end")
+    xb, yb = rf.to_svg(hpos("M2"))[0]
+    leader(s, [(xb - 4, yb + 12), (xb - 20, yb + 70), (98, yb + 70)], BIASC)
+    s.text(94, yb + 74, "BIAS · M2", "pin", BIASC, "end")
+    s.text(94, yb + 88, "HIDDEN BEHIND", "note", MUTED, "end")
+    s.text(94, yb + 102, "THE RIGHT EAR", "note", MUTED, "end")
+    ex, ey = rf.to_svg(hpos("M1"))[0]
+    s.text(ex + 4, ey + 46, "HIDDEN", "chip", REFC, "middle")
+    # B: the midline arc with its 10 and 20 % steps, landmarks, the mastoid
+    arc = np.array(head()["E"]["midline_arc"]["points"], float)
+    out = lambda P, d: on_skin(P)[0] + on_skin(P)[1] * d
+    s.path(catmull([tuple(p) for p in rs.to_svg(out(arc, 15))]), FAINT, 1)
+    marks = [hmark("nasion"), hmark("Fpz"), hmark("Fz"), hmark("Cz"), hmark("Pz"), hmark("Oz"), hmark("inion")]
     for p in marks:
-        s.line(*PSp(outward(p, 11.5)), *PSp(outward(p, 20.5)), FAINT, 1)
+        a, b = rs.to_svg(out(p[None], 10.5))[0], rs.to_svg(out(p[None], 19.5))[0]
+        s.line(*a, *b, FAINT, 1)
     for (p, q), lab in zip(zip(marks, marks[1:]), ["10%", "20%", "20%", "20%", "20%", "10%"]):
-        x, y = PSp(outward((p + q) / 2, 27))
+        mid = arc[np.argmin(np.linalg.norm(arc - (p + q) / 2, axis=1))]
+        x, y = rs.to_svg(out(mid[None], 28))[0]
         s.text(x, y + 3.5, lab, "chip", MUTED, "middle")
-    for c in ["Fz", "Cz", "Pz", "Oz"]:
-        x, y = PSp(CH[c])
-        s.circle(x, y, 2.4, MUTED, 1, fill=GROUND)
-        x, y = PSp(outward(CH[c], -9))
-        s.text(x, y + 3.5, c, "chip", MUTED, "middle", caps=False, halo=True)
-    mx, my = PSp(m1)
-    sticker(s, mx, my, rk * 0.85, rk, REFC)
-    draw_side_ear(s, PS)
-    x, y = PSp(fp1)
-    sticker(s, x + 1.5, y, rk * 0.35, rk, E1C)
-    leader(s, [(mx + 12, my + 12), (mx + 40, my + 56), (mx + 54, my + 56)], REFC)
-    s.text(mx + 58, my + 60, "MASTOID BONE", "note")
-    s.text(mx + 58, my + 74, "ON SKIN, NOT HAIR", "note")
-    nx, ny = PS(NZ_Y, NZ_Z)
-    leader(s, [(nx - 2, ny), (nx - 30, ny + 10)], MUTED)
-    s.text(nx - 34, ny + 14, "NASION", "note", MUTED, "end")
-    ix, iy = PSp(CH["Iz"])
-    leader(s, [(ix + 2, iy), (ix + 44, iy + 14)], MUTED)
-    s.text(ix + 48, iy + 18, "INION", "note", MUTED)
-    s.text(XS + 20, 546, "B  ·  LEFT SIDE VIEW", "note", MUTED, "middle")
-    # ---- C top view
-    s.line(44, 572, W - 44, 572, LINE, 1)
-    XT, YT, R = 176, 712, 70
-    proj, rho = top_projection()
-
-    def T(p):
-        u, v = proj(p)
-        return XT + u * R, YT + v * R
-    s.circle(XT, YT, R, INK, 1.5, fill=SURFACE)
-    s.circle(XT, YT, R * 0.5, LINE, 1, dash="2 4")
-    s.line(XT - R, YT, XT + R, YT, LINE, 1, dash="2 4")
-    s.line(XT, YT - R, XT, YT + R, LINE, 1, dash="2 4")
-    a = math.radians(14)
-    s.path(f"M{XT - R * math.sin(a):.1f} {YT - R * math.cos(a):.1f} L{XT:.1f} {YT - R * 1.13:.1f} "
-           f"L{XT + R * math.sin(a):.1f} {YT - R * math.cos(a):.1f}", INK, 1.5)
-    for sgn in (-1, 1):
-        s.path(catmull([(XT + sgn * R * 0.995, YT - R * 0.16), (XT + sgn * R * 1.07, YT - R * 0.13),
-                        (XT + sgn * R * 1.09, YT + R * 0.02), (XT + sgn * R * 1.05, YT + R * 0.15),
-                        (XT + sgn * R * 0.99, YT + R * 0.17)]), INK, 1.5)
-    s.text(XT, YT - R * 1.13 - 8, "NOSE", "note", MUTED, "middle")
-    for c in ["F7", "F3", "Fz", "F4", "F8", "T7", "C3", "Cz", "C4", "T8", "P7", "P3", "Pz", "P4", "P8", "O1", "O2"]:
-        x, y = T(CH[c])
-        s.circle(x, y, 2.2, MUTED, 1, fill=GROUND)
+    for name in ("Fz", "Cz", "Pz", "Oz"):
+        p = hmark(name)
+        x, y = rs.to_svg(out(p[None], 0))[0]
+        xi, yi = rs.to_svg(out(p[None], -11))[0]
+        s.text(xi, yi + 3.5, name, "chip", MUTED, "middle", caps=False, halo=True)
+    for name in ("F7", "T7", "P7"):
+        x, y = rs.to_svg(hpos(name)[None])[0]
+        chip_dot(s, x, y, name, 0, 15)
+    nx, ny = rs.to_svg(hmark("nasion")[None])[0]
+    leader(s, [(nx - 3, ny), (nx - 30, ny + 4)], MUTED)
+    s.text(nx - 34, ny + 8, "NASION", "note", MUTED, "end")
+    ix, iy = rs.to_svg(hmark("inion")[None])[0]
+    leader(s, [(ix + 3, iy), (ix + 40, iy + 4)], MUTED)
+    s.text(ix + 44, iy + 8, "INION", "note", MUTED)
+    mx, my = rs.to_svg(hpos("M1")[None])[0]
+    leader(s, [(mx + 10, my + 12), (mx + 40, my + 72), (mx + 54, my + 72)], REFC)
+    s.text(mx + 58, my + 76, "MASTOID BONE", "note")
+    s.text(mx + 58, my + 90, "ON SKIN, NOT HAIR", "note")
+    ybot = oy - NECK_CUT[1] * k
+    s.text(XF, ybot + 30, "A  ·  FRONT", "note", MUTED, "middle")
+    s.text(XS - 60 * k, ybot + 30, "B  ·  LEFT SIDE", "note", MUTED, "middle")
+    scale_bar(s, 44, ybot + 26, 50, k)
+    # ---- C from above: the 10-20 sites on the same head
+    s.line(44, ybot + 58, W - 44, ybot + 58, LINE, 1)
+    kt = 1.08
+    yc0 = ybot + 92
+    XT = 196
+    rt = R3.Render(sc, R3.TOP, kt, XT, yc0 + 168.0 * kt, cut=NECK_CUT)
+    place(s, rt)
+    ring = ["Fpz", "Fp2", "F8", "T8", "P8", "O2", "Oz", "O1", "P7", "T7", "F7", "Fp1"]
+    pts = [tuple(p) for p in rt.to_svg(np.array([hpos(c) if c in head()["E"]["channels"] else hmark(c) for c in ring]))]
+    s.path(catmull(pts, closed=True), FAINT, 1, dash="2 4")
+    for c in ["F3", "Fz", "F4", "C3", "Cz", "C4", "P3", "Pz", "P4", "F7", "F8", "T7", "T8", "P7", "P8", "O1", "O2"]:
+        x, y = rt.to_svg(hpos(c)[None])[0]
         if c in ("T7", "T8"):
-            s.text(x + (9 if c == "T7" else -9), y + 3, c, "chip", MUTED, "start" if c == "T7" else "end", caps=False)
+            chip_dot(s, x, y, c, 9 if c == "T8" else -9, 3, "start" if c == "T8" else "end")
         else:
-            s.text(x, y - 5.5, c, "chip", MUTED, "middle", caps=False)
-    srad = R * STICKER_R / (math.pi / 2 * rho)
-    for c, col, lab, dx, dy, st in [("Fp1", E1C, "E1", -11, -6, "solid"), ("Fp2", E2C, "E2", 11, -6, "optional"),
-                                     ("M1", REFC, "REF", 0, 24, "solid"), ("M2", BIASC, "BIAS", 0, 24, "solid")]:
-        x, y = T(CH[c])
-        sticker(s, x, y, srad, srad, col, style=st)
-        s.text(x + dx, y + dy, lab, "pin", col, "middle" if dx == 0 else ("end" if dx < 0 else "start"), halo=True)
-    s.text(XT, YT + R + 30, "CIRCLE: THE 10 % CIRCUMFERENCE", "chip", MUTED, "middle")
-    s.text(XT, YT + R + 42, "MASTOIDS LIE LOWER, OUTSIDE IT", "chip", MUTED, "middle")
-    s.text(44, 606, "C  ·  FROM ABOVE, NOSE UP", "note")
+            chip_dot(s, x, y, c, 0, -6)
+    sticker_outline(s, rt, "Fp2", E2C, "optional")
+    sticker_outline(s, rt, "M1", REFC, "hidden")
+    sticker_outline(s, rt, "M2", BIASC, "hidden")
+    for lead, dx, dy, anchor in [("E1", 22, -6, "start"), ("E2", -22, -6, "end"), ("REF", 16, 26, "start"), ("BIAS", -16, 26, "end")]:
+        ch, col = LEADS[lead]
+        x, y = rt.to_svg(hpos(ch)[None])[0]
+        s.text(x + dx, y + dy, lead, "pin", col, anchor, halo=True)
+    s.text(XT, yc0 - 12, "NOSE", "note", MUTED, "middle")
+    s.text(44, yc0 - 8, "C  ·  FROM ABOVE", "note")
+    s.text(44, rt.image_box()[1] + rt.image_box()[3] + 14, "DOTTED: THE 10 % CIRCUMFERENCE", "chip", MUTED)
     # ---- D how to find each spot
-    dx0 = 380
-    s.text(dx0, 606, "D  ·  HOW TO FIND EACH SPOT", "note")
-    rows = [("E1  →  LEFT FOREHEAD  ·  FP1", E1C, "Lower edge just above the left eyebrow, centered over the pupil."),
-            ("REF  →  BEHIND THE LEFT EAR  ·  M1", REFC, "The bony bump right behind the earlobe, on skin. Tie long hair back."),
-            ("BIASOUT  →  BEHIND THE RIGHT EAR  ·  M2", BIASC, "The same spot on the right side."),
-            ("E2  →  RIGHT FOREHEAD  ·  FP2, OPTIONAL", E2C, "Mirror image of Fp1.")]
-    for i, (head, col, find) in enumerate(rows):
-        yy = 640 + i * 46
-        s.text(dx0, yy, head, "pin", col)
-        s.text(dx0, yy + 18, find, "detail")
-    s.text(dx0, 826, "Stickers at true size, Ø 26 mm. Short dashes: hidden. Long dashes: optional.", "detail")
-    footer(s, "SOURCES  ·  ELECTRODE POSITIONS: MNE-PYTHON STANDARD 10-20 MONTAGE  ·  FACE AND EAR: ADULT PROPORTIONS, APPROXIMATE")
+    dx0 = 420
+    s.text(dx0, yc0 - 8, "D  ·  HOW TO FIND EACH SPOT", "note")
+    rows = [("E1  →  LEFT FOREHEAD  ·  FP1", E1C, ["Lower edge just above the left eyebrow,", "in line with the pupil."]),
+            ("REF  →  BEHIND THE LEFT EAR  ·  M1", REFC, ["The bony bump right behind the lower half", "of the ear, on skin. Tie long hair back."]),
+            ("BIASOUT  →  BEHIND THE RIGHT EAR  ·  M2", BIASC, ["The same spot on the right side."]),
+            ("E2  →  RIGHT FOREHEAD  ·  FP2, OPTIONAL", E2C, ["Mirror image of Fp1."])]
+    y = yc0 + 26
+    for head_, col, lines in rows:
+        s.text(dx0, y, head_, "pin", col)
+        for j, line in enumerate(lines):
+            s.text(dx0, y + 19 + j * 17, line, "detail")
+        y += 30 + 17 * len(lines) + 8
+    s.text(dx0, y + 6, "Dashed short: hidden behind the head. Dashed long: optional.", "detail")
+    footer(s, "SOURCES  ·  HEAD: MAKEHUMAN BASE MESH, CC0  ·  POSITIONS: MNE-PYTHON STANDARD 10-20, FITTED TO 5 LANDMARKS")
     return s
 
 
