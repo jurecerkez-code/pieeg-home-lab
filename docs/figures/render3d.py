@@ -299,6 +299,14 @@ class Render:
                  shadows=True, ao=True, cut=None, ground=None):
         V, F, M, N = scene.arrays()
         self.cam, self.k, self.ox, self.oy, self.ss = cam, k, ox, oy, ss
+        single = cut is not None and len(cut) == 2 and np.isscalar(cut[1])
+        planes = [] if cut is None else ([cut] if single else list(cut))
+        planes = [(np.asarray(n, float), float(d)) for n, d in planes]
+        if planes:                                # cut planes: keep points with X . n >= d for every plane
+            out = np.zeros(len(F), bool)
+            for n, d in planes:
+                out |= ((V[F] @ n) < d).all(axis=1)
+            F, M, N = F[~out], M[~out], N[~out]
         P = cam.project(V)
         if bounds is None:
             used = np.unique(F)
@@ -313,10 +321,8 @@ class Render:
         f = np.maximum(self.fid, 0)
         w = np.stack([b0, b1, 1 - b0 - b1], -1)
         X = (V[F[f]] * w[..., None]).sum(2)
-        if cut is not None:                       # cut plane: keep points with X . n >= d
-            cn, cd = np.asarray(cut[0], float), cut[1]
-            below = mask & ((X @ cn) < cd)
-            mask &= ~below
+        for n, d in planes:
+            mask &= (X @ n) >= d
         Nn = (N[f] * w[..., None]).sum(2)
         Nn /= np.maximum(np.linalg.norm(Nn, axis=-1, keepdims=True), 1e-12)
         self.mask, self.X, self.N, self.mat = mask, X, Nn, M[f]
