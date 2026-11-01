@@ -5,7 +5,7 @@ From a voltage on your forehead to a number in Python.
 ## Signal chain
 
 ```
- scalp ── Ag/AgCl sticker ── alligator cable ──► PiEEG-8 ─────────────────────► Raspberry Pi 3 ──── WiFi ────► MacBook
+ scalp ── Ag/AgCl sticker ── alligator cable ──► PiEEG-8 ─────────────────────► Raspberry Pi 3 ──── WiFi ────► laptop 
  (~10 µV)                     40 cm              ADS1299                SPI0      PiEEG Server                  Python / browser
                                                  · subtracts Ref                  · reads 27 bytes per sample    · live_view.py
                                                  · gain                           · converts to µV               · record.py

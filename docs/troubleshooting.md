@@ -33,7 +33,7 @@ Without a mounted board this is exactly what happens, so it's also what the Pi s
 ### The dashboard does not open
 
 1. Wait a full 2 minutes after plugging in the powerbank.
-2. MacBook and Pi on the **same WiFi network**. The Pi 3 uses 2.4 GHz, the Mac may use 5 GHz on the same router, that's fine.
+2. Laptop and Pi on the **same WiFi network**. The Pi 3 uses 2.4 GHz, the laptop may use 5 GHz on the same router, that's fine.
 3. `tina.local` not resolving, see below.
 4. SSH in and check: `systemctl status pieeg-server` and `journalctl -u pieeg-server -n 50`.
 
@@ -88,7 +88,7 @@ Then `http://<ip>:1617` and `python live_view.py --host <ip>`.
 ### Quick noise checklist (from PiEEG)
 
 - [ ] Everything on the battery, nothing on the mains, powerbank not charging
-- [ ] MacBook charger unplugged
+- [ ] Laptop charger unplugged
 - [ ] Short cables, hanging free
 - [ ] Setup on a wooden or plastic surface, away from the router, phones and chargers
 - [ ] Sitting still, feet not on a metal surface
@@ -97,7 +97,7 @@ Then `http://<ip>:1617` and `python live_view.py --host <ip>`.
 
 - PiEEG's current docs list the Pi 4 and 5 as hosts. Elecrow lists the Pi 3, 4 and 5, and the PiEEG Server installer explicitly detects the Pi 3 and selects `/dev/gpiochip0`. If `self_test.py` passes and blinks show up, the Pi 3 works.
 - Python SDK: the `*_Pi4.py` scripts are the right ones for the Pi 3 (both use `RPi.GPIO`).
-- 1 GB RAM: run only the server on the Pi, analysis on the Mac.
+- 1 GB RAM: run only the server on the Pi, analysis on the laptop.
 
 ## Still stuck
 

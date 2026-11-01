@@ -23,7 +23,7 @@
 2. [Equipment](#equipment)
 3. [Safety](#safety)
 4. [Step by step](#step-by-step): from the box to your first alpha wave
-5. [Code](#code): live view, recording and analysis on the MacBook.
+5. [Code](#code): live view, recording and analysis on the laptop
 6. [Missions](#missions)
 7. [Repository structure](#repository-structure)
 8. [References and citation](#references-and-citation)
@@ -32,11 +32,11 @@
 
 ## Overview
 
-This kit records EEG with the open source **[PiEEG-8](https://docs.pieeg.com/hardware/devices/pieeg-8/)** shield, built around the Texas Instruments **ADS1299**, the same 24 bit biopotential converter used in OpenBCI and many research amplifiers. The Raspberry Pi runs **[PiEEG Server](https://github.com/pieeg-club/PiEEG-server)** and streams 250 samples per second over WiFi. Everything else happens on the MacBook: a browser dashboard for the first look, and Python for live plots, recording, spectral analysis and conversion to the **[NWB](https://www.nwb.org/)** research data standard.
+This kit records EEG with the open source **[PiEEG-8](https://docs.pieeg.com/hardware/devices/pieeg-8/)** shield, built around the Texas Instruments **ADS1299**, the same 24 bit biopotential converter used in OpenBCI and many research amplifiers. The Raspberry Pi runs **[PiEEG Server](https://github.com/pieeg-club/PiEEG-server)** and streams 250 samples per second over WiFi. Everything else happens on the laptop: a browser dashboard for the first look, and Python for live plots, recording, spectral analysis and conversion to the **[NWB](https://www.nwb.org/)** research data standard.
 
 There's no EEG cap in this kit on purpose. It starts with electrode stickers on skin without hair (forehead and behind the ears), which is enough for blinks, eye movements, muscle activity and the alpha rhythm. More channels on bare skin (temples, eye corners) are [Mission 4](docs/missions.md#mission-4-more-channels-on-bare-skin). Positions through hair need dry electrodes, a later upgrade.
 
-<img src="docs/images/system.png" alt="System overview: electrodes, PiEEG-8 on Raspberry Pi, powerbank, WiFi, MacBook" width="100%">
+<img src="docs/images/system.png" alt="System overview: electrodes, PiEEG-8 on Raspberry Pi, powerbank, WiFi, laptop" width="100%">
 
 | | |
 |---|---|
@@ -77,7 +77,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 ## Safety
 
 > [!CAUTION]
-> **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from a **powerbank that is not charging**, and the MacBook runs **on battery, charger unplugged**. No wall power, no HDMI and no Ethernet cable anywhere in the setup. [docs/safety.md](docs/safety.md)
+> **Battery only.** The PiEEG-8 has **no electrical isolation**. While electrodes are on your skin, the Raspberry Pi runs from a **powerbank that is not charging**, and the laptop runs **on battery, charger unplugged**. No wall power, no HDMI and no Ethernet cable anywhere in the setup. [docs/safety.md](docs/safety.md)
 
 > [!WARNING]
 > **Pacemaker or other implanted electronic device?** Don't wear the electrodes without your physician's approval (PiEEG safety rule). You can still do everything as the researcher: [record someone else](docs/recording-someone-else.md) and start with [PiEEG's real example data](docs/missions.md#mission-0-real-data-first).
@@ -148,7 +148,7 @@ Behind the head doesn't work: Fp1 is about 45 cm away. Every lead should hang lo
 
 Wait about a minute while the Pi boots and joins the WiFi.
 
-**Connect to the Pi from the MacBook.** Open **Terminal** (<kbd>⌘</kbd> + <kbd>Space</kbd>, type `Terminal`, Enter) and type:
+**Connect to the Pi from the laptop.** Open a terminal (on a Mac: <kbd>⌘</kbd> + <kbd>Space</kbd>, type `Terminal`, Enter; on Windows: PowerShell) and type:
 
 ```bash
 ssh jure@tina.local
@@ -160,7 +160,7 @@ The first time, type `yes` to trust the Pi, then the Pi's password (nothing appe
 
 ### Step 5 · Check the setup (optional, 10 seconds)
 
-On the MacBook, after the [code setup](#code):
+On the laptop, after the [code setup](#code):
 
 ```bash
 python check_setup.py --noise-test
@@ -172,7 +172,7 @@ Checks the whole chain in one go: WiFi, Pi, PiEEG Server, 8 channel mode, sample
 
 The dashboard is the kit's graphical view. The Pi itself runs without a desktop (Raspberry Pi OS Lite, to leave its 1 GB of RAM to the server), so everything visual happens in the laptop's browser.
 
-On the MacBook (charger unplugged, same WiFi) open **[http://tina.local:1617](http://tina.local:1617)** in Safari or Chrome and click **Connect**. Then:
+On the laptop (charger unplugged, same WiFi) open **[http://tina.local:1617](http://tina.local:1617)** in Safari or Chrome and click **Connect**. Then:
 
 1. Check it shows **8 channels** (16 means the server isn't in PiEEG-8 mode, see [troubleshooting](docs/troubleshooting.md#pieeg-server)).
 2. **Bandpass** is already on: PiEEG Server starts with 1 to 40 Hz, and the button shows that range. Leave it. Inside its menu, the **Enabled** button shows the current state, and clicking it switches the filter off.
@@ -209,7 +209,7 @@ Unplug the powerbank, peel off the stickers (single use), then recharge the powe
 
 ## Code
 
-The Pi handles the hardware. Your Python runs on the MacBook and reads the live stream over WiFi.
+The Pi handles the hardware. Your Python runs on the laptop and reads the live stream over WiFi.
 
 ### Setup (once)
 

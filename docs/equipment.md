@@ -118,7 +118,7 @@ Wipe each spot before sticking an electrode and let it dry. Removes skin oil, lo
 
 ## Not in the box, but needed
 
-- **MacBook**, on battery while recording, same WiFi as the Pi
+- **Laptop** (Mac or Windows), on battery while recording, same WiFi as the Pi
 - **2.4 GHz WiFi**: the Pi 3 can't see 5 GHz networks
 
 ## Official references

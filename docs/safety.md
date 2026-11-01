@@ -7,7 +7,7 @@ The PiEEG-8 connects your skin directly to the electronics and has **no isolatio
 1. **Battery only.** The Raspberry Pi and the PiEEG-8 run from the powerbank while electrodes are on a person.
 2. **Don't charge the powerbank during a session.** A powerbank that's plugged into the wall while powering the Pi is a mains connection. Charge it before, never during.
 3. **No cable to anything on the mains.** No wall charger, no HDMI to a TV or monitor, no USB to a plugged in computer, and **no Ethernet cable** (the Pi 3 has a network port, leave it empty).
-4. **Laptop on battery, WiFi only.** Unplug the MacBook charger before the electrodes go on. The MacBook never gets a cable to the Pi.
+4. **Laptop on battery, WiFi only.** Unplug the laptop's charger before the electrodes go on. The laptop never gets a cable to the Pi.
 5. **Not a medical device.** Learning and research only. No diagnosis, monitoring or treatment of anything. PiEEG: the board "has not been certified by any regulator for use with the human body".
 6. **Implants.** Don't put electrodes on anyone with a pacemaker or other implanted electronic device without a physician's approval. The Bias electrode is connected to an amplifier output on the board (see [below](#what-the-bias-electrode-does)), and an implant isn't designed with that in mind. Without approval, be the researcher and [record someone else](recording-someone-else.md). Skip ECG experiments (wrists, chest) for that person entirely.
 7. **Skin.** Clean, intact skin only. Stop if a sticker itches or burns.
@@ -30,12 +30,12 @@ Power goes on last and comes off first, so nobody handles the pins of a powered 
 
 | Setup | With electrodes on |
 |---|---|
-| Pi + PiEEG-8 on a charged powerbank, MacBook on battery over WiFi | ✅ Safe |
+| Pi + PiEEG-8 on a charged powerbank, laptop on battery over WiFi | ✅ Safe |
 | Powerbank plugged into the wall while powering the Pi | ❌ Never |
 | Pi on its wall power supply | ❌ Never |
 | HDMI to a TV or monitor on a wall socket | ❌ Never |
 | Ethernet or USB cable to a mains powered device | ❌ Never |
-| MacBook charging while connected over WiFi | ❌ Unplug the charger first |
+| Laptop charging while connected over WiFi | ❌ Unplug the charger first |
 
 ## Why
 

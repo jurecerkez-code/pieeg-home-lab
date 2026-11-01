@@ -415,7 +415,7 @@ def fig_system():
     v, _ = trace(seconds=2.5)
     xs = np.linspace(sx + 10, sx + sw - 10, len(v))
     s.poly(list(zip(xs, sy + sh / 2 - v / np.percentile(np.abs(v), 99) * sh * 0.3)), ALPHA, 1.1)
-    s.text(lx2 + lw_ / 2, ly2 + lh + 42, "MACBOOK", "pin", INK, "middle")
+    s.text(lx2 + lw_ / 2, ly2 + lh + 42, "LAPTOP", "pin", INK, "middle")
     s.text(lx2 + lw_ / 2, ly2 + lh + 58, "ON BATTERY, CHARGER UNPLUGGED", "spec", MUTED, "middle")
     s.text(lx2 + lw_ / 2, ly2 + lh + 74, "PIEEG SERVER  ·  DATA :1616", "spec", MUTED, "middle")
     s.text(lx2 + lw_ / 2, ly2 + lh + 90, "DASHBOARD :1617  ·  PYTHON", "spec", MUTED, "middle")
@@ -479,7 +479,7 @@ def fig_kit():
         ("Clip cables", ["FEMALE → CLIP · 20 CM", "10 · BERRYBASE DUPAC20"]),
         ("Extension jumpers", ["MALE ↔ FEMALE · 20 CM", "40 · BERRYBASE DUPK-40-FM-20"]),
         ("Powerbank and cable", ["5 V · 3 A, AS PIEEG ADVISES", "OFFICIAL MICRO USB, 1 M"]),
-        ("Wipes and MacBook", ["CLEAN, DRY SKIN", "MACBOOK ON BATTERY, WIFI"]),
+        ("Wipes and laptop", ["CLEAN, DRY SKIN", "LAPTOP ON BATTERY, WIFI"]),
     ]
     for i, (title, spec) in enumerate(cards):
         cx = x0 + (i % 4) * (cw + gap)
