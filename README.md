@@ -23,7 +23,7 @@
 2. [Equipment](#equipment)
 3. [Safety](#safety)
 4. [Step by step](#step-by-step): from the box to your first alpha wave
-5. [Code](#code): live view, recording and analysis on the MacBook
+5. [Code](#code): live view, recording and analysis on the MacBook.
 6. [Missions](#missions)
 7. [Repository structure](#repository-structure)
 8. [References and citation](#references-and-citation)
