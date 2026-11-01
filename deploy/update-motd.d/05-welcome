@@ -11,6 +11,9 @@ dot() { if [ "$1" = active ]; then printf '%s●%s %s' "$OK" "$R" "$2"; else pri
 srv=$(systemctl is-active pieeg-server 2>/dev/null)
 page=$(systemctl is-active tina-page 2>/dev/null)
 thr=$(vcgencmd get_throttled 2>/dev/null | cut -d= -f2)
+# Anything but a number (an error message, "1 error_msg=...") would abort the whole banner
+# at the arithmetic below, so treat it as "unknown" instead.
+case "$thr" in 0x[0-9a-fA-F]*|[0-9]*) ;; *) thr="" ;; esac
 pwnote=""
 if [ -z "$thr" ]; then pw="${DIM}●${R} power"
 elif [ $((thr & 1)) -ne 0 ]; then pw="${BAD}●${R} power"
@@ -21,6 +24,7 @@ elif [ $((thr & 0x10000)) -ne 0 ]; then pw="${GOLD}●${R} power"
 "
 else pw="${OK}●${R} power"; fi
 IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+[ -n "$IP" ] || IP="the address from the router's device list"
 
 cat <<'ART'
 
@@ -47,14 +51,14 @@ cat <<'ART'
 
 ART
 cat <<TXT
-  ${B}${INK}Hi Tina. This is your EEG lab.${R}
+  ${B}${INK}Welcome to tina. This is your EEG lab.${R}
 
   $(dot "$srv" "PiEEG Server")    $(dot "$page" "your page")    $pw
 ${pwnote}
   ${GOLD}OPEN ON YOUR LAPTOP${R}
-    ${B}Your page${R}     http://raspberrypi.local:8080   ${DIM}manual, kit, live signal${R}
-    ${B}Dashboard${R}     http://raspberrypi.local:1617   ${DIM}press Connect${R}
-    ${B}Data${R}          ws://raspberrypi.local:1616     ${DIM}Python on your laptop${R}
+    ${B}Your page${R}     http://tina.local:8080   ${DIM}manual, kit, live signal${R}
+    ${B}Dashboard${R}     http://tina.local:1617   ${DIM}press Connect${R}
+    ${B}Data${R}          ws://tina.local:1616     ${DIM}Python on your laptop${R}
     ${DIM}If .local does not answer, use $IP instead.${R}
 
   ${GOLD}A SESSION IN FOUR STEPS${R}

@@ -5,7 +5,7 @@ Runs PiEEG Server's built in noise test. The server shorts every input inside
 the ADS1299 (CHnSET = 0x01, as in the official PiEEG noise check), measures the
 remaining noise for a few seconds, then switches back to normal recording.
 
-    python self_test.py                  # Pi on raspberrypi.local
+    python self_test.py                  # Pi on tina.local
     python self_test.py --host 192.168.0.42
 
 Electrodes can stay on or off, the inputs are disconnected inside the chip.
@@ -74,7 +74,7 @@ async def run(host: str, port: int, duration: float, quiet: bool = False):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--host", default="raspberrypi.local")
+    p.add_argument("--host", default="tina.local")
     p.add_argument("--port", type=int, default=1616)
     p.add_argument("--seconds", type=float, default=3, help="1 to 10, the server limits it to that range")
     a = p.parse_args()

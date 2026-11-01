@@ -10,6 +10,7 @@
 @font-face { font-family: "DejaVu Sans Mono"; font-weight: 700; font-display: swap; src: url("fonts/DejaVuSansMono-Bold.woff2") format("woff2"); }
 
 :root {
+  color-scheme: dark;   /* native form controls and scrollbars follow the Lab theme */
   --bg: #0b0d33;
   --surface: #11144a;
   --surface-2: #161a52;
@@ -172,7 +173,7 @@ h1.title {
   cursor: pointer;
 }
 
-.chips button[aria-selected="true"] { background: var(--blue); }
+.chips button[aria-pressed="true"] { background: var(--blue); }
 
 .cmd.prompt { margin: 2px 0 0; background: var(--code); border: 0; border-radius: 0; }
 .cmd.prompt pre { color: var(--fg); font-size: 13.5px; padding: 11px 70px 11px 14px; }
@@ -278,6 +279,7 @@ h1.title {
 .checklist li { border-top: 1px solid var(--line); padding: calc(var(--step) * 1.5) 0; }
 
 .checklist label { display: flex; gap: calc(var(--step) * 1.5); align-items: flex-start; cursor: pointer; }
+.checklist.outcomes li > span { display: block; }
 
 .checklist input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--blue); }
 
@@ -408,7 +410,9 @@ ol.plain li { margin-bottom: calc(var(--step) * 1.5); }
 
 /* ---------- use case cards ---------- */
 
-.cards { display: grid; gap: calc(var(--step) * 1.5); margin: calc(var(--step) * 2) 0; }
+.cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--step) * 1.5); margin: calc(var(--step) * 2) 0; }
+
+details.card, details.card .body, .steps > li { min-width: 0; max-width: 100%; }
 
 details.card {
   border: 1px solid var(--line);
@@ -440,6 +444,18 @@ details.card .body { padding-top: calc(var(--step) * 2); }
 }
 
 .card-figure svg { display: block; width: 100%; height: auto; }
+
+/* On a phone the 600 px drawings would shrink their labels to 5 px. Below 560 px the figure
+   keeps a readable width and scrolls sideways instead, like the tables. */
+@media (max-width: 559px) {
+  .card-figure { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: calc(var(--step) * 1.5); max-width: 100%; }
+  .card-figure img, .card-figure svg { width: 520px; max-width: none; }
+  .card-figure::after {
+    content: "drag sideways to see the whole drawing";
+    display: block; margin-top: calc(var(--step) * 1.5);
+    font: 11px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  }
+}
 
 .demo-row { display: flex; gap: calc(var(--step) * 1.5); flex-wrap: wrap; margin: calc(var(--step) * 2) 0; }
 

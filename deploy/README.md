@@ -1,6 +1,6 @@
 # Deploy
 
-What runs on the Pi besides PiEEG Server: Tina's page on port 8080 and the welcome shown on every SSH login. Both are plain files, so the copy in this repository is the backup.
+What runs on the Pi besides PiEEG Server: the kit's page on port 8080 (`http://tina.local:8080`) and the welcome shown on every SSH login. Both are plain files, so the copy in this repository is the backup.
 
 | File | Goes to | What it does |
 |---|---|---|
@@ -11,17 +11,20 @@ What runs on the Pi besides PiEEG Server: Tina's page on port 8080 and the welco
 On the Pi, from the repository root (the service file assumes the user `jure`; change `User` and the paths for another account):
 
 ```bash
-mkdir -p ~/tina-eeg && cp -r page/index.html page/assets ~/tina-eeg/
+mkdir -p ~/tina-eeg && rsync -a --delete page/index.html page/favicon.ico page/assets ~/tina-eeg/
 sudo install -m 644 deploy/tina-page.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now tina-page
 
 sudo install -m 755 deploy/update-motd.d/05-welcome /etc/update-motd.d/
 sudo cp /etc/motd /etc/motd.debian && sudo truncate -s 0 /etc/motd   # Debian's default text, kept as a backup
+sudo chmod -x /etc/update-motd.d/10-uname                            # Debian's kernel line, or it prints after the art
 ```
 
-Check: `curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/` prints `200`, and a new SSH login shows the welcome.
+`rsync --delete` also removes files that a previous copy left behind, so a renamed drawing doesn't linger. `favicon.ico` isn't linked from the page, but browsers ask for it anyway, and this keeps that request from being a 404 in the log.
 
-The page's six drawings are rendered by [`page/tools/page_figures.py`](../page/tools/page_figures.py) with the same renderer and parts as the figures in `docs/` (see [`docs/figures/README.md`](../docs/figures/README.md)). Run `python page/tools/page_figures.py` to rebuild them into `page/assets/svg`.
+Check: `curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/` prints `200`, the same URL with `tina.local` works from the laptop, and a new SSH login shows the welcome. To put the Debian login back: `sudo chmod +x /etc/update-motd.d/10-uname && sudo cp /etc/motd.debian /etc/motd && sudo rm /etc/update-motd.d/05-welcome`.
+
+The page's six drawings are rendered by [`page/tools/page_figures.py`](../page/tools/page_figures.py) with the same renderer and parts as the figures in `docs/` (see [`docs/figures/README.md`](../docs/figures/README.md)). Run `python page/tools/page_figures.py` to rebuild them into `page/assets/svg`. It needs the same Python packages as `docs/figures/make_figures.py`, and the forearm and chest drawings also need `docs/figures/data/makehuman_base.obj`, which is not in the repository: `docs/figures/extract_reference_data.py` downloads it once.
 
 ## The SSH welcome
 

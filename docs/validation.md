@@ -37,7 +37,7 @@ To do once the board arrives. Pi off, board on all 40 pins, powerbank with the k
 
 | # | Check | Command | Pass when |
 |---|---|---|---|
-| 1 | Power | `ssh jure@raspberrypi.local vcgencmd get_throttled` (a minute after boot) | `throttled=0x0` |
+| 1 | Power | `ssh jure@tina.local vcgencmd get_throttled` (a minute after boot) | `throttled=0x0` |
 | 2 | Whole chain and board noise | `python check_setup.py --noise-test --markdown ../docs/validation-board.md` | every line `[ok]` |
 | 3 | First test with electrodes | [first test](first-test.md) | blinks show as big spikes on channel 1 |
 | 4 | Alpha | `python record.py --seconds 60 --label eyes_open`, then `--label eyes_closed`, then `python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv --save ../docs/images/validation-alpha.png` | eyes closed shows more power at 8 to 13 Hz |

@@ -1,5 +1,5 @@
 """
-Figures for Tina's page (index.html, assets/svg). True scale renders made with the renderer and parts
+Figures for the Pi's page (index.html, assets/svg). True scale renders made with the renderer and parts
 of the pieeg-home-lab repo (docs/figures/render3d.py and parts3d.py), on a transparent background so
 they sit on the page's own navy ground (the repo's Lab theme), with labels in the page's fonts and colors.
 

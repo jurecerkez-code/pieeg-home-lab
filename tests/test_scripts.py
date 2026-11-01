@@ -72,7 +72,7 @@ def test_spectrum(recording, tmp_path):
 def test_mission_1_runs_on_a_raw_recording(recording, tmp_path):
     r = script("mission_1_notch.py", recording, cwd=tmp_path)
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "FAIL hum reduced" in r.stdout          # remove_mains() is still the empty starter
+    assert "FAIL hum peak" in r.stdout             # remove_mains() is still the empty starter
     assert "Note:" not in r.stdout                 # raw data, nothing to warn about
 
 

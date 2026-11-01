@@ -1,7 +1,7 @@
 """
 Check the whole chain from your laptop to the PiEEG-8 in about 10 seconds.
 
-    python check_setup.py                        # Pi on raspberrypi.local
+    python check_setup.py                        # Pi on tina.local
     python check_setup.py --host 192.168.0.209   # or its IP address
     python check_setup.py --noise-test           # also the board noise test (never during a recording)
     python check_setup.py --markdown check.md    # also save the results as a table
@@ -158,7 +158,7 @@ def check(a, rep: Report) -> bool:
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--host", default="raspberrypi.local")
+    p.add_argument("--host", default="tina.local")
     p.add_argument("--port", type=int, default=DEFAULT_PORT)
     p.add_argument("--dashboard-port", type=int, default=DASHBOARD_PORT)
     p.add_argument("--noise-test", action="store_true",

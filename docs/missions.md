@@ -41,7 +41,7 @@ python mission_1_notch.py recordings/<file>_hum_test.csv
 
 Fill in `remove_mains()` in [`code/mission_1_notch.py`](../code/mission_1_notch.py). Done when both checks print **PASS**: hum reduced by more than 95 %, alpha changed by less than 10 %.
 
-`record.py` records the raw signal (it switches PiEEG Server's filters off while it records), so your file has the real hum. On battery the hum on a person can be small. For a file with plenty of it, use `example_dry.csv` from Mission 0, or record 30 s with **no electrodes on anyone** and the cables hanging free: open inputs pick up the room's 50 Hz like antennas.
+`record.py` records the raw signal (it switches PiEEG Server's filters off while it records), so your file has the real hum. On battery the hum on a person can be small, and the script measures the hum as the peak that sticks out above the neighbouring frequencies, so the noise floor doesn't count against you. If there is almost nothing to remove, the script says `SKIP` instead of judging: then use `example_dry.csv` from Mission 0, or record 30 s with **no electrodes on anyone** and the cables hanging free: open inputs pick up the room's 50 Hz like antennas.
 
 <details><summary>Hints</summary>
 
@@ -125,7 +125,7 @@ Each sample arrives as 3 bytes per channel from the ADS1299. PiEEG converts them
 
 1. Read the official conversion in the [PiEEG-8 specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/#converting-to-microvolts) and in `_decode_channels` in [PiEEG Server hardware.py](https://github.com/pieeg-club/PiEEG-server/blob/main/pieeg_server/hardware.py).
 2. Find the data format and the LSB size in the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf) (sections on data format and input full scale range).
-3. Write down every step: bytes, two's complement, gain, VREF, µV.
+3. Write down every step: bytes, two's complement, gain, VREF, µV. Two things to look at closely: how many counts the datasheet puts between −VREF and +VREF (is the full scale 2^24 or 2^23 counts?), and which gain PiEEG actually programs into `CHnSET`.
 
 Done when you can explain each step and you've checked whether the PiEEG formula (about 0.268 µV per count at gain 1) matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub. Until then, every absolute µV value in this repo is provisional.
 

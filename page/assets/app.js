@@ -1,4 +1,4 @@
-/* Tina EEG page. No dependencies. Live websocket, sample fallback, one canvas. */
+/* PiEEG Home Lab page. No dependencies. Live websocket, sample fallback, one canvas. */
 (function () {
   "use strict";
 
@@ -47,7 +47,7 @@
 
   function hostName() {
     if (location.protocol === "http:" && location.hostname) return location.hostname;
-    return "raspberrypi.local";
+    return "tina.local";
   }
 
   function push(channels) {
@@ -64,10 +64,36 @@
     return buf[c][idx];
   }
 
+  function laneMean(c, n) {       // mean of the newest n samples of one channel
+    var sum = 0;
+    for (var k = 0; k < n; k++) sum += at(c, k);
+    return n ? sum / n : 0;
+  }
+
   /* ---------------- transport ---------------- */
+
+  // The Pi restarts, the WiFi drops, pieeg-server gets restarted: the socket closes.
+  // The page then shows the sample and tries again, first after 2 s, then 4, 8, up to 15 s,
+  // for as long as the page is open. Nothing to click.
+  var RETRY_MIN_MS = 2000;
+  var RETRY_MAX_MS = 15000;
+  var retryDelay = RETRY_MIN_MS;
+  var retryTimer = null;
+  var canRetry = true;
+
+  function scheduleRetry(reason) {
+    if (!canRetry || retryTimer) return;
+    retryTimer = setTimeout(function () {
+      retryTimer = null;
+      tryLive();
+    }, retryDelay);
+    if (window.console) console.info("next connection attempt in " + (retryDelay / 1000) + " s (" + reason + ")");
+    retryDelay = Math.min(retryDelay * 2, RETRY_MAX_MS);
+  }
 
   function tryLive() {
     if (location.protocol === "https:") {
+      canRetry = false;
       loadSample("https page cannot open a plain websocket");
       return;
     }
@@ -76,54 +102,66 @@
     var forced = /[?&]live=1/.test(location.search);
     if (local && !forced) {
       // served from a dev machine: do not fire a doomed request, it only pollutes the console
+      canRetry = false;
       loadSample("page is not being served by the Pi, add ?live=1 to force a connection attempt");
       return;
     }
     var url = "ws://" + host + ":1616";
     var settled = false;
+    var sock;
 
     var timer = setTimeout(function () {
       if (settled) return;
       settled = true;
-      try { if (ws) ws.close(); } catch (e) {}
+      try { sock.close(); } catch (e) {}
       loadSample("no answer from " + url + " within 2.5s");
+      scheduleRetry("timeout");
     }, 2500);
 
     try {
-      ws = new WebSocket(url);
+      sock = new WebSocket(url);
     } catch (e) {
       clearTimeout(timer);
       loadSample("websocket refused to open");
+      scheduleRetry("refused");
       return;
     }
+    ws = sock;
 
-    ws.onopen = function () {
-      if (settled) { try { ws.close(); } catch (e) {} return; }
+    sock.onopen = function () {
+      if (sock !== ws) { try { sock.close(); } catch (e) {} return; }
+      if (settled) { try { sock.close(); } catch (e) {} return; }
       settled = true;
       clearTimeout(timer);
       setMode("waiting");
     };
 
-    ws.onmessage = function (ev) {
-      if (typeof ev.data !== "string") return;
+    sock.onmessage = function (ev) {
+      if (sock !== ws || typeof ev.data !== "string") return;
       var msg;
       try { msg = JSON.parse(ev.data); } catch (e) { return; }
       if (msg && msg.channels && msg.channels.length === CH) {
         push(msg.channels);
-        if (mode !== "live") setMode("live");
+        if (mode !== "live") {
+          setMode("live");
+          retryDelay = RETRY_MIN_MS;   // this connection worked, so the next retry can be quick
+        }
       }
     };
 
-    ws.onerror = function () { /* onclose handles the fallback */ };
+    sock.onerror = function () { /* onclose handles the fallback */ };
 
-    ws.onclose = function () {
+    sock.onclose = function () {
+      if (sock !== ws) return;         // an old socket, already replaced
+      clearTimeout(timer);
       if (!settled) {
         settled = true;
-        clearTimeout(timer);
         loadSample("socket closed before it opened");
-      } else if (mode === "live") {
-        loadSample("socket closed");
+      } else {
+        // live or waiting: either way the Pi is gone for now
+        loadSample(mode === "live" ? "socket closed" : "socket closed while waiting for samples");
       }
+      scheduleRetry("closed");
     };
   }
 
@@ -213,16 +251,21 @@
       if (filled < 2) continue;
 
       var n = Math.min(filled, MAX);
-      var step = plotW / (WINDOW_S * SR);
       var px = plotW / n;
+
+      // Each electrode sits at its own DC offset, often millivolts, far outside the lane.
+      // Only the wiggle matters, so the lane is centred on the mean of what is on screen.
+      var mean = laneMean(lane, n);
 
       ctx.strokeStyle = (lane === 0) ? ACCENT : MUTED;
       ctx.lineWidth = 1.15;
       ctx.beginPath();
       for (var k = 0; k < n; k++) {
         var age = n - 1 - k;
-        var v = at(lane, age);
+        var v = at(lane, age) - mean;
         var y = midY - (v / RANGE) * (laneH * 0.42);
+        if (y < midY - laneH * 0.5) y = midY - laneH * 0.5;    // clip to the lane instead of
+        if (y > midY + laneH * 0.5) y = midY + laneH * 0.5;    // drawing over the neighbours
         var x = labelW + 8 + k * px;
         if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       }
@@ -235,11 +278,12 @@
   function goertzel(channel, freq) {
     var n = Math.min(filled, SR * 2);
     if (n < SR) return 0;
+    var mean = laneMean(channel, n);   // the DC offset of the electrode is not a brain rhythm
     var w = 2 * Math.PI * (freq / SR);
     var coeff = 2 * Math.cos(w);
     var s0 = 0, s1 = 0, s2 = 0;
     for (var k = 0; k < n; k++) {
-      var v = at(channel, n - 1 - k);
+      var v = at(channel, n - 1 - k) - mean;
       s0 = v + coeff * s1 - s2;
       s2 = s1;
       s1 = s0;
@@ -443,7 +487,7 @@
   if (!chips.length || !cmd) return;
   Array.prototype.forEach.call(chips, function (chip) {
     chip.addEventListener("click", function () {
-      Array.prototype.forEach.call(chips, function (c) { c.setAttribute("aria-selected", c === chip ? "true" : "false"); });
+      Array.prototype.forEach.call(chips, function (c) { c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
       cmd.textContent = chip.getAttribute("data-cmd");
       if (note) note.textContent = chip.getAttribute("data-note");
     });

@@ -6,8 +6,8 @@ The MicroSD in the box is ready: put it in the Pi, power it, and it streams. Thi
 
 | | |
 |---|---|
-| Name on the network | `raspberrypi`, reachable as **`raspberrypi.local`** |
-| User | `jure`, password on the note in the box |
+| Name on the network | `tina`, reachable as **`tina.local`** ([renaming a card that still says `raspberrypi`](#renaming-the-pi)) |
+| User | `jure`, the password chosen when the card was flashed |
 | System | Raspberry Pi OS Lite, 64 bit, Debian 13 "trixie" (image of 6 October 2026) |
 | WiFi | your home network, country DE. The Pi 3 only uses 2.4 GHz |
 | SSH | on, with password or key |
@@ -22,13 +22,13 @@ No monitor or keyboard needed. Laptop and Pi only have to be on the same WiFi.
 
 | What | How |
 |---|---|
-| **The graphical view** | The **dashboard**, in any browser: **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** |
+| **The graphical view** | The **dashboard**, in any browser: **[http://tina.local:1617](http://tina.local:1617)** |
 | Python | The scripts in `code/` run on the laptop and read the stream over WiFi ([README, Code](../README.md#code)) |
-| A terminal on the Pi | `ssh jure@raspberrypi.local`, in Terminal on a Mac or PowerShell on Windows |
+| A terminal on the Pi | `ssh jure@tina.local`, in Terminal on a Mac or PowerShell on Windows |
 
 **Why there's no desktop on the Pi.** The card runs Raspberry Pi OS **Lite**, without a desktop, on purpose: the Pi 3 has 1 GB of RAM, and PiEEG Server, the WiFi stream and a desktop would compete for it. Everything graphical happens on the laptop instead, in the dashboard and in Python, which is also how PiEEG's own "headless option" works. Nothing in this repo needs the Pi's desktop.
 
-If `raspberrypi.local` doesn't resolve, use the Pi's IP address instead (router page, or `hostname -I` in an SSH session), e.g. `http://192.168.0.209:1617`. See [troubleshooting](troubleshooting.md#raspberrypilocal-is-not-found).
+If `tina.local` doesn't resolve, use the Pi's IP address instead (router page, or `hostname -I` in an SSH session), e.g. `http://192.168.0.209:1617`. See [troubleshooting](troubleshooting.md#tinalocal-is-not-found).
 
 ## Check that it works
 
@@ -41,7 +41,7 @@ python check_setup.py --noise-test    # also PiEEG's board noise test, with the 
 
 It checks the whole chain in order: the Pi's address, PiEEG Server and its version, the dashboard, 8 channel mode, real hardware (not mock mode), and samples arriving at about 250 per second. Every line `[ok]` means the setup is complete. Without the PiEEG-8 mounted, the line `Samples` fails: the server runs, but no data comes from the board.
 
-The PiEEG doctor on the Pi checks the software side: `ssh jure@raspberrypi.local pieeg-server doctor`. Its two warnings about ports 1616 and 1617 being in use just mean the service already runs. It also announces newer PiEEG Server versions. This kit stays on 0.49.0 on purpose, see [updating](#updating-pieeg-server-later).
+The PiEEG doctor on the Pi checks the software side: `ssh jure@tina.local pieeg-server doctor`. Its two warnings about ports 1616 and 1617 being in use just mean the service already runs. It also announces newer PiEEG Server versions. This kit stays on 0.49.0 on purpose, see [updating](#updating-pieeg-server-later).
 
 ## Power during setup
 
@@ -70,7 +70,7 @@ How the card in the box was made, to redo it on a new card. About 45 to 90 minut
 1. On the laptop (Mac or Windows) install **[Raspberry Pi Imager](https://www.raspberrypi.com/software/)** and put the MicroSD into a card reader. Everything on the card gets erased.
 2. Choose device **Raspberry Pi 3**, then **Raspberry Pi OS Lite (64-bit)** (under Raspberry Pi OS (other)), then the MicroSD as storage.
 3. In the **customisation** step (Imager asks before writing):
-   - Hostname: `raspberrypi`
+   - Hostname: `tina`
    - Username and password: your choice, write them down
    - WiFi: home network name and password. The Pi 3 only sees **2.4 GHz**. A router that sends 2.4 and 5 GHz under one name is fine
    - Wireless LAN country: **DE**, time zone Europe/Berlin
@@ -84,10 +84,10 @@ Current Raspberry Pi OS applies these settings on the first boot with cloud-init
 Power the Pi from the powerbank or a 2.5 A supply (no electrodes during setup, see [power](#power-during-setup)). Wait 2 to 5 minutes, the first boot takes longer. Then in Terminal (Mac) or PowerShell (Windows):
 
 ```bash
-ssh <username>@raspberrypi.local
+ssh <username>@tina.local
 ```
 
-Can't find it? See [troubleshooting](troubleshooting.md#raspberrypilocal-is-not-found).
+Can't find it? See [troubleshooting](troubleshooting.md#tinalocal-is-not-found).
 
 ## 3. Install PiEEG Server, one fixed version
 
@@ -110,7 +110,7 @@ What `setup.sh` does: enables SPI, builds a Python environment in `~/PiEEG-serve
 The service starts in **16 channel mode** by default. The PiEEG-8 has one ADS1299, so add `--device pieeg8`. This is the official command, run it **once**:
 
 ```bash
-ssh <username>@raspberrypi.local
+ssh <username>@tina.local
 sudo sed -i 's|bin/pieeg-server|bin/pieeg-server --device pieeg8|' /etc/systemd/system/pieeg-server.service
 grep ExecStart /etc/systemd/system/pieeg-server.service      # must contain --device pieeg8 exactly once
 sudo systemctl daemon-reload
@@ -137,7 +137,7 @@ cd pieeg-home-lab/code && source .venv/bin/activate
 python check_setup.py --noise-test      # every line [ok]
 ```
 
-Open **http://raspberrypi.local:1617** in the browser and click **Connect**. The dashboard must show **8** channels. Sixteen means step 4 didn't apply.
+Open **http://tina.local:1617** in the browser and click **Connect**. The dashboard must show **8** channels. Sixteen means step 4 didn't apply.
 
 ## 6. Test on yourself
 
@@ -158,6 +158,18 @@ sudo dd if=/dev/rdisk4 bs=4m | gzip > ~/pieeg-sd-backup.img.gz
 Double check the disk number: `dd` only reads here, but the restore writes. On Windows, [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/) does the same with its **Read** button: pick a file name and the card's drive letter.
 
 To restore, write the image with Raspberry Pi Imager (**Use custom**). The image contains the WiFi password, keep it private.
+
+## Renaming the Pi
+
+A card flashed with the hostname `raspberrypi` answers to `raspberrypi.local`. To make it `tina.local` without flashing again, over SSH:
+
+```bash
+sudo hostnamectl set-hostname tina
+sudo sed -i 's/\braspberrypi\b/tina/' /etc/hosts
+sudo reboot
+```
+
+After the reboot, `ssh jure@tina.local` works and the old name stops answering. The laptop may remember the old host key under the new name; if `ssh` complains, `ssh-keygen -R tina.local` clears it.
 
 ## Updating PiEEG Server later
 

@@ -25,7 +25,7 @@ writes what happened to .events.
 
 Usage:
     from eeg_stream import stream_samples
-    for t, n, uv in stream_samples("raspberrypi.local"):
+    for t, n, uv in stream_samples("tina.local"):
         print(n, uv[0])
 """
 
@@ -39,7 +39,7 @@ from datetime import datetime
 
 import websockets
 
-DEFAULT_HOST = "raspberrypi.local"
+DEFAULT_HOST = "tina.local"
 DEFAULT_PORT = 1616
 SAMPLE_RATE = 250               # Hz, PiEEG default
 SERVER_BANDPASS = (1.0, 40.0)   # PiEEG Server's default bandpass, what stop() switches back on
@@ -184,7 +184,7 @@ class EEGStream:
     # ---- internals ------------------------------------------------------
 
     def _log(self, event: str, detail: str = ""):
-        self.events.append({"time": datetime.now().isoformat(timespec="milliseconds"),
+        self.events.append({"time": datetime.now().astimezone().isoformat(timespec="milliseconds"),
                             "last_n": self._last_n, "event": event, "detail": detail})
 
     def _run(self):

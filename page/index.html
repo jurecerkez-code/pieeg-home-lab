@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tina, this is your brain on the network</title>
-<meta name="description" content="A guide to the PiEEG-8 kit and a live view of the signal, written for one person.">
+<title>tina.local · PiEEG Home Lab</title>
+<meta name="description" content="The PiEEG Home Lab page served by the Pi itself: manual, spec sheet and the live EEG signal in one.">
 <link rel="icon" href="assets/favicon.svg?v=px1" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=px1" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=px1">
 <meta name="theme-color" content="#0b0d33">
-<link rel="stylesheet" href="assets/style.css?v=0f33fb64">
+<link rel="stylesheet" href="assets/style.css?v=3d3b5dcf">
 </head>
 <body>
 <div class="wrap">
@@ -19,15 +19,15 @@
     <p class="kicker">Open source EEG &nbsp;·&nbsp; Starter kit</p>
     <h1 class="title">PiEEG<br>Home Lab</h1>
     <p class="specline">8 CHANNEL EEG · RASPBERRY PI 3 · ADS1299 · 24 BIT · 250 HZ</p>
-    <div class="chips" role="tablist" aria-label="Ways in">
-      <button type="button" role="tab" aria-selected="true" data-cmd="ssh jure@raspberrypi.local"
+    <div class="chips" role="group" aria-label="Ways in">
+      <button type="button" aria-pressed="true" data-cmd="ssh jure@tina.local"
         data-note="On your Mac: open Terminal, paste this, press Enter.">TERMINAL</button>
-      <button type="button" role="tab" aria-selected="false" data-cmd="http://raspberrypi.local:1617"
+      <button type="button" aria-pressed="false" data-cmd="http://tina.local:1617"
         data-note="The dashboard, in any browser on the same WiFi. Press Connect.">DASHBOARD</button>
-      <button type="button" role="tab" aria-selected="false" data-cmd="python code/live_view.py"
+      <button type="button" aria-pressed="false" data-cmd="python code/live_view.py"
         data-note="From the pieeg-home-lab repo on your laptop, for your own analysis.">PYTHON</button>
     </div>
-    <div class="cmd prompt"><button class="copy" type="button">Copy</button><pre id="hero-cmd">ssh jure@raspberrypi.local</pre></div>
+    <div class="cmd prompt"><button class="copy" type="button">Copy</button><pre id="hero-cmd">ssh jure@tina.local</pre></div>
     <p class="prompt-note" id="hero-note">On your Mac: open Terminal, paste this, press Enter.</p>
   </div>
   <img class="athena" src="assets/svg/athena.svg" width="340" height="460"
@@ -37,10 +37,10 @@
 </header>
 
 <div class="hello">
-  <h2>Tina, this is your brain on the network.</h2>
+  <h2>Your brain on the network.</h2>
   <p class="lede">Eight channels of EEG, EMG and ECG, read by a Raspberry Pi and streamed to this page.
-    The manual, the spec sheet and the dashboard in one, written for the one person who will actually
-    use it.</p>
+    The manual, the spec sheet and the live signal in one, served by the Pi itself, so it is there
+    whenever the Pi is.</p>
   <div class="status" aria-live="polite">
     <span class="item"><span class="dot on"></span>this page</span>
     <span class="badge sample" id="badge" data-state="connecting">
@@ -56,11 +56,11 @@
     <li>Open <b>Terminal</b>: press <kbd>⌘</kbd> + <kbd>Space</kbd>, type <code>Terminal</code>, press Enter.</li>
     <li>Type this and press Enter:</li>
   </ol>
-  <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@raspberrypi.local</pre></div>
+  <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@tina.local</pre></div>
   <p class="expect">The first time it asks whether to trust the Pi: type <b>yes</b>. Then it asks for the Pi's
-    password, the one Jure gave you; nothing appears while you type it, that is normal. You land in your
+    password; nothing appears while you type it, that is normal. You land in your
     lab's welcome, with the links, a session in four steps and the commands.</p>
-  <p class="caption">To leave, type <code>exit</code>. If <code>raspberrypi.local</code> does not answer,
+  <p class="caption">To leave, type <code>exit</code>. If <code>tina.local</code> does not answer,
     use the address the welcome shows, or the one in the router's device list.</p>
 </section>
 
@@ -89,7 +89,7 @@
     recording so the page still works with the Pi switched off. In your start montage only CH1 has a
     sticker (Fp1). The sample leaves CH2 to CH8 quiet. Live, a channel with nothing on it can show
     anything, and none of it means anything.</p>
-  <table class="sr" aria-hidden="true">
+  <table class="sr">
     <caption>Channel positions</caption>
     <tbody>
       <tr><td>CH1</td><td>Fp1, against M1</td></tr><tr><td>CH2</td><td>Fp2, optional</td></tr>
@@ -114,8 +114,9 @@
             alt="Adult head seen from the front left: E1 sticker on the left forehead at Fp1, REF on the bone behind the left ear, BIAS behind the right ear">
         </figure>
         <p>Alpha grows at the back of the head when the eyes close. Beta rises when you work something
-          out. The server turns both into a focus score and a relaxation score, which is what makes this
-          usable while sitting still and doing nothing visible.</p>
+          out. This page measures both on channel 1 and shows them as a focus number and a relaxation
+          number: a rough readout, not a validated score, but enough to see the effect while sitting
+          still and doing nothing visible.</p>
         <p class="muted">Your start montage: E1 on the left forehead (Fp1), REF on the bone behind the left
           ear (M1), BIAS behind the right ear (M2). Alpha is strongest at the back of the head (O1, O2), but
           that is under hair, where stickers do not hold. From the forehead it is weaker and still shows when
@@ -173,7 +174,7 @@
           or phone on the same network, press Connect and watch all eight channels.</p>
         <p class="muted">That is a different page from this one: the real dashboard with filters,
           recording and integrations.</p>
-        <div class="cmd"><button class="copy" type="button">Copy</button><pre>http://raspberrypi.local:1617</pre></div>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>http://tina.local:1617</pre></div>
         <p class="caption">The session lobby has the server address already filled in. When it opens it
           says no signal yet, press Connect.</p>
       </div>
@@ -222,17 +223,19 @@
       like a broken Pi, so this matters.</li>
     <li><b>Install Raspberry Pi Imager</b> on a laptop. It is the official tool and there is nothing to
       configure.</li>
-    <li><b>Set the settings before writing.</b> In Imager, open the customisation dialog and set the
-      hostname to <code>raspberrypi</code>, enable SSH with a password, set the username, set the WiFi
+    <li><b>Set the settings before writing.</b> In Imager choose the Pi model, then <b>Raspberry Pi OS
+      Lite (64-bit)</b> under "Raspberry Pi OS (other)": no desktop, so the Pi's 1 GB of memory goes to
+      the server. Then open the customisation dialog and set the
+      hostname to <code>tina</code>, enable SSH with a password, set the username, set the WiFi
       name and password with country DE, and set the timezone to Europe/Berlin. Imager writes these as
       configuration files on the card. Without them the Pi needs a monitor and a keyboard to set up.</li>
     <li><b>Write, eject, insert, power.</b> On this Pi 3 a normal boot reaches the login prompt in about a
       minute (measured: 63 seconds). The first boot is longer because it resizes the card and may reboot
       once on its own, so give it three minutes. Do not pull the power during it.</li>
-    <li><b>Find it.</b> Open <code>http://raspberrypi.local</code> in a browser, or run
-      <code>ping raspberrypi.local</code>. If neither answers, open the router's admin page and look for a
-      device called <code>raspberrypi</code>.</li>
-    <li><b>Log in.</b> <code>ssh jure@raspberrypi.local</code>. Accept the fingerprint with
+    <li><b>Find it.</b> Open <code>http://tina.local</code> in a browser, or run
+      <code>ping tina.local</code>. If neither answers, open the router's admin page and look for a
+      device called <code>tina</code>.</li>
+    <li><b>Log in.</b> <code>ssh jure@tina.local</code>. Accept the fingerprint with
       <code>yes</code>. The password does not appear while you type it, that is normal.</li>
   </ol>
 
@@ -245,7 +248,7 @@
 
   <div class="trap">
     <span class="label">The address can change</span>
-    <p><code>raspberrypi.local</code> is a name resolved over the network, not a fixed address. When it
+    <p><code>tina.local</code> is a name resolved over the network, not a fixed address. When it
       stops answering, the router page is the answer. A reinstall is not.</p>
   </div>
 </section>
@@ -290,7 +293,7 @@
         <button class="choice no" type="button" aria-pressed="false" data-verdict="Wrong, and dangerous. A wall charger puts the mains on the board, which has no isolation from the electrodes.">
           <span class="title">Wall charger</span>
           <span class="verdict">press to check</span></button>
-        <button class="choice no" type="button" aria-pressed="false" data-verdict="Wrong. A laptop USB port is mains referenced through the laptop. Same problem, less obvious.">
+        <button class="choice no" type="button" aria-pressed="false" data-verdict="Wrong. The moment that laptop is on its charger, its USB port carries the mains to the board. Same problem, less obvious, and easy to forget mid session.">
           <span class="title">Laptop USB port</span>
           <span class="verdict">press to check</span></button>
       </div>
@@ -321,7 +324,7 @@
       <div class="choices" role="group" aria-label="Shield alignment">
         <button class="choice yes" type="button" aria-pressed="false" data-verdict="All 40 pins seated. The shield sits flat and square over the Pi.">
           <span class="title">Aligned</span><span class="verdict">press to check</span></button>
-        <button class="choice no" type="button" aria-pressed="false" data-verdict="Shifted by one pin. It usually still powers on, still reports an ADC, and every channel reads noise. Nothing warns you.">
+        <button class="choice no" type="button" aria-pressed="false" data-verdict="Shifted by one pin. Wrong voltages land on wrong pins: at best every channel reads noise and nothing warns you, at worst the board is damaged. Power off, lift, seat again.">
           <span class="title">Shifted by one pin</span><span class="verdict">press to check</span></button>
       </div>
     </li>
@@ -333,7 +336,7 @@
         after each check, because a silent command is indistinguishable from a broken one.</p>
 
       <h3>4.1 Open a terminal on the Pi</h3>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@raspberrypi.local</pre></div>
+      <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@tina.local</pre></div>
 
       <h3>4.2 Update the system</h3>
       <div class="cmd"><button class="copy" type="button">Copy</button><pre>sudo apt update &amp;&amp; sudo apt full-upgrade -y</pre></div>
@@ -352,17 +355,16 @@ git log -1 --format='%h %ad %s' --date=short</pre></div>
         so the device cannot break because somebody upstream pushed a change.</p>
 
       <h3>4.5 Run the setup script</h3>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>chmod +x setup.sh &amp;&amp; ./setup.sh</pre></div>
+      <div class="cmd"><button class="copy" type="button">Copy</button><pre>sudo -v &amp;&amp; bash setup.sh</pre></div>
       <p class="expect">Seven stages, each with a tick: detect the Pi, check prerequisites, install
-        packages, enable SPI, build the venv, create the service, self test.</p>
+        packages, enable SPI, build the venv, create the service, self test. The file is not marked
+        executable in PiEEG's repository, which is why it runs as <code>bash setup.sh</code>.</p>
 
       <div class="trap">
         <span class="label">If it stops at cannot obtain sudo privileges</span>
-        <p>Sudo works for every command, but the check at stage two asks for a password anyway. Fix it
-          once, then run the setup script again. Running it twice is safe.</p>
-        <div class="cmd"><button class="copy" type="button">Copy</button><pre>echo 'Defaults:jure !authenticate' | sudo tee /etc/sudoers.d/91-jure-noauth
-sudo chmod 440 /etc/sudoers.d/91-jure-noauth
-sudo visudo -c</pre></div>
+        <p>The script checks sudo at stage two with its own messages hidden, so a password prompt there
+          can look like a failure. <code>sudo -v</code> in front asks for the password first and keeps
+          sudo unlocked for the script. Running the script twice is safe.</p>
       </div>
 
       <h3>4.6 Reboot</h3>
@@ -434,38 +436,45 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
 
     <li>
       <h3>Start and verify</h3>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>pieeg-server --device pieeg8</pre></div>
-      <p class="expect">Or without hardware, to see the dashboard move: <b>pieeg-server --mock</b>.</p>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>pieeg-server doctor</pre></div>
-      <p class="expect">Expect <b>All checks passed</b>. Then open
-        <code>http://raspberrypi.local:1617</code>, pick the PiEEG Server tab, press Connect, and the
-        channel counter should read 8/8.</p>
+      <p>Nothing to start: PiEEG Server runs as a service and comes up with the Pi, about a minute after
+        power. Power goes in last, after the stickers and clips are on. Then, from the laptop:</p>
+      <div class="cmd"><button class="copy" type="button">Copy</button><pre>python check_setup.py --noise-test</pre></div>
+      <p class="expect">From <code>pieeg-home-lab/code</code> with the venv active. Every line <b>[ok]</b>
+        means WiFi, Pi, server, 8 channel mode and board all work; the first <b>[FAIL]</b> names the broken
+        link. Or on the Pi itself: <code>pieeg-server doctor</code>, expect <b>All checks passed</b>.</p>
+      <p class="expect">Then open <code>http://tina.local:1617</code> and press Connect. It should show
+        8 channels. Sixteen means the service lacks <code>--device pieeg8</code> (step 4.7).</p>
+      <p class="caption">To run the server by hand, for example with <code>--mock</code> to see the dashboard
+        move without a board, stop the service first: <code>sudo systemctl stop pieeg-server</code>, then
+        <code>pieeg-server --mock</code>. Otherwise the ports are already taken. <code>sudo systemctl start
+        pieeg-server</code> brings the service back.</p>
     </li>
 
     <li>
       <h3>Check the signal</h3>
       <p>Four outcomes, and what each one means:</p>
-      <ul class="checklist">
-        <li><label><span><span class="what">A moving, slightly fuzzy line</span>
-          <span class="why">this is a real signal. Small wiggles are the brain, big slow swings are movement</span></span></label></li>
-        <li><label><span><span class="what">A perfectly flat line</span>
-          <span class="why">that channel is not connected. Reseat the electrode, check the pin</span></span></label></li>
-        <li><label><span><span class="what">A thick band of hum</span>
-          <span class="why">mains pickup. Everything on the battery, away from the router, notch at 50 Hz</span></span></label></li>
-        <li><label><span><span class="what">Huge spikes on one channel only</span>
-          <span class="why">bad contact on that sticker. Alcohol, let it dry, a fresh sticker, recheck the clip</span></span></label></li>
+      <ul class="checklist outcomes">
+        <li><span><span class="what">A moving, slightly fuzzy line</span>
+          <span class="why">this is a real signal. Small wiggles are the brain, big slow swings are movement</span></span></li>
+        <li><span><span class="what">A perfectly flat line</span>
+          <span class="why">that channel is not connected. Reseat the electrode, check the pin</span></span></li>
+        <li><span><span class="what">A thick band of hum</span>
+          <span class="why">mains pickup. Everything on the battery, away from the router, notch at 50 Hz</span></span></li>
+        <li><span><span class="what">Huge spikes on one channel only</span>
+          <span class="why">bad contact on that sticker. Alcohol, let it dry, a fresh sticker, recheck the clip</span></span></li>
       </ul>
     </li>
 
     <li>
       <h3>Record and keep</h3>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>pieeg-server --device pieeg8 --record session.csv</pre></div>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>pieeg-server record session.csv --duration 300 --device pieeg8</pre></div>
-      <p class="expect">The first records while streaming, the second records for exactly five minutes
-        without starting the server.</p>
-      <p>Files land in <code>~/PiEEG-server/recordings/</code>. The dashboard lists them, and it serves
-        each one for download, so the CSV can come off the Pi without a terminal. Checked on this
-        install: <code>/api/recordings</code> returns the list.</p>
+      <div class="cmd"><button class="copy" type="button">Copy</button><pre>python record.py --seconds 60 --label eyes_closed</pre></div>
+      <p class="expect">From <code>pieeg-home-lab/code</code> on the laptop. It writes
+        <code>recordings/&lt;date&gt;_sub-01_eyes_closed.csv</code> plus a <code>.json</code> sidecar with the
+        montage, the filter state and every gap, switches the server's filters off while it records so the
+        file is raw, and puts them back afterwards. <code>spectrum.py</code> reads the result.</p>
+      <p>Without a terminal, the dashboard's <b>Record</b> button saves a raw CSV on the Pi, in
+        <code>~/PiEEG-server/recordings/</code>, and lists it for download. Those files have no sidecar,
+        so note the montage yourself.</p>
     </li>
 
   </ol>
@@ -486,9 +495,11 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
     <li>Sit still for the first minute. Blinks are signal too, they belong to the recording.</li>
     <li>Switch the notch to 50 Hz. It ships defaulted to 60, which is the American mains, and Berlin hum
       sits at 50.</li>
-    <li>Turn on the 1 to 40 Hz band pass for focus and relaxation work.</li>
+    <li>Leave the 1 to 40 Hz band pass on for watching. It is on when the server starts.
+      <code>record.py</code> records raw regardless, you filter later.</li>
     <li>Throw away the two seconds around a body movement instead of trying to rescue them.</li>
-    <li>Let the board warm up for two minutes before a recording you care about.</li>
+    <li>Give the stickers a minute after placing them. The gel to skin contact drifts at first and
+      settles; a recording you care about starts after that.</li>
   </ol>
 </section>
 
@@ -498,10 +509,10 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
   <table>
     <thead><tr><th>What you see</th><th>Why</th><th>What to do</th></tr></thead>
     <tbody>
-      <tr><td>Badge says SAMPLE, not LIVE</td><td>The browser cannot reach the Pi</td><td>Check you are on the same WiFi, open port 1617 to test the server</td></tr>
+      <tr><td>Badge says SAMPLE, not LIVE</td><td>This page comes from the Pi, so the Pi is reachable, but PiEEG Server on port 1616 is not answering, or it just restarted</td><td>Wait: the page tries again by itself every few seconds. Still SAMPLE after a minute: <code>systemctl status pieeg-server</code></td></tr>
       <tr><td>Badge says connected, no data</td><td>The socket is open but no samples arrive, usually because no shield is mounted</td><td>Fit the PiEEG-8, or start the server with <code>--mock</code> to watch the page move</td></tr>
       <tr><td>Port 1617 will not load</td><td>The server is not running</td><td><code>systemctl status pieeg-server</code>, then restart it</td></tr>
-      <tr><td><code>raspberrypi.local</code> not found</td><td>The name is not resolving, or the Pi has no address</td><td>Find the IP in the router and use the IP</td></tr>
+      <tr><td><code>tina.local</code> not found</td><td>The name is not resolving, or the Pi has no address</td><td>Find the IP in the router and use the IP</td></tr>
       <tr><td>Traces flat, straight line</td><td>Sticker off, wrong pin, or the board off by one</td><td>Reseat, then recheck the pin table</td></tr>
       <tr><td>Thick hum on every channel</td><td>Mains pickup</td><td>Everything on the battery, away from the router, notch at 50 Hz</td></tr>
       <tr><td>Spikes on one channel</td><td>That sticker has bad contact, or a joint is loose</td><td>Alcohol, a fresh sticker, the clip on the snap, every joint pushed home</td></tr>
@@ -530,16 +541,19 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
   </div>
 </section>
 
-<section aria-labelledby="personal-h">
-  <h2 id="personal-h">For Tina</h2>
-  <p class="muted">This space is deliberately empty. Jure writes this part.</p>
+<section aria-labelledby="notebook-h">
+  <h2 id="notebook-h">Lab notebook</h2>
+  <p>What has been measured with this kit, session by session, and the results of each mission, lives in
+    <a href="https://github.com/jurecerkez-code/pieeg-home-lab/blob/main/docs/lab-notebook.md">docs/lab-notebook.md</a>
+    in the repository: date, montage, what was done, what came out, and the plot. Every entry has a
+    recording behind it that <code>record.py</code> wrote, with its sidecar.</p>
 </section>
 
 <footer>
   <p>Not a medical device. Research and engineering use only.</p>
   <p>Structure and facts follow
-    <a href="https://www.pieeg.com/hardware/pieeg">pieeg.com/hardware/pieeg</a>. Text rewritten for one
-    person. Install details, the sudo trap and the 50 Hz notch note come from this build, not from the
+    <a href="https://www.pieeg.com/hardware/pieeg">pieeg.com/hardware/pieeg</a>. Text written for this
+    kit. Install details, the sudo note and the 50 Hz notch note come from this build, not from the
     source. The drawings are true scale renders made with the pieeg-home-lab repo: a MakeHuman head and
     body, the Pi from its official drawing, the PiEEG-8 measured on its photo. The bust and the trace at
     the top are the repo's own hero. Guide and code:
@@ -547,6 +561,6 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
 </footer>
 
 </div>
-<script src="assets/app.js?v=7c47fc7a"></script>
+<script src="assets/app.js?v=590def4e"></script>
 </body>
 </html>

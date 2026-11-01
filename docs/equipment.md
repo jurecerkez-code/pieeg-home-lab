@@ -40,7 +40,7 @@ The 40 pin header on the right edge of the top photo is where the PiEEG-8 sits. 
 | Link to Pi | SPI0 (pins 19, 21, 23, 24) + DRDY on GPIO 26 (pin 37) |
 | Bought at | [Elecrow](https://www.elecrow.com/pieeg.html) |
 
-**What it does:** your brain produces voltages of a few to a few tens of microvolts at the scalp. The ADS1299 amplifies each electrode against the reference, converts it to a 24 bit number 250 times per second, and tells the Pi "new sample ready" by pulling DRDY low. The Bias output holds your body at a fixed voltage from the chip, which reduces noise that appears on all electrodes at once, mainly 50 Hz from the mains.
+**What it does:** your brain produces voltages of a few to a few tens of microvolts at the scalp. The ADS1299 amplifies each electrode against the reference, converts it to a 24 bit number 250 times per second, and tells the Pi "new sample ready" by pulling DRDY low. The Bias output holds your body at a fixed voltage from the chip, so every electrode stays inside the converter's input range and the body doesn't float.
 
 **Electrode header** (left edge of the board, printed as `1-8 Elec`):
 
@@ -50,7 +50,7 @@ The 40 pin header on the right edge of the top photo is where the PiEEG-8 sits. 
 
 From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always check against the print on your own board.
 
-**Ref** is the shared reference for all 8 channels (the ADS1299's SRB1 input). **Biasout** holds the body at the chip's reference voltage, which reduces noise common to all electrodes, such as 50 Hz hum ([details](safety.md#what-the-bias-electrode-does)). PiEEG's official setup uses ear clips on the earlobes for these two. This kit uses stickers on the mastoids behind the ears instead.
+**Ref** is the shared reference for all 8 channels (the ADS1299's SRB1 input). **Biasout** holds the body at the chip's mid supply voltage so the inputs stay in range. With PiEEG's register settings it is a fixed voltage, not a feedback loop that cancels 50 Hz hum ([details](safety.md#what-the-bias-electrode-does), [how it works](how-it-works.md#reference-and-bias)). PiEEG's official setup uses ear clips on the earlobes for these two. This kit uses stickers on the mastoids behind the ears instead.
 
 ---
 
