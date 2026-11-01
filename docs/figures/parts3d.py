@@ -278,24 +278,69 @@ def _first_guess(p0, d0, p1, length, n, g, d1=None):
 LAMBDA = 45.0     # bending length (EI / weight per length) ** (1/3) of a 26 AWG jumper wire, mm
 
 
+def _via_guess(points, length, n, g):
+    """A polyline through the waypoints, given extra sag so it has the cable's length."""
+    W = np.asarray(points, float)
+    seg_l = np.linalg.norm(np.diff(W, axis=0), axis=1)
+    arc = np.r_[0, np.cumsum(seg_l)]
+    t = np.linspace(0, arc[-1], 600)
+    C = np.array([np.interp(t, arc, W[:, j]) for j in range(3)]).T
+    u = t / arc[-1]
+
+    def curve(a):
+        return C + np.outer(np.sin(np.pi * u) * a, g)
+
+    def L(a):
+        return np.linalg.norm(np.diff(curve(a), axis=0), axis=1).sum()
+    if L(0) < length:
+        lo, hi = 0.0, 1.0
+        while L(hi) < length:
+            hi *= 2
+        for _ in range(50):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if L(mid) < length else (lo, mid)
+        C = curve((lo + hi) / 2)
+    arc = np.r_[0, np.cumsum(np.linalg.norm(np.diff(C, axis=0), axis=1))]
+    want = np.linspace(0, arc[-1], n)
+    return np.array([np.interp(want, arc, C[:, j]) for j in range(3)]).T
+
+
 def hang(p0, d0, p1, length, n=64, d1=None, lam=LAMBDA, gravity=(0, 0, -1), floors=(), boxes=(), skin=None,
-         radius=WIRE_R):
-    """A cable at rest: length from p0 (leaving along d0, clamped in its housing) to p1 (arriving
-    along d1 if given, else free to turn). Static equilibrium of an elastic rod under its own weight
-    with bending stiffness EI = lam**3 (weight 1 per mm), nearly inextensible, kept out of floors,
-    boxes and the skin: the minimum of its energy, found with L-BFGS from a relaxed first guess."""
+         radius=WIRE_R, via=None, rigid=(), heavy=()):
+    """A cable at rest: length from p0 (leaving along d0 if given: clamped in a housing; else free to
+    turn, like a clip on a snap) to p1 (arriving along d1 if given). Static equilibrium of an elastic
+    rod under its own weight: bending stiffness EI = lam**3 per unit weight per mm, nearly
+    inextensible, kept out of floors, boxes and the skin. rigid: arc ranges (mm from p0) that do not
+    bend (a clip, two housings plugged together); heavy: (start, end, factor) ranges weighing more
+    per mm. via: waypoints for the first guess, so a cable can start on the right side of the head.
+    The rest shape is the minimum of the energy, found with L-BFGS."""
     from scipy.optimize import minimize
     p0, p1 = np.asarray(p0, float), np.asarray(p1, float)
-    d0 = np.asarray(d0, float) / np.linalg.norm(d0)
     g = np.asarray(gravity, float)
     seg = length / (n - 1)
-    P = _first_guess(p0, d0, p1, length, n, g, d1)
-    fixed = {0: p0, 1: p0 + d0 * seg, n - 1: p1}
+    if via is not None:
+        start = [p0] if d0 is None else [p0, p0 + np.asarray(d0, float) / np.linalg.norm(d0) * 2 * seg]
+        P = _via_guess(start + [np.asarray(v, float) for v in via] + [p1], length, n, g)
+    else:
+        P = _first_guess(p0, np.asarray(d0 if d0 is not None else -g, float) / np.linalg.norm(d0 if d0 is not None else -g),
+                         p1, length, n, g, d1)
+    fixed = {0: p0, n - 1: p1}
+    if d0 is not None:
+        d0 = np.asarray(d0, float) / np.linalg.norm(d0)
+        fixed[1] = p0 + d0 * seg
     if d1 is not None:
         d1 = np.asarray(d1, float) / np.linalg.norm(d1)
         fixed[n - 2] = p1 - d1 * seg
     free = np.array([i not in fixed for i in range(n)])
+    s_node = np.arange(n) * seg
     EI = lam ** 3
+    mult = np.ones(n)
+    for a_, b_ in rigid:
+        mult[(s_node >= a_ - 1e-6) & (s_node <= b_ + 1e-6)] = 400.0
+    wgt = np.ones(n)
+    for a_, b_, f_ in heavy:
+        wgt[(s_node >= a_ - 1e-6) & (s_node <= b_ + 1e-6)] = f_
+    kb = (EI / seg) * mult[1:-1]
     K = 200.0 * EI / seg ** 2                    # stretch penalty: links stay within a fraction of a percent
     Kc = K
 
@@ -305,8 +350,8 @@ def hang(p0, d0, p1, length, n=64, d1=None, lam=LAMBDA, gravity=(0, 0, -1), floo
         for k_, v in fixed.items():
             Q[k_] = v
         G = np.zeros_like(Q)
-        E = -seg * (Q @ g).sum()
-        G += -seg * g
+        E = -seg * (wgt * (Q @ g)).sum()
+        G += -seg * wgt[:, None] * g
         e = Q[1:] - Q[:-1]
         L = np.linalg.norm(e, axis=1)
         u = e / L[:, None]
@@ -314,9 +359,9 @@ def hang(p0, d0, p1, length, n=64, d1=None, lam=LAMBDA, gravity=(0, 0, -1), floo
         E += 0.5 * K * (dl ** 2).sum()
         ge = (K * dl)[:, None] * u
         c = (u[:-1] * u[1:]).sum(1)
-        E += EI / seg * (1 - c).sum()
-        ge[:-1] += -(u[1:] - c[:, None] * u[:-1]) / L[:-1, None] * EI / seg
-        ge[1:] += -(u[:-1] - c[:, None] * u[1:]) / L[1:, None] * EI / seg
+        E += (kb * (1 - c)).sum()
+        ge[:-1] += -(u[1:] - c[:, None] * u[:-1]) / L[:-1, None] * kb[:, None]
+        ge[1:] += -(u[:-1] - c[:, None] * u[1:]) / L[1:, None] * kb[:, None]
         G[1:] += ge
         G[:-1] -= ge
         for nrm, d in floors:
@@ -341,7 +386,7 @@ def hang(p0, d0, p1, length, n=64, d1=None, lam=LAMBDA, gravity=(0, 0, -1), floo
             E += 0.5 * Kc * (pen ** 2).sum()
             G += Kc * pen[:, None] * nn
         return E, G[free].ravel()
-    res = minimize(energy, P[free].ravel(), jac=True, method="L-BFGS-B", options={"maxiter": 20000, "maxfun": 40000})
+    res = minimize(energy, P[free].ravel(), jac=True, method="L-BFGS-B", options={"maxiter": 30000, "maxfun": 60000})
     P[free] = res.x.reshape(-1, 3)
     for k_, v in fixed.items():
         P[k_] = v

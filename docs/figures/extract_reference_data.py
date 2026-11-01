@@ -218,10 +218,56 @@ def head_model():
     print("head:", len(V), "vertices,", len(F), "faces, landmark fit rms", round(residual, 1), "mm")
 
 
+BUST_CUT = [((0, 0, 1), 480.0), ((1.571, 0, 1), 269.3), ((-1.571, 0, 1), 269.3)]   # chest, and up over each arm
+
+
+def bust_model():
+    """The same MakeHuman mesh with neck and shoulders, cut like a classical bust (chest flat, the arms
+    cut by a plane rising toward each shoulder, every cut closed), for the scene in FIG. 01. One Loop
+    subdivision. Needs trimesh with networkx and mapbox_earcut for the caps."""
+    import collections
+    import numpy as np
+    import trimesh
+    path = DATA / "makehuman_base.obj"
+    if not path.exists():
+        urllib.request.urlretrieve(MAKEHUMAN_URL, path)
+    verts, groups, g = [], collections.defaultdict(list), None
+    for line in path.read_text().splitlines():
+        if line.startswith("v "):
+            verts.append([float(x) for x in line.split()[1:4]])
+        elif line.startswith("g "):
+            g = line.split()[1]
+        elif line.startswith("f "):
+            groups[g].append([int(t.split("/")[0]) - 1 for t in line.split()[1:]])
+    v = np.array(verts)
+    V = np.c_[-v[:, 0], v[:, 2], v[:, 1]] * 100
+    tris = np.array([[f[0], f[i], f[i + 1]] for name in ("body", "helper-l-eye", "helper-r-eye")
+                     for f in groups[name] for i in range(1, len(f) - 1)])
+    m = trimesh.Trimesh(V, tris[V[tris].min(axis=1)[:, 2] > 360], process=True)
+    m.remove_unreferenced_vertices()
+    vv, ff = trimesh.remesh.subdivide_loop(m.vertices, m.faces, iterations=1)
+    m = trimesh.Trimesh(vv, ff, process=True)
+    cap = []
+    for n, d in BUST_CUT:                       # cut and close each cut with a flat face, like stone
+        n = np.array(n, float)
+        k = np.linalg.norm(n)
+        m = m.slice_plane(n / k * d / k, n / k, cap=True)
+    C, fn = m.triangles_center, m.face_normals
+    cap = np.zeros(len(m.faces), bool)
+    for n, d in BUST_CUT:
+        n = np.array(n, float)
+        k = np.linalg.norm(n)
+        cap |= (np.abs(C @ (n / k) - d / k) < 0.05) & (fn @ (n / k) < -0.99)
+    np.savez_compressed(DATA / "bust_makehuman.npz", V=m.vertices.astype(np.float32), F=m.faces.astype(np.int32),
+                        cap=cap)
+    print(f"bust: {len(m.vertices)} vertices, {len(m.faces)} faces, {cap.sum()} on the cuts")
+
+
 if __name__ == "__main__":
     DATA.mkdir(exist_ok=True)
     electrodes()
     raspberry_pi()
     hero_trace()
     head_model()
+    bust_model()
     print("wrote", *sorted(p.name for p in DATA.glob("*.json")))

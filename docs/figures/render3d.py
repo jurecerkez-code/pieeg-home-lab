@@ -215,9 +215,10 @@ class Skin:
 
     def __init__(self, V, F):
         from scipy.spatial import cKDTree
-        self.V, self.F = V, F
-        self.vn = vertex_normals(V, F)
-        self.tree = cKDTree(V)
+        used = np.unique(F)
+        self.V, self.F = V[used], F
+        self.vn = vertex_normals(V, F)[used]
+        self.tree = cKDTree(self.V)
 
     def project(self, P):
         P = np.atleast_2d(np.asarray(P, float))
@@ -287,6 +288,9 @@ MATERIALS = {   # base color (sRGB), diffuse, specular, shininess, outline darke
 }
 
 
+SECTION = {}      # material: color of its cut faces
+
+
 def material(name, color=None, diffuse=0.85, spec=0.1, shine=20, line=0.6, emit=0.0):
     MATERIALS[name] = (color, diffuse, spec, shine, line, emit)
 
@@ -296,17 +300,19 @@ class Render:
     camera's screen mm. The raster is computed at `ss` pixels per SVG px."""
 
     def __init__(self, scene, cam, k, ox, oy, ss=4, pad=6.0, bounds=None, light=(-0.55, 0.70, 0.45),
-                 shadows=True, ao=True, cut=None, catcher=None):
+                 shadows=True, ao=True, cut=None, catcher=None, cut_only=None):
         V, F, M, N = scene.arrays()
         self.cam, self.k, self.ox, self.oy, self.ss = cam, k, ox, oy, ss
         single = cut is not None and len(cut) == 2 and np.isscalar(cut[1])
         planes = [] if cut is None else ([cut] if single else list(cut))
         planes = [(np.asarray(n, float), float(d)) for n, d in planes]
+        cuttable = np.ones(len(F), bool) if cut_only is None else np.isin(M, list(cut_only))
         if planes:                                # cut planes: keep points with X . n >= d for every plane
             out = np.zeros(len(F), bool)
             for n, d in planes:
                 out |= ((V[F] @ n) < d).all(axis=1)
-            F, M, N = F[~out], M[~out], N[~out]
+            out &= cuttable
+            F, M, N, cuttable = F[~out], M[~out], N[~out], cuttable[~out]
         P = cam.project(V)
         if bounds is None:
             used = np.unique(F)
@@ -321,10 +327,13 @@ class Render:
         f = np.maximum(self.fid, 0)
         w = np.stack([b0, b1, 1 - b0 - b1], -1)
         X = (V[F[f]] * w[..., None]).sum(2)
+        cut_px = cuttable[f]
         for n, d in planes:
-            mask &= (X @ n) >= d
+            mask &= ((X @ n) >= d) | ~cut_px
         Nn = (N[f] * w[..., None]).sum(2)
         Nn /= np.maximum(np.linalg.norm(Nn, axis=-1, keepdims=True), 1e-12)
+        fn = np.cross(V[F[:, 1]] - V[F[:, 0]], V[F[:, 2]] - V[F[:, 0]])
+        self.back = mask & ((fn[f] @ (-cam.d)) < 0)          # looking at the inside of a cut shell
         self.mask, self.X, self.N, self.mat = mask, X, Nn, M[f]
         self.zbuf = np.where(mask, self.zbuf, -np.inf)
         # light in camera terms: from the upper left, in front of the subject
@@ -438,6 +447,9 @@ class Render:
             c = base * (amb + kd * diff)[:, None] + spec[:, None]
             emit = MATERIALS[nm][5] if len(MATERIALS[nm]) > 5 else 0.0   # keeps signal colors true
             rgb[sel] = c * (1 - emit) + base * emit
+        for nm, col in SECTION.items():                    # inside of a cut shell: flat section color
+            sel = self.back & (self.mat == nm)
+            rgb[sel] = hex_rgb(col) * (0.75 + 0.25 * self.occl[sel])[:, None]
         rgb = np.clip(rgb, 0, 1)
         # contour lines where a surface passes in front of another, darker shade of the front surface
         z = np.where(self.mask, self.zbuf, -1e9)

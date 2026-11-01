@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" width="1000" height="900"><rect width="1000" height="900" fill="#0b0d33"/>
-<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M18 864 L18 882 L36 882" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 864 L982 882 L964 882" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 864 L18 882 L36 882" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 864 L982 882 L964 882" stroke="#2b3170" stroke-width="2" fill="none"/>
 <text x="44.0" y="49.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="2.0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">FIG. 06  ·  PI HEADER</text>
 <text x="44.0" y="87.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="32" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Five pins carry the data</text>
 <text x="44.0" y="113.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">The Pi's 40 pin header as it sits on the board: pin 1 at the left, the board edge at the top.</text>
