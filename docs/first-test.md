@@ -54,7 +54,7 @@ The clip bites the metal snap in the middle of the sticker, not the foam. Ref an
 
 Each lead is about 40 cm: jumper plus clip cable. Both positions below reach all three stickers with slack to spare (paths measured on an adult head and shoulders model):
 
-- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, just beside your left shoulder, on a wooden or plastic surface. Paths: 28 cm to Fp1, 19 cm to Ref, 32 cm to Bias
+- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, just beside your left shoulder, on a wooden or plastic surface. Paths: 28 cm to Fp1, 20 cm to Ref, 33 cm to Bias
 - **Lying down:** Pi on the pillow beside your left ear. Best position for relaxed alpha. Paths: 19 cm to Fp1, 9 cm to Ref, 23 cm to Bias, which runs around the front of the neck because it can't pass under your head
 - Not behind your head: Fp1 is about 45 cm away from there
 - Cables hang loose, nothing pulls on a sticker. If one does, move the Pi closer or chain a second jumper onto that lead

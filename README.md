@@ -137,7 +137,7 @@ Each lead is about 40 cm: a 20 cm jumper plus a 20 cm clip cable. The clip cable
 
 | Where the Pi is | Fp1 (E1) | M1 (Ref) | M2 (Bias) |
 |---|---|---|---|
-| Sitting: shelf at shoulder height, just beside your left shoulder | 28 cm | 19 cm | 32 cm |
+| Sitting: shelf at shoulder height, just beside your left shoulder | 28 cm | 20 cm | 33 cm |
 | Lying on your back: pillow, beside your left ear | 19 cm | 9 cm | 23 cm, around the front of the neck |
 
 Behind the head doesn't work: Fp1 is about 45 cm away. Every lead should hang loose. If one pulls on its sticker, move the Pi closer or chain a second jumper onto that lead. Power goes in last: plug the Micro USB cable into **PWR IN** and into the powerbank (charged, and not plugged into the wall). The LED on the PiEEG-8 lights up.

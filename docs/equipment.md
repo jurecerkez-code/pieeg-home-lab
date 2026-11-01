@@ -77,7 +77,7 @@ From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always che
 | Amount | 10, one for every pin on the electrode header |
 | Bought at | [BerryBase, DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
 
-The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. But 20 cm alone is not enough: measured on an adult head and shoulders model, the longest path in the start montage (Pi on a shelf at shoulder height, Bias behind the right ear) is 32 cm. One extension jumper per lead fixes that, see ⑤.
+The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. But 20 cm alone is not enough: measured on an adult head and shoulders model, the longest path in the start montage (Pi on a shelf at shoulder height, Bias behind the right ear) is 33 cm. One extension jumper per lead fixes that, see ⑤.
 
 > If your board ever turns out to have a socket instead of pins, you need the male version (BerryBase DUPAD20).
 
