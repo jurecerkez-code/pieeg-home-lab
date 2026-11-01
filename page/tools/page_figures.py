@@ -1,7 +1,7 @@
 """
 Figures for Tina's page (index.html, assets/svg). True scale renders made with the renderer and parts
 of the pieeg-home-lab repo (docs/figures/render3d.py and parts3d.py), on a transparent background so
-they sit on the page's own dark brown, with labels in the page's fonts and colors.
+they sit on the page's own navy ground (the repo's Lab theme), with labels in the page's fonts and colors.
 
     python page/tools/page_figures.py                 # all six, into page/assets/svg
     python page/tools/page_figures.py . page/assets/svg electrodes   # just one
@@ -24,13 +24,13 @@ import render3d as R          # noqa: E402
 
 DATA = REPO / "docs" / "figures" / "data"
 W = 600
-FG, MUTED, ACCENT, HAIR = "#ffffff", "rgba(255,255,255,0.62)", "#ffac02", "rgba(255,255,255,0.28)"
+FG, MUTED, ACCENT, HAIR = "#ecebf7", "#9a9ccc", "#d8b55a", "#3d4390"      # Lab theme: ink, muted, gold, line
 E1C, E2C, E3C, E4C, REFC, BIASC = "#4b4bff", "#8f96ff", "#5fd3a5", "#f0a35e", "#22d3ff", "#c792ff"
-MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+MONO = "DejaVu Sans Mono, Menlo, Consolas, ui-monospace, monospace"
 for name, col in {"E1": E1C, "E2": E2C, "E3": E3C, "E4": E4C, "REF": REFC, "BIAS": BIASC}.items():
     R.material("rim_" + name, col, 0.6, 0.0, 8, 0.7, emit=0.55)
     R.material("wire_" + name, col, 0.75, 0.25, 30, 0.6, emit=0.25)
-R.material("table", "#2a1a0b", 0.85, 0.05, 10, 0.6)
+R.material("table", "#161a52", 0.85, 0.05, 10, 0.6)
 R.material("foam", "#fdfdfb", 0.9, 0.0, 8, 0.7, emit=0.7)       # white foam reads as white, not as texture
 
 
@@ -127,8 +127,8 @@ def body_mesh(keep, subdiv=0, cut=()):
     return m.vertices, m.faces, cap
 
 
-R.material("bust", "#ddd5c5", 0.84, 0.035, 14, 0.62)
-R.material("bust_cut", "#c9c0ae", 0.80, 0.0, 10, 0.6)
+R.material("bust", "#e7e2d6", 0.84, 0.035, 14, 0.62)
+R.material("bust_cut", "#cfc8b9", 0.80, 0.0, 10, 0.6)
 
 
 # ---------------------------------------------------------------- 01 the start montage on the head
@@ -152,8 +152,8 @@ def head_map():
     for c in ("Fz", "C3", "P7", "O1", "F7", "T7"):
         if r.visible(pos[c][None], tol=2.0)[0]:
             x, y = P(pos[c])
-            pg.items.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.6" fill="#ddd5c5" stroke="#170d02" stroke-width="1.2"/>')
-            pg.text(x, y - 6, c, "#170d02", 10, "middle", 700, 0.3)
+            pg.items.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.6" fill="#e7e2d6" stroke="#0b0d33" stroke-width="1.2"/>')
+            pg.text(x, y - 6, c, "#0b0d33", 10, "middle", 700, 0.3)
     x, y = P(pos["Fp1"])
     pg.leader([(x - 14, y - 4), (166, y - 40), (156, y - 40)], E1C)
     pg.label(150, y - 44, "E1 · FP1", ["LEFT FOREHEAD", "ABOVE THE EYEBROW"], E1C, "end")

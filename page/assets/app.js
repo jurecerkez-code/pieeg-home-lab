@@ -179,8 +179,8 @@
   var INK = colour("--fg", "#ffffff");
   var MUTED = colour("--muted", "rgba(255,255,255,0.56)");
   var HAIR = colour("--hair", "rgba(255,255,255,0.12)");
-  var ACCENT = colour("--accent", "#ffac02");
-  var PAPER = colour("--surface", "#1f1206");
+  var ACCENT = colour("--e1", "#4b4bff");          // CH1 is E1, drawn in its lead color
+  var PAPER = colour("--bg", "#0b0d33");
 
   var labelW = 74;
 
@@ -216,7 +216,7 @@
       var step = plotW / (WINDOW_S * SR);
       var px = plotW / n;
 
-      ctx.strokeStyle = (lane === 0) ? ACCENT : INK;
+      ctx.strokeStyle = (lane === 0) ? ACCENT : MUTED;
       ctx.lineWidth = 1.15;
       ctx.beginPath();
       for (var k = 0; k < n; k++) {
@@ -433,4 +433,19 @@
   } else {
     boot();
   }
+})();
+
+/* Hero chips: the three ways in, each with its command. */
+(function () {
+  var chips = document.querySelectorAll(".chips button");
+  var cmd = document.getElementById("hero-cmd");
+  var note = document.getElementById("hero-note");
+  if (!chips.length || !cmd) return;
+  Array.prototype.forEach.call(chips, function (chip) {
+    chip.addEventListener("click", function () {
+      Array.prototype.forEach.call(chips, function (c) { c.setAttribute("aria-selected", c === chip ? "true" : "false"); });
+      cmd.textContent = chip.getAttribute("data-cmd");
+      if (note) note.textContent = chip.getAttribute("data-note");
+    });
+  });
 })();
