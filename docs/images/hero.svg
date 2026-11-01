@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 460" width="1000" height="460"><rect width="1000" height="460" fill="#0b0d33"/>
-<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M18 424 L18 442 L36 442" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 424 L982 442 L964 442" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 424 L18 442 L36 442" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 424 L982 442 L964 442" stroke="#2b3170" stroke-width="2" fill="none"/>
 <text x="44.0" y="62.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="2.0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">OPEN SOURCE EEG  ·  STARTER KIT</text>
 <text x="40.0" y="156.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="88" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">PiEEG</text>
 <text x="40.0" y="240.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="88" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Home Lab</text>

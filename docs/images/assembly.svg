@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 740" width="1000" height="740"><rect width="1000" height="740" fill="#0b0d33"/>
-<path d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M18 704 L18 722 L36 722" stroke="#2b3170" stroke-width="2" fill="none"/>
-<path d="M982 704 L982 722 L964 722" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 36 L18 18 L36 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 36 L982 18 L964 18" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M18 704 L18 722 L36 722" stroke="#2b3170" stroke-width="2" fill="none"/>
+<path class="bracket" d="M982 704 L982 722 L964 722" stroke="#2b3170" stroke-width="2" fill="none"/>
 <text x="44.0" y="49.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="2.0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">FIG. 03  ·  MOUNTING</text>
 <text x="44.0" y="87.0" font-family="Inter Display, Inter, Helvetica Neue, Arial, sans-serif" font-size="32" font-weight="200" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Pin 1 on pin 1, then press straight down</text>
 <text x="44.0" y="113.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="400" letter-spacing="0" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">The Raspberry Pi from its official drawing, the PiEEG-8 measured from PiEEG's photo (about 1 mm).</text>

@@ -5,12 +5,19 @@ Builds every figure in docs/images from documented sources, so each one can be c
     python make_figures.py placement    # only some: hero system kit assembly placement wiring header
 
 Style: the PiEEG Home Lab design system, Lab theme. Ground #0b0d33, corner brackets, FIG. 0N labels,
-Inter Display, Inter and DejaVu Sans Mono, gold for hardware, one fixed color per electrode lead,
-no gradients. Every figure is 1000 px wide in SVG and exported at 2x to PNG.
+Inter Display, Inter and DejaVu Sans Mono, gold for hardware, one fixed color per electrode lead.
+Every figure is 1000 px wide in SVG and exported at 2x to PNG.
 
-Needs numpy, scipy and Pillow, plus rsvg-convert (librsvg) or the cairosvg package for the PNGs.
-Sources, extracted once by extract_reference_data.py into data/:
-  electrodes_1020.json    electrode positions, MNE-Python standard 10-20 montage (colin27 head)
+FIG. 01, 04 and 05 are rendered in 3D at true scale (render3d.py, parts3d.py): an adult head from
+MakeHuman's CC0 base mesh with the 10-20 montage fitted to it, the Raspberry Pi and the PiEEG-8, and
+leads that hang as gravity and their bending stiffness decide. Labels are drawn on top with the same
+projection, so each one points at the right millimeter.
+
+Needs numpy, scipy, numba, trimesh, shapely, mapbox_earcut and Pillow, plus rsvg-convert (librsvg)
+or the cairosvg package for the PNGs. Sources, extracted once by extract_reference_data.py into data/:
+  head_makehuman.npz      the head (MakeHuman base mesh, CC0), two Loop subdivisions
+  bust_makehuman.npz      the same with neck and shoulders, cut like a classical bust (FIG. 01)
+  head_electrodes.json    10-20 positions on that head: MNE-Python's standard_1020 montage, fitted
   raspberry_pi_3b.json    Raspberry Pi 3 Model B outline, parts and 40 pin header, official DXF drawing
   hero_trace.json         6 s of a real PiEEG recording, from PiEEG's published example data
   assets/athena_generated.jpg   the hero bust, an AI generated illustration (Gamma), recolored here
@@ -30,6 +37,9 @@ import sys
 from pathlib import Path
 
 import numpy as np
+
+import parts3d as P3
+import render3d as R3
 
 HERE = Path(__file__).resolve().parent
 DATA, ASSETS, OUT = HERE / "data", HERE / "assets", HERE.parent / "images"
@@ -65,9 +75,6 @@ def blend(c1, c2, t):
     a = [int(c1[i:i + 2], 16) for i in (1, 3, 5)]
     b = [int(c2[i:i + 2], 16) for i in (1, 3, 5)]
     return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(a, b))
-
-
-SKIN = blend(GROUND, MARBLE1, 0.07)      # skin as drawn: marble at 7 % on ground, opaque where a part hides lines
 
 
 def esc(s):
@@ -150,7 +157,7 @@ class Svg:
 def brackets(s):
     i = 18
     for x, y, dx, dy in [(i, i, 1, 1), (W - i, i, -1, 1), (i, s.h - i, 1, -1), (W - i, s.h - i, -1, -1)]:
-        s.add(f'<path d="M{x} {y + dy * i} L{x} {y} L{x + dx * i} {y}" stroke="{LINE}" stroke-width="2" fill="none"/>')
+        s.add(f'<path class="bracket" d="M{x} {y + dy * i} L{x} {y} L{x + dx * i} {y}" stroke="{LINE}" stroke-width="2" fill="none"/>')
 
 
 def sheet(h, num, name, title, caption=None):
@@ -163,6 +170,14 @@ def sheet(h, num, name, title, caption=None):
     if caption:
         s.text(44, 113, caption, "caption")
     return s
+
+
+def resize(s, h):
+    """Change a sheet's height after drawing: new ground and corner brackets."""
+    s.h = h
+    s.items = [it for it in s.items if 'class="bracket"' not in it]
+    s.items[0] = f'<rect width="{W}" height="{h}" fill="{GROUND}"/>'
+    brackets(s)
 
 
 def footer(s, text):
@@ -250,192 +265,11 @@ def tag(s, x, y, txt, color=MUTED, anchor="start"):
     return x0, x0 + w
 
 
-def hair_paint(s):
-    """Hair as a see-through gold hatch (pattern, not a gradient)."""
-    s.defs["hair"] = (f'<pattern id="hair" width="4.5" height="4.5" patternUnits="userSpaceOnUse" '
-                      f'patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4.5" stroke="{GOLD_LIGHT}" '
-                      f'stroke-width="0.9" opacity="0.42"/></pattern>')
-    return "url(#hair)"
-
-
-FOAM = blend(GROUND, MARBLE1, 0.24)      # the white foam disc, as drawn on the dark technical head
-
-
-def sticker(s, cx, cy, rx, ry, color, rot=0, style="solid", sw=1.5, foam=FOAM):
-    """Electrode sticker at true size: foam disc with a colored rim and the metal snap stud
-    (about 5 mm) in the middle. style: solid, optional (dashed 8 6, the optional E2 lead)
-    or hidden (short dashes, behind the head)."""
-    if style != "solid":
-        s.ellipse(cx, cy, rx, ry, color, sw, dash="8 6" if style == "optional" else "3 3", rot=rot)
-        return
-    s.ellipse(cx, cy, rx, ry, color, sw, fill=foam, rot=rot)
-    f = 2.6 / STICKER_R
-    s.ellipse(cx, cy, max(rx * f, 1.3), max(ry * f, 1.3), GROUND, 0.7, fill=MARBLE2, rot=rot)
-
-
 def wire(s, pts, color, dash=None, w=2.5):
     s.path(catmull(pts), color, w, dash=dash)
 
 
-def catenary(p1, p2, slack=1.2, n=48):
-    """A cable hanging freely between two supports (screen coordinates, y down): a catenary whose
-    length is slack times the straight distance."""
-    from scipy.optimize import brentq
-    (x1, y1), (x2, y2) = p1, p2
-    if x2 < x1:
-        return catenary(p2, p1, slack, n)[::-1]
-    h, v = x2 - x1, y1 - y2                        # v measured upward
-    L = slack * math.hypot(h, v)
-    target = math.sqrt(L * L - v * v)
-    a = brentq(lambda a: 2 * a * math.sinh(h / (2 * a)) - target, h / 1000, 1e7)
-    x0 = (x1 + x2) / 2 - a * math.atanh(v / L)
-    c = -y1 - a * math.cosh((x1 - x0) / a)
-    return [(x, -(a * math.cosh((x - x0) / a) + c)) for x in np.linspace(x1, x2, n)]
-
-
-# ---------------------------------------------------------------- head geometry (mm, MNE head coordinates)
-EL = json.loads((DATA / "electrodes_1020.json").read_text())
-CH = {k: np.array(v, float) for k, v in EL["channels"].items()}
-FID = {k: np.array(v, float) for k, v in EL["fiducials"].items()}
 STICKER_R = 13.0                     # Somnomedics SEN010C, 26 mm foam disc
-
-# Midline face profile (y forward, z up), anchored on the template's nasion; the rest follows adult
-# proportions (nasion to chin about 107 mm). The neck is cut 165 mm below the template origin.
-NZ_Y, NZ_Z = FID["nasion"][1], FID["nasion"][2]
-NECK_Z = -165
-FACE = [(NZ_Y + 5.5, NZ_Z + 15), (NZ_Y, NZ_Z), (NZ_Y + 9, NZ_Z - 22), (NZ_Y + 20, NZ_Z - 38),
-        (NZ_Y + 24, NZ_Z - 43), (NZ_Y + 15, NZ_Z - 49), (NZ_Y + 8, NZ_Z - 50), (NZ_Y + 11.5, NZ_Z - 62),
-        (NZ_Y + 13, NZ_Z - 65.5), (NZ_Y + 9.5, NZ_Z - 69), (NZ_Y + 11, NZ_Z - 75), (NZ_Y + 4, NZ_Z - 83),
-        (NZ_Y + 7.5, NZ_Z - 95), (NZ_Y + 2, NZ_Z - 104), (NZ_Y - 10, NZ_Z - 109), (NZ_Y - 30, NZ_Z - 112),
-        (NZ_Y - 42, NZ_Z - 116), (NZ_Y - 45.5, NZ_Z - 128), (NZ_Y - 45, NECK_Z)]
-NAPE = [(CH["Iz"][1] + 4, CH["Iz"][2] - 22), (CH["Iz"][1] + 14, CH["Iz"][2] - 52),
-        (CH["Iz"][1] + 26, CH["Iz"][2] - 85), (CH["Iz"][1] + 28.5, NECK_Z)]
-# Hairline seen from the left: forehead, temple, in front of and over the ear, behind it, into the knot.
-HAIRLINE = [(55, 24), (20, 13), (-6, -6), (-20, -22), (-24, -36), (-28, -22), (-37, -12), (-50, -10),
-            (-60, -22), (-64, -44), (-74, -60), (-92, -64), (-112, -56)]
-
-
-def side_head_outline():
-    scalp = [(CH[c][1], CH[c][2]) for c in ["Fpz", "AFz", "Fz", "FCz", "Cz", "CPz", "Pz", "POz", "Oz", "Iz"]]
-    return list(reversed(FACE)) + scalp + NAPE
-
-
-def side_hair():
-    """Hair pulled back into a low knot, as you would wear it for mastoid electrodes."""
-    over = [(80, 26)] + [(CH[c][1] + d, CH[c][2] + e) for c, d, e in
-                         [("AFz", 1, 2.5), ("Fz", 2, 4), ("FCz", 1, 5), ("Cz", 0, 5), ("CPz", -2, 5),
-                          ("Pz", -4, 4), ("POz", -5, 3), ("Oz", -6, 1)]]
-    knot = [(-127, 4), (-141, 2), (-151, -8), (-153, -22), (-146, -35), (-133, -41), (-123, -40), (-117, -50)]
-    return over + knot + HAIRLINE[::-1]
-
-
-def ear_points(rot_deg=12):
-    """Left ear, side view template (u = mm toward the back, v = mm up, origin at the ear canal)."""
-    helix = [(-3, -2), (-2.5, 4), (-1, 10), (3, 20), (10, 27), (17, 27.5), (22.5, 21), (24.5, 10), (23.5, -1),
-             (19.5, -12), (12.5, -20), (6.5, -26), (1.5, -24), (-0.5, -14), (-2, -7)]
-    anti = [(6.5, 19), (14, 22.5), (19, 15), (19.5, 4), (17, -6), (12.5, -13)]
-    rim = [(1, 11), (6, 21.5), (12, 24.5), (18, 23.5), (21.2, 17)]
-    concha = [(1.5, 3.5), (6.5, 6), (10.5, 1), (8.5, -6.5), (3, -7.5)]
-    a = math.radians(rot_deg)
-
-    def r(pts):
-        return [(u * math.cos(a) + v * math.sin(a), -u * math.sin(a) + v * math.cos(a)) for u, v in pts]
-    return r(helix), r(anti), r(rim), r(concha)
-
-
-def draw_side_head(s, X0, Y0, k, lw=1.5, features=True):
-    """Left side view, nose to the left. Returns P(y, z) and Pp(point) mapping to screen."""
-    def P(y, z):
-        return X0 - y * k, Y0 - z * k
-
-    def Pp(p):
-        return P(p[1], p[2])
-    out = [P(y, z) for y, z in side_head_outline()]
-    s.path(catmull(out) + " Z", "none", 0, fill=SKIN)
-    hair = [P(y, z) for y, z in side_hair()]
-    s.path(catmull(hair, closed=True), "none", 0, fill=hair_paint(s))
-    s.path(catmull(hair, closed=True), GOLD_DEEP, lw * 0.6)
-    for strand in ([(-128, -2), (-140, -10), (-147, -22)], [(-131, -12), (-139, -24), (-139, -34)]):
-        s.path(catmull([P(y, z) for y, z in strand]), GOLD_DEEP, lw * 0.5)
-    s.path(catmull(out), INK, lw)
-    if features:
-        ny, nz = NZ_Y, NZ_Z
-        s.path(catmull([P(ny - 1, nz + 11), P(ny - 10, nz + 15), P(ny - 22, nz + 15.5), P(ny - 32, nz + 12.5)]), INK, lw * 1.2, op=0.9)
-        s.path(catmull([P(ny - 8, nz - 3), P(ny - 14, nz + 1.5), P(ny - 22, nz + 0.5), P(ny - 27, nz - 4.5)]), INK, lw * 0.8)
-        s.path(catmull([P(ny - 27, nz - 4.5), P(ny - 19, nz - 7.5), P(ny - 11, nz - 6.5), P(ny - 8, nz - 3)]), INK, lw * 0.65, op=0.85)
-        s.path(catmull([P(ny + 5, nz - 48), P(ny + 3, nz - 43), P(ny + 8.5, nz - 39.5), P(ny + 14, nz - 43.5)]), INK, lw * 0.7, op=0.85)
-        s.path(catmull([P(ny + 9.5, nz - 69), P(ny + 4, nz - 69.8), P(ny - 1, nz - 70.5)]), INK, lw * 0.7, op=0.85)
-    return P, Pp
-
-
-def draw_side_ear(s, P, lw=1.5):
-    """Left ear, drawn over anything behind it. Ear canal level with the template's preauricular point."""
-    eac = (FID["lpa"][1], FID["lpa"][2])
-    helix, anti, rim, concha = ear_points(12)
-    E = lambda pts: [P(eac[0] - u, eac[1] + v) for u, v in pts]
-    s.path(catmull(E(helix), closed=True), INK, lw * 0.9, fill=SKIN)
-    s.path(catmull(E(rim)), INK, lw * 0.6, op=0.7)
-    s.path(catmull(E(anti)), INK, lw * 0.6, op=0.7)
-    s.path(catmull(E(concha), closed=True), INK, lw * 0.55, op=0.6)
-
-
-def draw_front_head(s, X0, Y0, k, lw=1.5):
-    """Front view. Her left side (x < 0) appears on the viewer's right."""
-    def P(x, z):
-        return X0 - x * k, Y0 - z * k
-    right = [(0, CH["Cz"][2]), (36, 91), (CH["C4"][0], CH["C4"][2]), (80, 30), (CH["T8"][0], CH["T8"][2]),
-             (80, -32), (69, -52), (62, -75), (54, -98), (47, -113), (31, -129), (14, -140.5), (0, -143)]
-    left = [(-x, z) for x, z in reversed(right[1:-1])]
-    head = [P(x, z) for x, z in right + left]
-    s.path(catmull(head, closed=True), "none", 0, fill=SKIN)
-    hair_r = [(0, 108), (40, 98), (73, 70), (89, 32), (92, 0), (90, -20), (84, -33), (74, -38),
-              (72, -25), (64, -6), (48, 12), (25, 22)]
-    hair = [P(x, z) for x, z in hair_r] + [P(0, 24)] + [P(-x, z) for x, z in reversed(hair_r[1:])]
-    s.path(catmull(hair, closed=True), "none", 0, fill=hair_paint(s))
-    s.path(catmull(hair, closed=True), GOLD_DEEP, lw * 0.6)
-    for sgn in (1, -1):                                  # neck, emerging below the jaw
-        s.path(catmull([P(sgn * 43, -117), P(sgn * 41.5, -140), P(sgn * 43, NECK_Z + 2)]), INK, lw)
-    s.path(catmull(head, closed=True), INK, lw)
-    for sgn in (1, -1):
-        ear = [(79, -13), (88, -14), (94, -23), (95.5, -38), (93, -53), (88, -66), (81, -71)]
-        s.path(catmull([P(sgn * x, z) for x, z in ear]) + f" L{P(sgn * 79, -13)[0]:.1f} {P(sgn * 79, -13)[1]:.1f}",
-               INK, lw * 0.9, fill=SKIN)
-        s.path(catmull([P(sgn * x, z) for x, z in [(84, -20), (89, -30), (89.5, -46), (85, -60)]]), INK, lw * 0.6, op=0.6)
-        s.path(catmull([P(sgn * x, z) for x, z in [(13, -24.5), (22, -21), (33, -19.5), (43, -20.5), (50, -24)]]), INK, lw * 1.25, op=0.9)
-        s.path(catmull([P(sgn * x, z) for x, z in [(17, -38.5), (24, -34.5), (33, -33.5), (41, -35.5), (46, -38.5)]]), INK, lw * 0.85)
-        s.path(catmull([P(sgn * x, z) for x, z in [(46, -38.5), (38, -42), (28, -42.5), (21, -41), (17, -38.5)]]), INK, lw * 0.65, op=0.85)
-        cx, cy = P(sgn * 31, -38.2)
-        s.circle(cx, cy, 4.6 * k / 2, INK, lw * 0.6, op=0.85)
-        s.circle(cx, cy, 1.6 * k / 2, "none", 0, fill=INK, op=0.85)
-        s.path(catmull([P(sgn * 6.5, -37), P(sgn * 6, -55), P(sgn * 8, -72)]), INK, lw * 0.6, op=0.35)
-    s.path(catmull([P(x, z) for x, z in [(-15, -77), (-17.5, -82.5), (-12, -87.5), (-5, -86), (0, -88),
-                                           (5, -86), (12, -87.5), (17.5, -82.5), (15, -77)]]), INK, lw * 0.8)
-    s.path(catmull([P(x, z) for x, z in [(-23, -101.5), (-9, -98.5), (0, -100.2), (9, -98.5), (23, -101.5)]]), INK, lw * 0.8, op=0.85)
-    s.path(catmull([P(x, z) for x, z in [(-23, -101.5), (-8, -102.2), (0, -101.4), (8, -102.2), (23, -101.5)]]), INK, lw * 0.9)
-    s.path(catmull([P(x, z) for x, z in [(-14, -107), (0, -109.5), (14, -107)]]), INK, lw * 0.65, op=0.55)
-    return P
-
-
-def top_projection():
-    """Azimuthal equidistant projection from the vertex, as in MNE's topographic maps, with the head
-    tilted so Fpz and Oz lie on the circle. Left to right it is scaled so T7 and T8 lie on it too:
-    the circle is the 10 % circumference, as in the classic 10-20 diagram."""
-    fpz, oz = CH["Fpz"], CH["Oz"]
-    ang = math.atan2(oz[2] - fpz[2], fpz[1] - oz[1])
-    c, s_ = math.cos(ang), math.sin(ang)
-    rot = np.array([[1, 0, 0], [0, c, -s_], [0, s_, c]])
-    f2, o2 = rot @ fpz, rot @ oz
-    origin = np.array([0.0, (f2[1] + o2[1]) / 2, (f2[2] + o2[2]) / 2])
-
-    def raw(p):
-        v = rot @ np.asarray(p, float) - origin
-        theta = math.acos(max(-1, min(1, v[2] / np.linalg.norm(v))))
-        phi = math.atan2(v[1], v[0])
-        r = theta / (math.pi / 2)
-        return r * math.cos(phi), -r * math.sin(phi)
-    su = 2 / (abs(raw(CH["T7"])[0]) + abs(raw(CH["T8"])[0]))
-    rho = float(np.mean([np.linalg.norm(rot @ CH[k] - origin) for k in ("Fpz", "Oz", "T7", "T8", "Cz")]))
-    return (lambda p: (raw(p)[0] * su, raw(p)[1])), rho
 
 
 # ---------------------------------------------------------------- boards
@@ -446,12 +280,7 @@ PI_MAJOR = {  # bounding boxes in board mm, from the official DXF
     "hdmi": (24.75, -1.5, 39.25, 10.65), "csi": (43.55, 0.3, 47.5, 22.7), "dsi": (1.5, 16.8, 5.45, 39.2),
     "audio": (50.0, 0.0, 57.0, 12.5), "lan": (55.4, 29.2, 64.4, 38.2), "micro_usb": (6.85, -0.6, 14.35, 4.71)}
 MICROSD_CARD = PI["parts_bottom_boxes"][1]     # the card itself, on the underside, sticking out at the left
-# PiEEG-8, measured on the top view photo in PiEEG's docs (pieeg8_led.png), board mm, origin bottom left.
-# The 40 pin socket mates with the Pi's header, so it shares the Pi's coordinates (HAT layout).
-PIEEG = {"w": 65.0, "h": 56.0, "r": 3.0, "holes": [(3.5, 3.5), (61.5, 3.5), (3.5, 52.5), (61.5, 52.5)],
-         "header_x": 10.2, "header_top": 38.0, "ads1299": (28.2, 18.0), "led": (42.0, 18.7),
-         "jumpers": [(56.6, 42.5), (56.6, 37.6), (56.6, 32.7)], "cap": (37.0, 7.0, 4.6, 7.6)}
-HEADER = ["Ref", "Biasout", "E8", "E7", "E6", "E5", "E4", "E3", "E2", "E1"]     # printed top to bottom
+PIEEG, HEADER = P3.PIEEG, P3.HEADER      # PiEEG-8 parts, measured on PiEEG's photo (see parts3d.py)
 
 
 def board_map(x0, y0, k, h=56.0):
@@ -540,65 +369,56 @@ def laptop(s, x, y, w, h):
 
 
 def fig_system():
-    s = sheet(560, 1, "SYSTEM", "How the pieces talk",
-              "From the skin to the browser. Everything wired to the person runs on battery.")
-    s.rect(40, 146, 572, 338, LINE, 1.2, r=10, dash="6 5")
-    s.text(56, 166, "BATTERY ONLY  ·  NO CABLE TO THE MAINS", "note")
-    # head, left side view
-    k, X0, Y0 = 0.80, 206, 296
-    P, Pp = draw_side_head(s, X0, Y0, k, lw=1.3)
-    fx, fy = Pp(CH["Fp1"])
-    mx, my = Pp(CH["M1"])
-    sticker(s, mx, my, STICKER_R * k * 0.85, STICKER_R * k, REFC)
-    # E1 lead lies on the skin from the forehead to the top of the ear, goes behind the ear
-    wire(s, [(fx + 1, fy), P(64, -3), P(36, -2), P(8, -6), P(-16, -11), P(-33, -12)], E1C)
-    draw_side_ear(s, P, lw=1.3)
-    sticker(s, fx + 1.5, fy, STICKER_R * k * 0.35, STICKER_R * k, E1C)
-    # boards
-    kb, bx0, by0 = 2.0, 418, 220
-    Mpi = draw_pi(s, bx0, by0, kb, detail=False, microsd=False)
-    M = draw_pieeg(s, bx0, by0, kb, chip_label=False)
-    hx = M(PIEEG["header_x"], 0)[0]
-    pin_y = {n: M(PIEEG["header_x"], PIEEG["header_top"] - i * 2.54)[1] for i, n in enumerate(HEADER)}
-    # free hanging parts: catenaries from behind the ear and the nape to the header pins
-    for start, pin, col, slack in [(P(-97, -100), "Biasout", BIASC, 1.22), ((mx + 2, my + 2), "Ref", REFC, 1.18),
-                                   (P(-38, -76), "E1", E1C, 1.16)]:
-        s.poly(catenary(start, (hx, pin_y[pin]), slack), col, 2.5)
-    s.text(350, 420, "20 CM CABLES", "note", MUTED, "middle")
-    leader(s, [(fx - 3, fy - 10), (fx - 14, fy - 46), (fx - 22, fy - 46)], E1C)
-    s.text(fx - 26, fy - 42, "E1 · FP1", "pin", E1C, "end", halo=True)
-    s.text(bx0, by0 - 26, "PIEEG-8  ·  ADS1299", "pin", GOLD)
-    s.text(bx0, by0 - 11, "ON RASPBERRY PI 3 MODEL B", "spec")
-    # legend for the leads
-    lx = 56
-    for lab, col in [("E1 · FP1", E1C), ("REF · M1", REFC), ("BIAS · M2, BEHIND THE RIGHT EAR", BIASC)]:
-        s.line(lx, 461, lx + 18, 461, col, 2.5)
-        s.text(lx + 26, 465, lab, "note", col)
-        lx += 26 + text_width(lab, "note") + 22
-    # power
-    ux, uy = Mpi(10.6, -0.6)
-    px0, py0 = 418, 384
-    s.rect(px0, py0, 168, 50, INK, 1.5, fill=SURFACE, r=10)
-    s.text(px0 + 84, py0 + 22, "POWERBANK  ·  5 V", "pin", INK, "middle")
-    s.text(px0 + 84, py0 + 38, "CHARGED, NOT CHARGING", "spec", MUTED, "middle")
-    s.line(ux, uy + 1, ux, py0, INK, 1.5)
-    s.text(ux + 10, uy + 34, "MICRO USB → PWR IN", "note")
+    s = sheet(640, 1, "SYSTEM", "How the pieces talk",
+              "One adult at true scale, the Pi on a shelf beside her shoulder. The forehead lead runs over the ear.")
+    sc, paths, studs, usb_len = system_scene()
+    cam = R3.Camera.orbit(50, 16)
+    r = R3.Render(sc, cam, 1.0, 0, 0).move_to(30, 150)
+    place(s, r)
+    box_ = r.image_box()
+    s.rect(36, 138, 672, box_[1] + box_[3] - 120, LINE, 1.2, r=10, dash="6 5")
+    s.text(52, box_[1] + box_[3] + 8, "BATTERY ONLY  ·  NO CABLE TO THE MAINS", "note")
+
+    def P(p):
+        return r.to_svg(np.atleast_2d(p))[0]
+    lx = 478                                                    # label column, right of the head
+    total = sum(LEAD.values())
+    ex, ey = P(studs["E1"][0])                                  # E1: printed on the forehead, next to its sticker
+    s.text(ex + 16, ey - 16, "E1 · FP1", "pin", E1C, weight=600)
+    items = [("REF · M1", "BEHIND THE LEFT EAR", studs["REF"][0], REFC, 232),
+             ("JOINT", "JUMPER + CLIP CABLE, 40 CM", point_at(paths["E1"], LEAD["jumper"] + 14), INK, 280),
+             ("BIAS · M2", "BEHIND THE RIGHT EAR, ITS LEAD", point_at(paths["BIAS"], total - 140), BIASC, 328)]
+    for title, sub, p, col, ty in items:
+        x, y = P(p)
+        xe = lx - 22
+        leader(s, [(x, y), (xe - abs(ty - 4 - y) * 0.35, y), (xe, ty - 4), (lx - 6, ty - 4)], col)
+        s.text(lx, ty, title, "pin", col)
+        s.text(lx, ty + 14, sub, "chip", MUTED)
+        if title.startswith("BIAS"):
+            s.text(lx, ty + 28, "COMES AROUND THE NECK", "chip", MUTED)
+    bx, by = P(to_world([[24.0, 18.0, P3.PE_TOP + 1.0]])[0])
+    leader(s, [(bx, by), (bx + 36, 414), (lx - 6, 414)], GOLD)
+    s.text(lx, 418, "PIEEG-8 ON RASPBERRY PI 3 B", "pin", GOLD)
+    s.text(lx, 432, "ON A SHELF AT SHOULDER HEIGHT", "chip", MUTED)
+    pbx, pby = P(np.array([(POWERBANK[0] + POWERBANK[3]) / 2, POWERBANK[4], POWERBANK[2] + 4]))
+    sbot = P(np.array([SHELF[0], SHELF[4], SHELF[2]]))[1]
+    leader(s, [(pbx, pby), (pbx, sbot + 12), (pbx + 12, sbot + 12)], INK)
+    s.text(pbx + 16, sbot + 16, "POWERBANK  ·  5 V", "pin", INK)
+    s.text(pbx + 16, sbot + 30, "CHARGED, NOT CHARGING", "chip", MUTED)
     # wifi and laptop
-    lx, ly, lw_, lh = 752, 226, 188, 118
-    s.line(626, 284, lx - 28, 284, MUTED, 1.5, dash="6 6")
-    arrowhead(s, lx - 20, 284, 0, MUTED, 7)
-    arrowhead(s, 620, 284, 180, MUTED, 7)
-    s.text(684, 272, "WIFI 2.4 GHZ", "pin", MUTED, "middle")
-    s.text(684, 304, "PIEEG SERVER", "note", MUTED, "middle")
-    s.text(684, 320, "DATA :1616", "note", MUTED, "middle")
-    s.text(684, 336, "DASHBOARD :1617", "note", MUTED, "middle")
-    sx, sy, sw, sh = laptop(s, lx, ly, lw_, lh)
+    lx2, ly2, lw_, lh = 778, 250, 168, 110
+    s.line(716, ly2 + lh / 2, lx2 - 26, ly2 + lh / 2, MUTED, 1.5, dash="5 5")
+    arrowhead(s, lx2 - 18, ly2 + lh / 2, 0, MUTED, 7)
+    arrowhead(s, 712, ly2 + lh / 2, 180, MUTED, 7)
+    s.text(736, ly2 + lh / 2 - 12, "WIFI", "pin", MUTED, "middle")
+    sx, sy, sw, sh = laptop(s, lx2, ly2, lw_, lh)
     v, _ = trace(seconds=2.5)
     xs = np.linspace(sx + 10, sx + sw - 10, len(v))
     s.poly(list(zip(xs, sy + sh / 2 - v / np.percentile(np.abs(v), 99) * sh * 0.3)), ALPHA, 1.1)
-    s.text(lx + lw_ / 2, ly + lh + 42, "MACBOOK", "pin", INK, "middle")
-    s.text(lx + lw_ / 2, ly + lh + 58, "ON BATTERY, CHARGER UNPLUGGED", "spec", MUTED, "middle")
-    s.text(lx + lw_ / 2, ly + lh + 74, "BROWSER DASHBOARD  ·  PYTHON", "spec", MUTED, "middle")
+    s.text(lx2 + lw_ / 2, ly2 + lh + 42, "MACBOOK", "pin", INK, "middle")
+    s.text(lx2 + lw_ / 2, ly2 + lh + 58, "ON BATTERY, CHARGER UNPLUGGED", "spec", MUTED, "middle")
+    s.text(lx2 + lw_ / 2, ly2 + lh + 74, "PIEEG SERVER  ·  DATA :1616", "spec", MUTED, "middle")
+    s.text(lx2 + lw_ / 2, ly2 + lh + 90, "DASHBOARD :1617  ·  PYTHON", "spec", MUTED, "middle")
     footer(s, "SKIN  →  ADS1299, 24 BIT, 250 SAMPLES/S  →  SPI  →  PIEEG SERVER  →  WIFI  →  BROWSER, PYTHON")
     return s
 
@@ -633,22 +453,37 @@ def dupont_cable(s, x, y, w_total, color, k):
     alligator(s, a + wire_len, y, k)
 
 
+def dupont_jumper(s, x, y, w_total, color, k):
+    """Extension jumper: female Dupont housing, wire with a break, male housing with its pin."""
+    hw, hl, pin = 2.6 * k, 14 * k, 6 * k
+    s.rect(x, y - hw / 2, hl, hw, INK, 1.2, fill=GROUND)
+    a, b = x + hl, x + w_total - hl - pin
+    mid = (a + b) / 2
+    s.line(a, y, mid - 8, y, color, 2.5)
+    s.line(mid - 5, y - 6, mid - 1, y + 6, MUTED, 1)
+    s.line(mid + 1, y - 6, mid + 5, y + 6, MUTED, 1)
+    s.line(mid + 8, y, b, y, color, 2.5)
+    s.rect(b, y - hw / 2, hl, hw, INK, 1.2, fill=GROUND)
+    s.rect(b + hl, y - 0.32 * k, pin, 0.64 * k, "none", 0, fill=GOLD)
+
+
 def fig_kit():
-    s = sheet(700, 2, "WHAT'S IN THE BOX", "Six parts, no soldering",
-              "Parts 01 to 04 are drawn to the same scale. 05 and 06 are not to scale.")
-    cw, chh, gap, x0, y0 = 296, 236, 12, 44, 140
+    s = sheet(690, 2, "WHAT'S IN THE BOX", "Seven parts, no soldering",
+              "Parts 01 to 05 are drawn to the same scale. 06 and 07 are not to scale.")
+    cw, chh, gap, x0, y0 = 219, 236, 12, 44, 140
     k = 2.1
     cards = [
-        ("Raspberry Pi 3 Model B", ["BCM2837 · 1 GB · WIFI 2.4 GHZ", "16 GB MICROSD, PIEEG SERVER INSTALLED"]),
-        ("PiEEG-8", ["ADS1299 · 24 BIT · 250 HZ", "10 MALE PINS: REF, BIASOUT, E8 … E1"]),
-        ("Ag/AgCl electrode stickers", ["Ø 26 MM FOAM · SNAP · SINGLE USE", "60 · SOMNOMEDICS SEN010C"]),
-        ("Dupont to alligator cables", ["FEMALE 2.54 MM → CLIP · 20 CM", "10 · BERRYBASE DUPAC20"]),
-        ("Powerbank and Micro USB cable", ["5 V · 3 A, AS PIEEG RECOMMENDS", "OFFICIAL CABLE RPI-MUSB-1"]),
-        ("Alcohol wipes and MacBook", ["CLEAN, DRY SKIN UNDER EACH STICKER", "MACBOOK ON BATTERY, WIFI ONLY"]),
+        ("Raspberry Pi 3 Model B", ["1 GB RAM · WIFI 2.4 GHZ", "16 GB MICROSD · PIEEG SERVER"]),
+        ("PiEEG-8", ["ADS1299 · 24 BIT · 250 HZ", "10 PINS: REF, BIASOUT, E8…E1"]),
+        ("Ag/AgCl stickers", ["Ø 26 MM FOAM · SNAP", "60 · SOMNOMEDICS SEN010C"]),
+        ("Clip cables", ["FEMALE → CLIP · 20 CM", "10 · BERRYBASE DUPAC20"]),
+        ("Extension jumpers", ["MALE ↔ FEMALE · 20 CM", "40 · BERRYBASE DUPK-40-FM-20"]),
+        ("Powerbank and cable", ["5 V · 3 A, AS PIEEG ADVISES", "OFFICIAL MICRO USB, 1 M"]),
+        ("Wipes and MacBook", ["CLEAN, DRY SKIN", "MACBOOK ON BATTERY, WIFI"]),
     ]
     for i, (title, spec) in enumerate(cards):
-        cx = x0 + (i % 3) * (cw + gap)
-        cy = y0 + (i // 3) * (chh + gap)
+        cx = x0 + (i % 4) * (cw + gap)
+        cy = y0 + (i // 4) * (chh + gap)
         s.rect(cx, cy, cw, chh, LINE, 1)
         s.text(cx + 14, cy + 24, f"{i + 1:02d}", "index")
         s.text(cx + 14, cy + chh - 52, title, "card_title")
@@ -661,41 +496,50 @@ def fig_kit():
             draw_pieeg(s, ax + (aw - 65 * k) / 2, ay + (ah - 56 * k) / 2, k, chip_label=False)
         elif i == 2:
             r = STICKER_R * k
-            yc = ay + ah / 2 - 12
-            sx = ax + 6 + r                                    # top view, true size
+            yc = ay + ah / 2 - 4
+            sx = ax + 4 + r                                    # top view, true size
             s.circle(sx, yc, r, INK, 1.5)
             s.circle(sx, yc, 2.6 * k, GROUND, 0.7, fill=MARBLE2)
             dim_h(s, sx - r, sx + r, yc + r + 16, "Ø 26 MM", ext_from=yc)
             k2 = 2 * k                                         # side view at 2:1, schematic
             vw, vt = 26 * k2, 1.6 * k2                         # foam disc width and thickness
-            vx, vy = ax + aw - vw - 2, yc + 14
+            vx, vy = ax + aw - vw, yc + 14
             s.rect(vx, vy - vt, vw, vt, INK, 1.2, fill=GROUND)
             cxs = vx + vw / 2
             s.rect(cxs - 2.6 * k2, vy - vt - 2.6 * k2, 5.2 * k2, 2.6 * k2, INK, 1, fill=MARBLE2, r=2)
-            leader(s, [(cxs, vy - vt - 2.6 * k2), (cxs, vy - 44), (cxs - 10, vy - 44)], MUTED)
-            s.text(cxs - 14, vy - 47, "SNAP STUD:", "chip", MUTED, "end")
-            s.text(cxs - 14, vy - 37, "THE CLIP BITES HERE", "chip", MUTED, "end")
-            leader(s, [(vx + vw - 6, vy), (vx + vw - 6, vy + 16), (vx + vw - 16, vy + 16)], MUTED)
-            s.text(vx + vw - 20, vy + 19, "STICKY SIDE ON SKIN", "chip", MUTED, "end")
-            s.text(vx, yc + r + 19, "SIDE VIEW, 2:1", "chip", MUTED)
+            leader(s, [(cxs, vy - vt - 2.6 * k2), (cxs, yc - 26)], MUTED)
+            s.text(ax + aw, yc - 40, "SNAP STUD:", "chip", MUTED, "end")
+            s.text(ax + aw, yc - 30, "THE CLIP BITES HERE", "chip", MUTED, "end")
+            s.text(ax + aw, vy + 14, "STICKY SIDE DOWN", "chip", MUTED, "end")
+            s.text(vx, vy + 26, "SIDE VIEW, 2:1", "chip", MUTED)
         elif i == 3:
             for j, col in enumerate((E1C, REFC, BIASC)):
-                dupont_cable(s, ax + 6, ay + 22 + j * 28, aw - 14, col, k)
-            s.text(ax + 6, ay + 110, "WIRE SHORTENED IN THE DRAWING", "note")
+                dupont_cable(s, ax + 2, ay + 22 + j * 28, aw - 4, col, k)
+            s.text(ax + 2, ay + 110, "WIRE SHORTENED", "note")
         elif i == 4:
-            s.rect(ax + 16, ay + 22, 120, 64, INK, 1.5, fill=SURFACE, r=12)
-            s.text(ax + 76, ay + 59, "5 V", "pin", INK, "middle")
-            s.path(f"M{ax + 136} {ay + 54} C{ax + 180} {ay + 54} {ax + 190} {ay + 24} {ax + 232} {ay + 24}", INK, 1.5)
-            s.rect(ax + 232, ay + 18, 16, 12, INK, 1.2, fill=GROUND, r=2)
-            s.text(ax + 240, ay + 48, "MICRO USB", "chip", MUTED, "middle")
+            for j, col in enumerate((E1C, REFC, BIASC)):
+                dupont_jumper(s, ax + 2, ay + 22 + j * 28, aw - 4, col, k)
+            s.text(ax + 2, ay + 110, "ONE PER LEAD, PEELED OFF", "note")
+        elif i == 5:
+            s.rect(ax + 4, ay + 26, 92, 54, INK, 1.5, fill=SURFACE, r=10)
+            s.text(ax + 50, ay + 58, "5 V", "pin", INK, "middle")
+            s.path(f"M{ax + 96} {ay + 50} C{ax + 136} {ay + 50} {ax + 140} {ay + 26} {ax + 170} {ay + 26}", INK, 1.5)
+            s.rect(ax + 170, ay + 20, 16, 12, INK, 1.2, fill=GROUND, r=2)
+            s.text(ax + 178, ay + 50, "MICRO", "chip", MUTED, "middle")
+            s.text(ax + 178, ay + 60, "USB", "chip", MUTED, "middle")
         else:
-            s.rect(ax + 10, ay + 24, 92, 62, INK, 1.5, r=4)
-            s.line(ax + 10, ay + 38, ax + 102, ay + 38, LINE, 1)
-            s.text(ax + 56, ay + 66, "WIPES", "pin", MUTED, "middle")
-            s.rect(ax + 136, ay + 14, 104, 66, INK, 1.5, r=4)
-            s.poly([(ax + 126, ay + 82), (ax + 250, ay + 82), (ax + 244, ay + 90), (ax + 132, ay + 90)], INK, 1.5, closed=True)
-    scale_bar(s, 44, 666, 20, k, "20 MM, PARTS 01 TO 04")
-    s.text(W - 44, 669, "SOURCES  ·  PI: OFFICIAL DRAWING  ·  PIEEG-8: PIEEG PHOTO, ABOUT 1 MM", "note", MUTED, "end")
+            s.rect(ax + 4, ay + 30, 70, 50, INK, 1.5, r=4)
+            s.line(ax + 4, ay + 42, ax + 74, ay + 42, LINE, 1)
+            s.text(ax + 39, ay + 66, "WIPES", "chip", MUTED, "middle")
+            s.rect(ax + 96, ay + 20, 84, 56, INK, 1.5, r=4)
+            s.poly([(ax + 88, ay + 78), (ax + 188, ay + 78), (ax + 183, ay + 86), (ax + 93, ay + 86)], INK, 1.5, closed=True)
+    cx, cy = x0 + 3 * (cw + gap), y0 + chh + gap                 # the eighth cell: scale and sources
+    scale_bar(s, cx + 14, cy + 60, 20, k, "20 MM")
+    s.text(cx + 14, cy + 96, "PARTS 01 TO 05 AT ONE SCALE", "note")
+    s.text(cx + 14, cy + 132, "SOURCES", "note", FAINT)
+    s.text(cx + 14, cy + 150, "PI: OFFICIAL DRAWING", "note")
+    s.text(cx + 14, cy + 166, "PIEEG-8: PIEEG PHOTO, 1 MM", "note")
+    s.text(cx + 14, cy + 182, "PARTS: PRODUCT PAGES", "note")
     return s
 
 
@@ -781,187 +625,471 @@ def fig_mounting():
     return s
 
 
+# ---------------------------------------------------------------- the rendered head (FIG. 01, 04)
+
+HEAD = {}
+LEADS = {"E1": ("Fp1", E1C), "E2": ("Fp2", E2C), "REF": ("M1", REFC), "BIAS": ("M2", BIASC)}
+for _lead, (_ch, _col) in LEADS.items():
+    R3.material("rim_" + _lead, _col, 0.6, 0.0, 8, 0.7, emit=0.55)
+NECK_CUT = ((0, 0, 1), 606.0)          # the bust is cut flat 606 mm above the mesh's origin
+
+
+def head():
+    """MakeHuman's CC0 head with the 10-20 montage fitted to it (data/head_*, extract_reference_data)."""
+    if not HEAD:
+        V, F = R3.load_head()
+        HEAD.update(V=V, F=F, skin=R3.Skin(V, F), E=R3.load_electrodes())
+    return HEAD
+
+
+def hpos(ch):
+    return np.array(head()["E"]["channels"][ch]["pos"], float)
+
+
+def hmark(name):
+    E = head()["E"]
+    return np.array(E["landmarks"].get(name) or E["midline_arc"]["marks"][name], float)
+
+
+def head_scene(leads=("E1", "REF", "BIAS")):
+    h = head()
+    sc = R3.Scene().add(h["V"], h["F"], "skin", smooth=True)
+    for lead in leads:
+        v, f, m, c, n = R3.sticker_mesh(h["skin"], hpos(LEADS[lead][0]), "rim_" + lead)
+        sc.add(v, f, m)
+    return sc
+
+
+def place(s, r):
+    x, y, w, h = r.image_box()
+    s.image(x, y, w, h, r.png())
+
+
+def on_skin(P, lift=0.0):
+    q, n = head()["skin"].project(P)
+    return q + n * lift, n
+
+
+def runs(mask):
+    """Index runs where mask is true, on a closed loop."""
+    n = len(mask)
+    if mask.all():
+        return [list(range(n)) + [0]]
+    start = int(np.argmin(mask))
+    out, cur = [], []
+    for i in range(start, start + n + 1):
+        j = i % n
+        if mask[j]:
+            cur.append(j)
+        elif cur:
+            out.append(cur)
+            cur = []
+    if cur:
+        out.append(cur)
+    return [r for r in out if len(r) > 1]
+
+
+def sticker_outline(s, r, ch, col, style):
+    """The rim of a sticker on the skin, as a vector line. hidden: short dashes where the head hides
+    it. optional: long dashes (8 6) where it can be seen, for the optional E2 lead."""
+    c, n = on_skin(hpos(ch))
+    ring, _ = on_skin(R3.disc_points(c[0], n[0], R3.STICKER_R, 120), R3.FOAM_T)
+    xy = r.to_svg(ring)
+    vis = r.visible(ring, tol=1.0)
+    want = ~vis if style == "hidden" else vis
+    for run in runs(want):
+        s.poly([tuple(xy[j]) for j in run], col, 1.4 if style == "hidden" else 1.6,
+               dash="3 3" if style == "hidden" else "8 6")
+
+
+def silhouette_x(r, y_svg, side):
+    """Leftmost (side=-1) or rightmost (side=1) point of a render's silhouette on an SVG row."""
+    x0, y0, w, h = r.image_box()
+    row = int((y_svg - y0) * r.ss)
+    cols = np.nonzero(r.mask[row])[0]
+    edge = cols.max() if side > 0 else cols.min()
+    return x0 + edge / r.ss
+
+
+def skin_label(s, x, y, text, anchor="middle"):
+    """A label printed on the light skin: dark ink, no halo."""
+    s.text(x, y, text, "chip", GROUND, anchor, caps=False, weight=600)
+
+
+def skin_dot(s, x, y):
+    s.circle(x, y, 2.4, GROUND, 1.2, fill=MARBLE1)
+
+
 # ---------------------------------------------------------------- FIG. 04 electrode placement
 def fig_placement():
-    s = sheet(880, 4, "ELECTRODE PLACEMENT", "Three stickers, placed by landmarks",
-              "Front and side view of the same head at the same scale, and the 10-20 map seen from above.")
-    k, Y0 = 1.2, 312
-    XF, XS = 236, 660
-    fp1, fp2, m1, m2 = CH["Fp1"], CH["Fp2"], CH["M1"], CH["M2"]
-    rk = STICKER_R * k
-    for name, z, col in [("FP1 LEVEL", fp1[2], E1C), ("M1 LEVEL", m1[2], REFC)]:
-        yy = Y0 - z * k
-        s.line(XF - 118, yy, 880, yy, col, 0.8, dash="3 5", op=0.6)
-        s.text(886, yy + 3, name, "chip", col)
-    # one label per lead, set on its level line between the two views, serving both
-    for lab, z, col in [("E1 · FP1", fp1[2], E1C), ("REF · M1", m1[2], REFC)]:
-        s.text(444, Y0 - z * k + 4, lab, "pin", col, "middle", bg=True)
-    # ---- A front view
-    PF = draw_front_head(s, XF, Y0, k)
-    for p, col in [(m1, REFC), (m2, BIASC)]:
-        x, y = PF(p[0], p[2])
-        sticker(s, x, y, rk * 0.6, rk, col, style="hidden")
-    x, y = PF(fp1[0], fp1[2])
-    sticker(s, x, y, rk * 0.96, rk, E1C)
-    x2, y2 = PF(fp2[0], fp2[2])
-    sticker(s, x2, y2, rk * 0.96, rk, E2C, style="optional")
-    px, py = PF(fp1[0], -38.2)
-    s.line(px, py - 6, px, y + rk + 1, E1C, 0.8, dash="2 2", op=0.85)
-    leader(s, [(x2 - 10, y2 - 12), (x2 - 40, y2 - 60), (122, y2 - 60)], E2C)
-    s.text(118, y2 - 56, "E2 · FP2", "pin", E2C, "end")
-    s.text(118, y2 - 42, "OPTIONAL", "note", MUTED, "end")
-    xm, ym = PF(m1[0], m1[2])
-    leader(s, [(xm + 2, ym + 14), (xm + 14, ym + 66), (xm + 24, ym + 66)], REFC)
-    s.text(xm + 28, ym + 70, "HIDDEN BEHIND", "note")
-    s.text(xm + 28, ym + 84, "THE LEFT EAR", "note")
-    xb, yb = PF(m2[0], m2[2])
-    leader(s, [(xb - 2, yb + 14), (124, yb + 66)], BIASC)
-    s.text(44, yb + 80, "BIAS · M2", "pin", BIASC)
-    s.text(44, yb + 94, "BEHIND THE EAR", "note")
-    s.text(XF, 546, "A  ·  FRONT VIEW", "note", MUTED, "middle")
-    scale_bar(s, 404, 542, 50, k)
-    # ---- B left side view: stickers first, the ear hides the part behind it
-    PS, PSp = draw_side_head(s, XS, Y0, k)
-    lat = [PSp(CH[c]) for c in ["Fp1", "F7", "T7", "P7", "O1"]]
-    s.path(catmull(lat), MUTED, 0.9, dash="2 4", op=0.75)
-    for c in ["F7", "T7", "P7", "O1"]:
-        x, y = PSp(CH[c])
-        s.circle(x, y, 2.4, MUTED, 1, fill=GROUND)
-        s.text(x + (7 if c == "O1" else 0), y + 15, c, "chip", MUTED, "middle", caps=False, halo=True)
-    centre = np.array([0, -13.0, 5.0])
+    s = sheet(1010, 4, "ELECTRODE PLACEMENT", "Three stickers, placed by landmarks",
+              "One adult head at true scale, seen from the front, the left and above. Stickers at true size, Ø 26 mm.")
+    k, ztop = 1.5, 848.0
+    oy = 168 + ztop * k
+    sc = head_scene()
+    # ---- A front view (her left on the viewer's right) and B left side view, same scale, same rows
+    XF, XS = 262, 790
+    rf = R3.Render(sc, R3.FRONT, k, XF, oy, cut=NECK_CUT)
+    rs = R3.Render(sc, R3.LEFT, k, XS, oy, cut=NECK_CUT)
+    place(s, rf)
+    place(s, rs)
+    # level lines between the views: the same height in both, one label serving both
+    for lab, ch, col in [("E1 · FP1", "Fp1", E1C), ("REF · M1", "M1", REFC)]:
+        y = rf.to_svg(hpos(ch))[0, 1]
+        xa, xb = silhouette_x(rf, y, 1) + 8, silhouette_x(rs, y, -1) - 8
+        s.line(xa, y, xb, y, col, 0.9, dash="2 4")
+        s.text((xa + xb) / 2, y + 4, lab, "pin", col, "middle", bg=True)
+    # A: optional E2, the hidden mastoid stickers, the pupil line
+    sticker_outline(s, rf, "Fp2", E2C, "optional")
+    sticker_outline(s, rf, "M1", REFC, "hidden")
+    sticker_outline(s, rf, "M2", BIASC, "hidden")
+    px, py = rf.to_svg(hmark("pupil_l")[None])[0]
+    fy = rf.to_svg((hpos("Fp1") - [0, 0, R3.STICKER_R])[None])[0, 1]
+    s.line(px, py - 7, px, fy + 2, E1C, 1, dash="2 2")
+    x2, y2 = rf.to_svg(hpos("Fp2")[None])[0]
+    lw2 = text_width("E2 · FP2", "pin")
+    leader(s, [(x2 - 12, y2 - 10), (x2 - 40, y2 - 52), (44 + lw2 + 8, y2 - 52)], E2C)
+    s.text(44, y2 - 48, "E2 · FP2", "pin", E2C)
+    s.text(44, y2 - 34, "OPTIONAL", "note", MUTED)
+    xb, yb = rf.to_svg(hpos("M2")[None])[0]
+    lwb = text_width("BIAS · M2", "pin")
+    leader(s, [(xb - 3, yb + 13), (xb - 14, yb + 64), (44 + lwb + 8, yb + 64)], BIASC)
+    s.text(44, yb + 68, "BIAS · M2", "pin", BIASC)
+    s.text(44, yb + 82, "BEHIND THE", "note", MUTED)
+    s.text(44, yb + 96, "RIGHT EAR", "note", MUTED)
+    # B: the midline arc with its 10 and 20 % steps, landmarks, the mastoid
+    arc = np.array(head()["E"]["midline_arc"]["points"], float)
 
-    def outward(p, d):
-        v = p - centre
-        return p + v / np.linalg.norm(v) * d
-    arcpts = [FID["nasion"], CH["Fpz"], CH["AFz"], CH["Fz"], CH["FCz"], CH["Cz"], CH["CPz"], CH["Pz"], CH["POz"], CH["Oz"], CH["Iz"]]
-    s.path(catmull([PSp(outward(p, 16)) for p in arcpts]), FAINT, 1)
-    marks = [FID["nasion"], CH["Fpz"], CH["Fz"], CH["Cz"], CH["Pz"], CH["Oz"], CH["Iz"]]
+    def out(P, d):
+        q, n = on_skin(np.atleast_2d(P))
+        return q + n * d
+    s.path(catmull([tuple(p) for p in rs.to_svg(out(arc, 15))]), FAINT, 1)
+    marks = [hmark("nasion"), hmark("Fpz"), hmark("Fz"), hmark("Cz"), hmark("Pz"), hmark("Oz"), hmark("inion")]
     for p in marks:
-        s.line(*PSp(outward(p, 11.5)), *PSp(outward(p, 20.5)), FAINT, 1)
+        a, b = rs.to_svg(out(p, 10.5))[0], rs.to_svg(out(p, 19.5))[0]
+        s.line(*a, *b, FAINT, 1)
     for (p, q), lab in zip(zip(marks, marks[1:]), ["10%", "20%", "20%", "20%", "20%", "10%"]):
-        x, y = PSp(outward((p + q) / 2, 27))
+        mid = arc[np.argmin(np.linalg.norm(arc - (p + q) / 2, axis=1))]
+        x, y = rs.to_svg(out(mid, 28))[0]
         s.text(x, y + 3.5, lab, "chip", MUTED, "middle")
-    for c in ["Fz", "Cz", "Pz", "Oz"]:
-        x, y = PSp(CH[c])
-        s.circle(x, y, 2.4, MUTED, 1, fill=GROUND)
-        x, y = PSp(outward(CH[c], -9))
-        s.text(x, y + 3.5, c, "chip", MUTED, "middle", caps=False, halo=True)
-    mx, my = PSp(m1)
-    sticker(s, mx, my, rk * 0.85, rk, REFC)
-    draw_side_ear(s, PS)
-    x, y = PSp(fp1)
-    sticker(s, x + 1.5, y, rk * 0.35, rk, E1C)
-    leader(s, [(mx + 12, my + 12), (mx + 40, my + 56), (mx + 54, my + 56)], REFC)
-    s.text(mx + 58, my + 60, "MASTOID BONE", "note")
-    s.text(mx + 58, my + 74, "ON SKIN, NOT HAIR", "note")
-    nx, ny = PS(NZ_Y, NZ_Z)
-    leader(s, [(nx - 2, ny), (nx - 30, ny + 10)], MUTED)
-    s.text(nx - 34, ny + 14, "NASION", "note", MUTED, "end")
-    ix, iy = PSp(CH["Iz"])
-    leader(s, [(ix + 2, iy), (ix + 44, iy + 14)], MUTED)
-    s.text(ix + 48, iy + 18, "INION", "note", MUTED)
-    s.text(XS + 20, 546, "B  ·  LEFT SIDE VIEW", "note", MUTED, "middle")
-    # ---- C top view
-    s.line(44, 572, W - 44, 572, LINE, 1)
-    XT, YT, R = 176, 712, 70
-    proj, rho = top_projection()
-
-    def T(p):
-        u, v = proj(p)
-        return XT + u * R, YT + v * R
-    s.circle(XT, YT, R, INK, 1.5, fill=SURFACE)
-    s.circle(XT, YT, R * 0.5, LINE, 1, dash="2 4")
-    s.line(XT - R, YT, XT + R, YT, LINE, 1, dash="2 4")
-    s.line(XT, YT - R, XT, YT + R, LINE, 1, dash="2 4")
-    a = math.radians(14)
-    s.path(f"M{XT - R * math.sin(a):.1f} {YT - R * math.cos(a):.1f} L{XT:.1f} {YT - R * 1.13:.1f} "
-           f"L{XT + R * math.sin(a):.1f} {YT - R * math.cos(a):.1f}", INK, 1.5)
-    for sgn in (-1, 1):
-        s.path(catmull([(XT + sgn * R * 0.995, YT - R * 0.16), (XT + sgn * R * 1.07, YT - R * 0.13),
-                        (XT + sgn * R * 1.09, YT + R * 0.02), (XT + sgn * R * 1.05, YT + R * 0.15),
-                        (XT + sgn * R * 0.99, YT + R * 0.17)]), INK, 1.5)
-    s.text(XT, YT - R * 1.13 - 8, "NOSE", "note", MUTED, "middle")
-    for c in ["F7", "F3", "Fz", "F4", "F8", "T7", "C3", "Cz", "C4", "T8", "P7", "P3", "Pz", "P4", "P8", "O1", "O2"]:
-        x, y = T(CH[c])
-        s.circle(x, y, 2.2, MUTED, 1, fill=GROUND)
-        if c in ("T7", "T8"):
-            s.text(x + (9 if c == "T7" else -9), y + 3, c, "chip", MUTED, "start" if c == "T7" else "end", caps=False)
+    for name in ("Fz", "Cz", "Pz", "Oz"):
+        x, y = rs.to_svg(out(hmark(name), 0))[0]
+        xi, yi = rs.to_svg(out(hmark(name), -12))[0]
+        skin_dot(s, x - 0.6, y)
+        skin_label(s, xi, yi + 3.5, name)
+    for name, dy in (("F7", 15), ("T7", -7), ("P7", 15)):
+        x, y = rs.to_svg(hpos(name)[None])[0]
+        skin_dot(s, x, y)
+        skin_label(s, x, y + dy, name)
+    nx, ny = rs.to_svg(hmark("nasion")[None])[0]
+    leader(s, [(nx - 3, ny), (nx - 30, ny + 4)], MUTED)
+    s.text(nx - 34, ny + 8, "NASION", "note", MUTED, "end")
+    ix, iy = rs.to_svg(hmark("inion")[None])[0]
+    leader(s, [(ix + 2, iy + 2), (ix + 26, iy + 34), (ix + 36, iy + 34)], MUTED)
+    s.text(ix + 40, iy + 38, "INION", "note", MUTED)
+    mx, my = rs.to_svg(hpos("M1")[None])[0]
+    leader(s, [(mx + 10, my + 12), (mx + 40, my + 72), (mx + 54, my + 72)], REFC)
+    s.text(mx + 58, my + 76, "MASTOID BONE", "note")
+    s.text(mx + 58, my + 90, "ON SKIN, NOT HAIR", "note")
+    ybot = oy - NECK_CUT[1] * k
+    s.text(XF, ybot + 30, "A  ·  FRONT", "note", MUTED, "middle")
+    s.text(rs.to_svg(np.array([[0, 64.0, 700]]))[0, 0], ybot + 30, "B  ·  LEFT SIDE", "note", MUTED, "middle")
+    scale_bar(s, 470, ybot + 26, 50, k)
+    # ---- C from above: the 10-20 sites on the same head
+    s.line(44, ybot + 58, W - 44, ybot + 58, LINE, 1)
+    kt = 1.25
+    yc0 = ybot + 100
+    XT = 226
+    rt = R3.Render(sc, R3.TOP, kt, XT, yc0 + 172.0 * kt, cut=NECK_CUT)
+    place(s, rt)
+    ring = ["Fpz", "Fp2", "F8", "T8", "P8", "O2", "Oz", "O1", "P7", "T7", "F7", "Fp1"]
+    pts = [tuple(p) for p in rt.to_svg(np.array([hpos(c) for c in ring]))]
+    s.path(catmull(pts, closed=True), GROUND, 0.9, dash="2 4", op=0.55)
+    cx0, cy0 = rt.to_svg(hpos("Cz")[None])[0]
+    for c in ["F3", "Fz", "F4", "C3", "Cz", "C4", "P3", "Pz", "P4", "F7", "F8", "T7", "T8", "P7", "P8", "O1", "O2"]:
+        x, y = rt.to_svg(hpos(c)[None])[0]
+        skin_dot(s, x, y)
+        if c in ("F7", "F8", "O1", "O2", "P7", "P8"):          # on the rim: label toward the middle
+            v = np.array([cx0 - x, cy0 - y])
+            v /= np.linalg.norm(v)
+            skin_label(s, x + v[0] * 14, y + v[1] * 14 + 3.5, c)
+        elif c in ("T7", "T8"):
+            skin_label(s, x + (9 if c == "T7" else -9), y + 3.5, c, "start" if c == "T7" else "end")
+        elif c in ("C3", "C4"):
+            skin_label(s, x, y + 15, c)
         else:
-            s.text(x, y - 5.5, c, "chip", MUTED, "middle", caps=False)
-    srad = R * STICKER_R / (math.pi / 2 * rho)
-    for c, col, lab, dx, dy, st in [("Fp1", E1C, "E1", -11, -6, "solid"), ("Fp2", E2C, "E2", 11, -6, "optional"),
-                                     ("M1", REFC, "REF", 0, 24, "solid"), ("M2", BIASC, "BIAS", 0, 24, "solid")]:
-        x, y = T(CH[c])
-        sticker(s, x, y, srad, srad, col, style=st)
-        s.text(x + dx, y + dy, lab, "pin", col, "middle" if dx == 0 else ("end" if dx < 0 else "start"), halo=True)
-    s.text(XT, YT + R + 30, "CIRCLE: THE 10 % CIRCUMFERENCE", "chip", MUTED, "middle")
-    s.text(XT, YT + R + 42, "MASTOIDS LIE LOWER, OUTSIDE IT", "chip", MUTED, "middle")
-    s.text(44, 606, "C  ·  FROM ABOVE, NOSE UP", "note")
+            skin_label(s, x, y - 6, c)
+    sticker_outline(s, rt, "Fp2", E2C, "optional")
+    xl, xr = rt.image_box()[0] - 8, rt.image_box()[0] + rt.image_box()[2] + 8
+    for lead, side, dy in [("E1", -1, -18), ("E2", 1, -18)]:
+        ch, col = LEADS[lead]
+        x, y = rt.to_svg(hpos(ch)[None])[0]
+        xe = xl if side < 0 else xr
+        leader(s, [(x, y), (x + side * 10, y + dy), (xe, y + dy)], col)
+        s.text(xe - 4 if side < 0 else xe + 4, y + dy + 4, lead, "pin", col, "end" if side < 0 else "start")
+    nose = rt.to_svg(np.array([[0, 168.0, 700]]))[0]
+    s.text(nose[0], nose[1] - 12, "NOSE", "note", MUTED, "middle")
+    s.text(44, yc0 - 18, "C  ·  FROM ABOVE", "note")
+    s.text(XT, rt.image_box()[1] + rt.image_box()[3] + 16, "DOTTED: THE 10 % CIRCUMFERENCE", "chip", MUTED, "middle")
+    s.text(XT, rt.image_box()[1] + rt.image_box()[3] + 30, "REF AND BIAS SIT LOWER, BEHIND THE EARS (B)", "chip", MUTED, "middle")
     # ---- D how to find each spot
-    dx0 = 380
-    s.text(dx0, 606, "D  ·  HOW TO FIND EACH SPOT", "note")
-    rows = [("E1  →  LEFT FOREHEAD  ·  FP1", E1C, "Lower edge just above the left eyebrow, centered over the pupil."),
-            ("REF  →  BEHIND THE LEFT EAR  ·  M1", REFC, "The bony bump right behind the earlobe, on skin. Tie long hair back."),
-            ("BIASOUT  →  BEHIND THE RIGHT EAR  ·  M2", BIASC, "The same spot on the right side."),
-            ("E2  →  RIGHT FOREHEAD  ·  FP2, OPTIONAL", E2C, "Mirror image of Fp1.")]
-    for i, (head, col, find) in enumerate(rows):
-        yy = 640 + i * 46
-        s.text(dx0, yy, head, "pin", col)
-        s.text(dx0, yy + 18, find, "detail")
-    s.text(dx0, 826, "Stickers at true size, Ø 26 mm. Short dashes: hidden. Long dashes: optional.", "detail")
-    footer(s, "SOURCES  ·  ELECTRODE POSITIONS: MNE-PYTHON STANDARD 10-20 MONTAGE  ·  FACE AND EAR: ADULT PROPORTIONS, APPROXIMATE")
+    dx0 = 452
+    s.text(dx0, yc0 - 18, "D  ·  HOW TO FIND EACH SPOT", "note")
+    rows = [("E1  →  LEFT FOREHEAD  ·  FP1", E1C, ["Lower edge just above the left eyebrow,", "in line with the pupil."]),
+            ("REF  →  BEHIND THE LEFT EAR  ·  M1", REFC, ["The bony bump right behind the lower half", "of the ear, on skin. Tie long hair back."]),
+            ("BIASOUT  →  BEHIND THE RIGHT EAR  ·  M2", BIASC, ["The same spot on the right side."]),
+            ("E2  →  RIGHT FOREHEAD  ·  FP2, OPTIONAL", E2C, ["Mirror image of Fp1."])]
+    y = yc0 + 16
+    for head_, col, lines in rows:
+        s.text(dx0, y, head_, "pin", col)
+        for j, line in enumerate(lines):
+            s.text(dx0, y + 20 + j * 18, line, "detail")
+        y += 34 + 18 * len(lines)
+    s.text(dx0, y + 4, "Short dashes: hidden behind the head. Long dashes: optional.", "detail")
+    footer(s, "SOURCES  ·  HEAD: MAKEHUMAN BASE MESH, CC0  ·  POSITIONS: MNE-PYTHON STANDARD 10-20, FITTED TO 5 LANDMARKS")
     return s
+
+
+# ---------------------------------------------------------------- the rendered boards (FIG. 01, 05)
+
+LEAD_PIN = {"E1": "E1", "E2": "E2", "REF": "Ref", "BIAS": "Biasout"}
+for _lead, (_ch, _col) in LEADS.items():
+    R3.material("wire_" + _lead, _col, 0.75, 0.25, 30, 0.6, emit=0.25)
+
+
+def board_scene(leads=("REF", "BIAS", "E1"), stub=None, toward=(-110.0, 0.0, 150.0), length=230.0):
+    """Pi 3 B with the PiEEG-8, a jumper housing on each used pin and its wire. The wire's shape is
+    the elastic rod at rest on its way to the head (up and to the left); stub keeps its first mm."""
+    sc = R3.Scene()
+    P3.raspberry_pi(sc)
+    P3.pieeg(sc, used=[LEAD_PIN[l] for l in leads])
+    obst = [(0, 0, -2, 87, 56, P3.PE_TOP)]
+    for l in leads:
+        x, y = P3.pin_xy(LEAD_PIN[l])
+        obst.append((x - 1.27, y - 1.27, P3.EL_BASE, x + 1.27, y + 1.27, P3.EL_BASE + P3.HOUSING_L))
+    wires = {}
+    for i, l in enumerate(leads):
+        p0 = P3.housing_top(LEAD_PIN[l])
+        far = p0 + np.array(toward) + np.array([0, 0, 12.0 * i])
+        P = P3.hang(p0, (0, 0, 1), far, length + 10 * i, floors=[((0, 0, 1), -2.0)], boxes=obst)
+        if stub:
+            P = P3.cut_path(P, stub)
+        P3.add_cable(sc, P, "wire_" + l)
+        wires[l] = P
+    return sc, wires
+
+
+def cable_break(s, r, P, col):
+    """Technical drawing break at the end of a cable that continues: two short slanted strokes."""
+    a, b = r.to_svg(np.asarray(P[-2:], float))
+    d = (b - a) / max(np.linalg.norm(b - a), 1e-9)
+    nrm = np.array([-d[1], d[0]])
+    for off in (3.0, 7.0):
+        c = b + d * off
+        p, q = c + nrm * 6 + d * 2.5, c - nrm * 6 - d * 2.5
+        s.line(*p, *q, col, 1.2)
+    return b + d * 12
+
+
+# ---------------------------------------------------------------- FIG. 01 scene: bust, shelf, boards, leads
+SHELF_TOP = 565.0                       # shelf at shoulder height, just beside her left shoulder
+SHELF = (-450.0, -170.0, SHELF_TOP - 18, -208.0, 86.0, SHELF_TOP)
+BOARD_AT = np.array([-220.0, 56.5, SHELF_TOP + 2.0])   # the Pi's corner (0, 56) lands here, turned 180 degrees
+LEAD = {"jumper": 172.0, "joint": 28.0, "clip_wire": 158.0, "clip": 24.0}   # mm along a lead, board end first
+POWERBANK = (-420.0, -120.0, SHELF_TOP, -316.0, -54.0, SHELF_TOP + 16.0)     # 10,000 mAh class, 104 x 66 x 16 mm
+for _name, _args in {"shelf": ("#252a66", 0.85, 0.05, 10, 0.6), "powerbank": ("#3a3d57", 0.80, 0.25, 30, 0.5),
+                     "bust": ("#ddd5c5", 0.84, 0.035, 14, 0.62), "usb": ("#b0465a", 0.75, 0.25, 30, 0.6)}.items():
+    R3.material(_name, *_args)
+R3.material("bust_cut", "#c9c0ae", 0.80, 0.0, 10, 0.6)
+
+
+def to_world(P):
+    """Board frame (parts3d) to the head's frame: turned 180 degrees about z, header toward her."""
+    P = np.atleast_2d(np.asarray(P, float))
+    return np.c_[BOARD_AT[0] - P[:, 0], BOARD_AT[1] - P[:, 1], BOARD_AT[2] + P[:, 2]]
+
+
+def load_bust():
+    d = np.load(DATA / "bust_makehuman.npz")
+    return d["V"].astype(float), d["F"].astype(np.int64), d["cap"]
+
+
+def oriented_box(sc, a, b, w, h, up, mat, off=0.0):
+    """A box from point a to point b, w wide and h high, its height along `up` (shifted by off)."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    ax = (b - a) / np.linalg.norm(b - a)
+    side = np.cross(ax, up)
+    side /= np.linalg.norm(side)
+    nrm = np.cross(side, ax)
+    V = np.array([c + side * sx * w / 2 + nrm * (off + sy * h / 2) for c in (a, b)
+                  for sx, sy in [(-1, -1), (1, -1), (1, 1), (-1, 1)]])
+    F = np.array([[0, 1, 5], [0, 5, 4], [1, 2, 6], [1, 6, 5], [2, 3, 7], [2, 7, 6], [3, 0, 4], [3, 4, 7],
+                  [0, 3, 2], [0, 2, 1], [4, 5, 6], [4, 6, 7]])
+    sc.add(V, F, mat)
+
+
+def clip_mesh(sc, a, b, up, lead):
+    """Alligator clip from a (its back) to b (the jaws on the snap): boot in the lead's color, two metal jaws."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    L = np.linalg.norm(b - a)
+    m = a + (b - a) * 0.40
+    oriented_box(sc, a, m, 5.0, 5.0, up, "wire_" + lead)
+    for off in (1.3, -1.3):
+        oriented_box(sc, a + (b - a) * 0.36, b + (b - a) / L * 2.0, 4.2, 0.9, up, "metal", off)
+
+
+def point_at(P, s):
+    arc = np.r_[0, np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))]
+    return np.array([np.interp(s, arc, P[:, j]) for j in range(3)])
+
+
+def usb_cable(sc):
+    """Micro USB plug in PWR IN, the official 1 m cable coiled loosely on the shelf, USB A plug in the powerbank."""
+    up = np.array([0, 0, 1.0])
+    mu = to_world([[10.6, -0.6, P3.PI_T + 1.3]])[0]                  # mouth of the Pi's micro USB socket
+    m_end = mu + np.array([0, 20.0, 0])
+    oriented_box(sc, mu, m_end, 10.5, 6.5, up, "plastic")
+    pa = np.array([-368.0, POWERBANK[4], SHELF_TOP + 8.0])           # powerbank's USB A port, on its front face
+    a_end = pa + np.array([0, 24.0, 0])
+    oriented_box(sc, pa, a_end, 16.0, 8.5, up, "plastic")
+    z0 = SHELF_TOP + 1.7
+    r, c, turns = 27.0, np.array([-374.0, 30.0]), 4
+    t = np.linspace(0, 2 * np.pi * turns, 480)
+    coil = np.c_[c[0] + r * np.cos(-t), c[1] + r * np.sin(-t), z0 + 0.8 * np.sin(t * 0.5) ** 2]
+    lead_out = P3.smooth_path(np.array([m_end, m_end + [-4, 6, -2.5], [-262, 79, z0], [-330, 74, z0], coil[0]]), 10)
+    lead_in = P3.smooth_path(np.array([coil[-1], [-366, 2, z0], a_end + [-2, 10, -4], a_end + [0, 4, -1], a_end]), 10)
+    path = np.r_[lead_out, coil[1:], lead_in[1:]]
+    V, F = R3.tube(path, 1.6, 10)
+    sc.add(V, F, "usb", smooth=True)
+    oriented_box(sc, coil[len(coil) // 3] + [0, 0, -1], coil[len(coil) // 3] + [0, 0, 4.5], 4.0, 4.0, [1.0, 0, 0], "plastic")
+    return np.linalg.norm(np.diff(path, axis=0), axis=1).sum() + 20 + 24
+
+
+def system_scene():
+    """The whole setup at true scale in the head's frame, the leads settled by gravity."""
+    V, F, cap = load_bust()
+    skin = R3.Skin(V, F[~cap])
+    sc = R3.Scene().add(V, F[~cap], "bust", smooth=True).add(V, F[cap], "bust_cut")
+    studs = {}
+    for lead in ("E1", "REF", "BIAS"):
+        v, f, m, c, n = R3.sticker_mesh(skin, hpos(LEADS[lead][0]), "rim_" + lead)
+        sc.add(v, f, m)
+        studs[lead] = (c + n * (R3.FOAM_T + R3.STUD_H * 0.7), n)
+    V_, F_ = R3.box(*SHELF)
+    sc.add(V_, F_, "shelf")
+    boards = R3.Scene()
+    P3.raspberry_pi(boards)
+    P3.pieeg(boards, used=[LEAD_PIN[l] for l in ("REF", "BIAS", "E1")])
+    for Vb, Fb, Mb in zip(boards.V, boards.F, boards.M):
+        sc.add(to_world(Vb), Fb - Fb.min(), Mb)
+    V_, F_ = R3.box(*POWERBANK)
+    sc.add(V_, F_, "powerbank")
+    usb_len = usb_cable(sc)
+    obst = [SHELF, (BOARD_AT[0] - 87, BOARD_AT[1] - 56, SHELF_TOP, BOARD_AT[0], BOARD_AT[1], BOARD_AT[2] + P3.PE_TOP),
+            POWERBANK]
+    total = sum(LEAD.values())
+    j0, j1 = LEAD["jumper"], LEAD["jumper"] + LEAD["joint"]
+    rigid = [(j0, j1), (total - LEAD["clip"], total)]
+    heavy = [(j0, j1, 6.0), (total - LEAD["clip"], total, 18.0)]
+    ear = skin.project(np.array([[-80.0, 50.0, 733.0]]))[0][0]
+    hook = ear + skin.project(ear)[1][0] * 1.5
+    routes = {"REF": [(-175, -12, 600), (-110, -8, 642), studs["REF"][0] + (-6, -6, -28)],
+              "BIAS": [(62, -12, 678), (0, -52, 648), (-62, -30, 640), (-155, 5, 600)]}
+    paths = {}
+    for lead in ("REF", "BIAS", "E1"):
+        p0 = to_world(P3.housing_top(LEAD_PIN[lead]))[0]
+        stud = studs[lead][0]
+        kw = dict(boxes=obst, skin=skin)
+        if lead == "E1":                    # back over the ear like the arm of a pair of glasses, off the face
+            Lb = 132.0
+            A = P3.hang(p0, (0, 0, 1), hook, total - Lb, n=72, via=[(-155, 32, 650), (-98, 34, 700)],
+                        rigid=[r for r in rigid if r[1] <= total - Lb], heavy=[h for h in heavy if h[1] <= total - Lb], **kw)
+            off = total - Lb
+            B = P3.hang(hook, None, stud, Lb, n=40, via=[(-62, 120, 745)],
+                        rigid=[(a - off, b - off) for a, b in rigid if a >= off],
+                        heavy=[(a - off, b - off, f) for a, b, f in heavy if a >= off], **kw)
+            P = np.r_[A, B[1:]]
+        else:
+            P = P3.hang(p0, (0, 0, 1), stud, total, n=100, via=routes[lead], rigid=rigid, heavy=heavy, **kw)
+        paths[lead] = P
+        arc = np.r_[0, np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))]
+        P3.add_cable(sc, np.r_[P[arc < j0], [point_at(P, j0)]], "wire_" + lead)
+        P3.add_cable(sc, np.r_[[point_at(P, j1)], P[(arc > j1) & (arc < total - LEAD["clip"])],
+                               [point_at(P, total - LEAD["clip"])]], "wire_" + lead)
+        oriented_box(sc, point_at(P, j0), point_at(P, j0 + 14.0), P3.HOUSING_W, P3.HOUSING_W, [0, 0, 1.0], "housing")
+        oriented_box(sc, point_at(P, j0 + 14.0), point_at(P, j1), P3.HOUSING_W, P3.HOUSING_W, [0, 0, 1.0], "housing")
+        clip_mesh(sc, point_at(P, total - LEAD["clip"]), P[-1], studs[lead][1], lead)
+    return sc, paths, studs, usb_len
 
 
 # ---------------------------------------------------------------- FIG. 05 wiring
 def fig_wiring():
-    s = sheet(900, 5, "WIRING", "Which pin goes where",
-              "Ten male pins on the left edge of the PiEEG-8, printed Ref, Biasout, E8 to E1 from top to bottom.")
-    # A: the board
-    k, x0, y0 = 3.2, 60, 196
-    s.text(44, 150, "A  ·  PIEEG-8, TOP VIEW", "note")
-    M = draw_pieeg(s, x0, y0, k, chip_label=False)
-    ax_, ay_ = M(PIEEG["ads1299"][0], PIEEG["ads1299"][1] + 7.2)
-    s.text(ax_, ay_ + 3, "ADS1299", "chip", GOLD, "middle")
-    hb = (PIEEG["header_x"] - 2.4, PIEEG["header_top"] - 9 * 2.54 - 2.4, PIEEG["header_x"] + 2.4, PIEEG["header_top"] + 2.4)
-    bx1, by1 = M(hb[0], hb[3])
-    bx2, by2 = M(hb[2], hb[1])
-    s.rect(bx1, by1, bx2 - bx1, by2 - by1, INK, 1, dash="3 3")
-    s.text(bx1 + 2, by1 - 6, "B", "pin", INK)
-    gx, gy = M(32, 52.5)
-    leader(s, [(gx, gy), (gx, y0 - 16), (gx + 12, y0 - 16)], GOLD)
-    s.text(gx + 16, y0 - 12, "40 PIN SOCKET, UNDERNEATH → PI", "note", GOLD)
-    lx, ly = M(*PIEEG["led"])
-    leader(s, [(lx, ly), (lx, y0 + 56 * k + 22), (lx + 12, y0 + 56 * k + 22)], GOLD)
-    s.text(lx + 16, y0 + 56 * k + 26, "LED, ON WITH POWER", "note", GOLD)
-    # B: header detail, pin pitch 32 px
-    hx, hy0, pp = 470, 196, 32
-    s.text(hx - 34, 150, "B  ·  ELECTRODE HEADER, 2.54 MM PITCH", "note")
-    s.rect(hx - 20, hy0 - 20, 40, 9 * pp + 40, GOLD, 1.5, fill=SURFACE, r=6)
-    pin_y = {}
-    used = {"Ref": (REFC, "behind the left ear", "M1, left mastoid", None),
-            "Biasout": (BIASC, "behind the right ear", "M2, right mastoid", None),
-            "E2": (E2C, "right forehead, optional", "Fp2", "8 6"),
-            "E1": (E1C, "left forehead", "Fp1", None)}
-    for i, name in enumerate(HEADER):
-        y = hy0 + i * pp
-        pin_y[name] = y
-        on = name in used
-        s.rect(hx - 6, y - 6, 12, 12, GOLD, 1.2, fill=GOLD if on else "none")
-        s.text(hx - 34, y + 4, name, "pin", INK if on else FAINT, "end")
-    s.line(hx + 34, pin_y["E8"] - 6, hx + 34, pin_y["E3"] + 6, FAINT, 1)
-    s.text(hx + 44, (pin_y["E8"] + pin_y["E3"]) / 2 + 3.5, "E3 TO E8: EMPTY", "note", FAINT)
-    dx = 706
-    dest = {"Ref": hy0 - 2, "Biasout": hy0 + 64, "E2": hy0 + 196, "E1": hy0 + 262}
-    for name, (col, where, pos, dash) in used.items():
-        y, ty = pin_y[name], dest[name]
-        wire(s, [(hx + 6, y), (hx + 60, y), (dx - 90, ty), (dx - 16, ty)], col, dash=dash)
-        sticker(s, dx, ty, 11, 11, col, style="optional" if dash else "solid")
-        s.text(dx + 20, ty - 2, f"{upper(name)}  →  {upper(pos)}", "pin", col)
-        s.text(dx + 20, ty + 15, where[0].upper() + where[1:], "detail")
-    s.text(hx - 34, hy0 + 9 * pp + 46, "FEMALE DUPONT END ONTO THE PIN  ·  CLIP BITES THE METAL SNAP", "note")
+    s = sheet(1080, 5, "WIRING", "Which pin goes where",
+              "The PiEEG-8 on the Raspberry Pi. Each lead starts with a jumper, its female end pushed onto a pin.")
+    # ---- A: the whole stack, three jumpers in place
+    sc, wires = board_scene(stub=30.0)
+    ca = R3.Camera.orbit(-35, 30)
+    ra = R3.Render(sc, ca, 4.1, 0, 0, catcher=-2.0).move_to(30, 170)
+    place(s, ra)
+    s.text(44, 150, "A  ·  ON THE PI, SEEN FROM THE MICROSD END", "note")
+    for l in ("REF", "BIAS", "E1"):
+        cable_break(s, ra, wires[l], LEADS[l][1])
+    abot = ra.image_box()[1] + ra.image_box()[3] + 8
+    targets = [("ELECTRODE HEADER", "ENLARGED IN B", np.array([P3.PIEEG["header_x"] - 1.3, 16.0, P3.PE_TOP + 1.0]), 44, INK),
+               ("ADS1299", "THE EEG CHIP", np.array([*P3.PIEEG["ads1299"], P3.PE_TOP + 1.0]), 236, GOLD),
+               ("LED", "ON WITH POWER", np.array([*P3.PIEEG["led"], P3.PE_TOP + 0.6]), 384, GOLD)]
+    for title, sub, P, tx, col in targets:
+        x, y = ra.to_svg(P[None])[0]
+        leader(s, [(x, y), (x, abot), (tx, abot)] if abs(x - tx) > 2 else [(x, y), (x, abot)], col)
+        s.text(tx, abot + 18, title, "pin", col)
+        s.text(tx, abot + 33, sub, "note", MUTED)
+    # ---- B: the electrode header, a detail cut out of the board
+    cb = R3.Camera.orbit(-16, 16)
+    scb, wb = board_scene(stub=12.0)
+    cut = [((-1, 0, 0), -15.0), ((0, 1, 0), 11.0), ((0, -1, 0), -42.0), ((0, 0, 1), P3.PE_Z0 - 0.05)]
+    corners = np.array([[x, y, z] for x in (0, 15) for y in (11, 42) for z in (P3.PE_Z0, P3.EL_BASE + P3.HOUSING_L + 12)])
+    pc = cb.project(corners)
+    kb = 344 / (np.ptp(pc[:, 0]) + 8)
+    rb = R3.Render(scb, cb, kb, 0, 0, cut=cut, pad=4, bounds=(pc[:, 0].min(), pc[:, 1].min(), pc[:, 0].max(), pc[:, 1].max())).move_to(604, 180)
+    place(s, rb)
+    s.text(604, 150, "B  ·  ELECTRODE HEADER, 2.54 MM PITCH", "note")
+    for l in ("REF", "BIAS", "E1"):
+        cable_break(s, rb, wb[l], LEADS[l][1])
+    x2, y2 = P3.pin_xy("E2")                      # where the optional fourth jumper goes
+    w2 = P3.HOUSING_W / 2
+    sq = [(x2 - w2, y2 - w2), (x2 - w2, y2 + w2), (x2 + w2, y2 + w2), (x2 + w2, y2 - w2)]
+    z0, z1 = P3.EL_BASE, P3.EL_BASE + P3.HOUSING_L
+    for a in range(4):
+        for p, q in [((*sq[a], z0), (*sq[(a + 1) % 4], z0)), ((*sq[a], z1), (*sq[(a + 1) % 4], z1)),
+                     ((*sq[a], z0), (*sq[a], z1))]:
+            pp, qq = rb.to_svg(np.array([p, q]))
+            if rb.visible(np.array([p, q]), tol=0.6).all():
+                s.line(*pp, *qq, E2C, 1, dash="3 3")
+    yb0 = rb.image_box()[1] + rb.image_box()[3] + 4
+    colors = {"Ref": REFC, "Biasout": BIASC, "E1": E1C, "E2": E2C}
+    for i, name in enumerate(P3.HEADER):
+        x, y = P3.pin_xy(name)
+        px_ = rb.to_svg(np.array([[x - 1.3, y, P3.EL_BASE]]))[0, 0]       # straight below the pin,
+        ix0, iy0, _, _ = rb.image_box()                                     # from the board's lower edge
+        rows = np.nonzero(rb.mask[:, int((px_ - ix0) * rb.ss)])[0]
+        py_ = iy0 + (rows.max() + 1) / rb.ss + 3
+        ty = yb0 + 18 + (i % 2) * 18
+        col = colors.get(name, FAINT)
+        s.line(px_, py_, px_, ty - 11, col if name in colors else LINE, 0.9)
+        s.text(px_, ty, name, "chip", col, "middle", caps=True, size=10)
+    b_end = yb0 + 40
+    ty = abot + 96
+    s.text(44, ty - 24, "EACH LEAD GOES TO", "note")
+    for l, where in [("REF", "M1, BEHIND THE LEFT EAR"), ("BIAS", "M2, BEHIND THE RIGHT EAR"),
+                     ("E1", "FP1, LEFT FOREHEAD"), ("E2", "FP2, RIGHT FOREHEAD, OPTIONAL")]:
+        col = LEADS[l][1]
+        s.line(44, ty - 4, 60, ty - 4, col, 2.5, dash="5 4" if l == "E2" else None)
+        s.text(68, ty, f"{'BIASOUT' if l == 'BIAS' else l}  →  {where}", "chip", col, size=11)
+        ty += 19
+    s.text(44, ty + 4, "E3 TO E8 STAY EMPTY", "note", FAINT)
+    c_top = max(b_end, ty + 10) + 34
     # C: inside the ADS1299
-    cy0 = 578
+    cy0 = c_top + 26
     s.line(44, cy0 - 26, W - 44, cy0 - 26, LINE, 1)
     s.text(44, cy0, "C  ·  INSIDE THE ADS1299, WITH THE REGISTER VALUES PIEEG SERVER WRITES", "note")
     bx0, bx1, cb0, cb1 = 196, 716, cy0 + 22, cy0 + 254
@@ -1020,6 +1148,7 @@ def fig_wiring():
     s.text(rx, yB + 6, "Forehead minus left mastoid.", "detail")
     s.text(rx, yB + 23, "Bias holds the body at", "detail")
     s.text(rx, yB + 40, "the chip's mid supply.", "detail")
+    resize(s, cy0 + 254 + 96)
     footer(s, "SOURCES  ·  PIEEG DOCS: ELECTRODES & PINOUT  ·  PIEEG SERVER 0.49.0 HARDWARE.PY  ·  TI ADS1299 DATASHEET")
     return s
 
