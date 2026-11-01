@@ -31,9 +31,13 @@ def test_welcome_script_parses():
 
 def test_assets_are_versioned():
     """Browsers keep old copies of style.css and app.js; the ?v= in index.html is the first 8 hex
-    digits of each file's SHA-256, so every change gets a new URL. Update it when a file changes."""
+    digits of each file's SHA-256, so every change gets a new URL. Update it when a file changes.
+    Hashes are taken over LF bytes: git may hand the checkout CRLF endings on Windows, and a
+    browser gets the same bytes either way."""
     import hashlib
     html = (PAGE / "index.html").read_text(encoding="utf-8")
     for f in ("assets/style.css", "assets/app.js"):
-        h = hashlib.sha256((PAGE / f).read_bytes()).hexdigest()[:8]
+        crlf, lf = bytes((13, 10)), bytes((10,))
+        blob = (PAGE / f).read_bytes().replace(crlf, lf)
+        h = hashlib.sha256(blob).hexdigest()[:8]
         assert f"{f}?v={h}" in html, f"{f} changed: set ?v={h} in page/index.html"
