@@ -5,7 +5,7 @@ Goal: see a blink and your alpha rhythm in the browser. "You" is whoever wears t
 ## You need
 
 - Raspberry Pi 3 Model B with the PiEEG-8 on top and the MicroSD inside
-- 3 electrode stickers, 3 alligator clip cables, 3 extension jumpers (the 20 cm male to female jumpers)
+- 3 electrode stickers, 3 alligator clip cables, 3 extension jumpers (peeled off the male to female ribbon)
 - Powerbank, **charged and not plugged into the wall**, and the Micro USB cable
 - MacBook on battery, **charger unplugged**, on the same WiFi as the Pi
 - An alcohol wipe
@@ -22,9 +22,9 @@ Pi unplugged. The PiEEG-8 sits on all 40 pins of the Pi's GPIO header, pushed do
 
 ![wiring](images/wiring.png)
 
-The black female end of each cable slides onto a pin of the 10 pin header:
+Each lead is an extension jumper plus a clip cable. The jumper's female end slides onto a pin of the 10 pin header, the clip cable's black female end onto the jumper's male end. Push each joint fully home.
 
-| Cable | Pin |
+| Lead | Pin |
 |---|---|
 | 1 | **E1** |
 | 2 | **Ref** |
@@ -52,13 +52,14 @@ The clip bites the metal snap in the middle of the sticker, not the foam. Ref an
 
 ## 4. Where to put the Pi
 
-Each lead is 20 cm of clip cable plus one 20 cm extension jumper: about 40 cm per electrode. Measured over an adult head, that reaches the sitting position below with room for slack: 28 cm to Fp1, 14 cm to Ref, 33 cm to Bias. It does not reach a board behind the head (longest path about 45 cm), and lying down needs a second jumper on the forehead lead.
+Each lead is about 40 cm: jumper plus clip cable. Both positions below reach all three stickers with slack to spare (paths measured on an adult head and shoulders model):
 
-- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, on a wooden or plastic surface, beside your head
-- **Lying down:** Pi on the pillow next to your head. Best position for relaxed alpha, but add a second jumper to the forehead lead if that path is over 30 cm
-- Cables hang loose, nothing pulls on a sticker
+- **Sitting:** Pi and powerbank on a shelf or a stack of books at shoulder height, just beside your left shoulder, on a wooden or plastic surface. Paths: 28 cm to Fp1, 19 cm to Ref, 32 cm to Bias
+- **Lying down:** Pi on the pillow beside your left ear. Best position for relaxed alpha. Paths: 19 cm to Fp1, 9 cm to Ref, 23 cm to Bias, which runs around the front of the neck because it can't pass under your head
+- Not behind your head: Fp1 is about 45 cm away from there
+- Cables hang loose, nothing pulls on a sticker. If one does, move the Pi closer or chain a second jumper onto that lead
 
-**Keep the path short.** Every extra centimetre and every extra connector adds contact resistance and 50 Hz pickup, and EEG is in the microvolt range. Keep the path from pin to sticker under about 30 cm per extension, bundle the three leads loosely together, and keep them away from mains leads, chargers and monitors. If the signal is hummy, that is the first thing to fix.
+**Keep the leads tidy.** Longer unshielded wire picks up more 50 Hz hum, and moving cables make motion artifacts. Keep the three leads loosely together, away from mains leads, chargers and monitors. If the signal is hummy, check this first.
 
 ## 5. Power
 
