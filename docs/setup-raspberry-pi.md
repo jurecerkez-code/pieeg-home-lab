@@ -26,6 +26,8 @@ No monitor or keyboard needed. Laptop and Pi only have to be on the same WiFi.
 | Python | The scripts in `code/` run on the laptop and read the stream over WiFi ([README, Code](../README.md#code)) |
 | A terminal on the Pi | `ssh jure@tina.local`, in Terminal on a Mac or PowerShell on Windows |
 
+If you also push to this repository from the laptop, GitHub wants a personal access token instead of the account password. On a Mac, `git config --global credential.helper osxkeychain` makes git remember it after the first push; on Windows, Git for Windows does the same by default.
+
 **Why there's no desktop on the Pi.** The card runs Raspberry Pi OS **Lite**, without a desktop, on purpose: the Pi 3 has 1 GB of RAM, and PiEEG Server, the WiFi stream and a desktop would compete for it. Everything graphical happens on the laptop instead, in the dashboard and in Python, which is also how PiEEG's own "headless option" works. Nothing in this repo needs the Pi's desktop.
 
 If `tina.local` doesn't resolve, use the Pi's IP address instead (router page, or `hostname -I` in an SSH session), e.g. `http://192.168.0.209:1617`. See [troubleshooting](troubleshooting.md#tinalocal-is-not-found).

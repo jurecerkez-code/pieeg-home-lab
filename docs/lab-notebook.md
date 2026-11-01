@@ -2,7 +2,7 @@
 
 What was measured with this kit, in order. One entry per session, one block per finished mission. Each entry names the recording it rests on (`code/recordings/` is not in the repository, the file names are the reference) and the sidecar's `complete` flag, so every number here can be traced to a file with a known montage and known filtering.
 
-Conventions: times are local (Europe/Berlin), subjects are pseudonyms (`sub-01` is the kit's owner), amplitudes are PiEEG Server's µV until [Mission 5](missions.md#mission-5-read-the-datasheet) settles the conversion.
+Conventions: times are local (Europe/Berlin), subjects are pseudonyms (`sub-01` is the kit's owner), amplitudes are PiEEG Server's µV, which read against the ADS1299 datasheet are half the true value ([README note](../README.md#step-7--check-the-signal), [Mission 5](missions.md#mission-5-read-the-datasheet)). Plots go in `images/notebook/` as PNG at about 1600 px wide (`spectrum.py --save`, `dpi=130`), one per entry, so the folder stays small.
 
 ---
 

@@ -199,7 +199,7 @@ Sit still, relax your face, look at one point.
 Alpha is strongest at the back of the head. On the forehead it's weaker, so give it time and watch the spectrum rather than the raw line. Full checklist: **[docs/first-test.md](docs/first-test.md)**. Something off: **[docs/troubleshooting.md](docs/troubleshooting.md)**.
 
 > [!NOTE]
-> Treat absolute µV values as provisional until [Mission 5](docs/missions.md#mission-5-read-the-datasheet), which checks PiEEG's µV conversion against the ADS1299 datasheet. Shapes, timing and frequencies don't depend on it.
+> **About the µV numbers.** PiEEG Server converts each 24 bit sample with 4.5 V / 16 777 215, about 0.268 µV per count. The ADS1299 datasheet puts full scale (+VREF / gain) at code 0x7FFFFF, so one count is 4.5 V / 8 388 607, about 0.536 µV at the gain 1 PiEEG programs. Read against the datasheet, every µV value from the server, and so every µV in this repo, is **half the true value**. Shapes, timing, frequencies and every comparison between recordings are unaffected. [Mission 5](docs/missions.md#mission-5-read-the-datasheet) is to verify this independently and report it upstream; until that's done the repo keeps PiEEG's numbers unchanged, so they stay comparable with PiEEG's own dashboard and example data.
 
 ### Step 8 · Finish
 
@@ -299,6 +299,8 @@ pip install pytest
 python -m pytest tests
 ```
 
+Besides the scripts, the suite checks that the documents agree with each other: the pinned PiEEG Server version, the setup commands on the Pi's page against `docs/setup-raspberry-pi.md`, the Pi's name and ports, the electrode montage, and the citation. Run it before pushing a change to any of them.
+
 ---
 
 ## Missions
@@ -306,7 +308,7 @@ python -m pytest tests
 | # | Mission | Done when |
 |---|---|---|
 | 0 | **Real data first** | Your detector finds 10 chews and 10 blinks in PiEEG's example file |
-| 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice |
+| 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice on PiEEG's `example_dry.csv` |
 | 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
 | 3 | **Make it NWB** | Your recording passes `nwbinspector` |
 | 4 | **More channels on bare skin** | 4 channels incl. eye corners, a left/right eye movement plot |
@@ -368,7 +370,7 @@ pieeg-home-lab/
 If you use the PiEEG hardware in research, cite:
 
 ```
-I. Rakhmatulin et al. Raspberry Pi Shield – for measure EEG (PIEEG). 2021 5th International
+I. Rakhmatulin, M. Zhanikeev, A. Parfenov. Raspberry PI Shield – for measure EEG (PIEEG). 2021 5th International
 Conference on Electrical, Electronics, Communication, Computer Technologies and Optimization
 Techniques (ICEECCOT), pp. 410–413. DOI: 10.1109/ICEECCOT52851.2021.9707969
 ```

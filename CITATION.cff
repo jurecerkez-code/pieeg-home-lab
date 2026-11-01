@@ -15,6 +15,10 @@ references:
     authors:
       - family-names: "Rakhmatulin"
         given-names: "Ildar"
+      - family-names: "Zhanikeev"
+        given-names: "Marat"
+      - family-names: "Parfenov"
+        given-names: "Andrey"
     year: 2021
     collection-title: "2021 5th International Conference on Electrical, Electronics, Communication, Computer Technologies and Optimization Techniques (ICEECCOT)"
     start: 410

@@ -32,16 +32,16 @@ For NWB practice there's far more: [DANDI](https://dandiarchive.org/) hosts thou
 
 ## Mission 1: kill the 50 Hz hum
 
-Every socket in the flat runs at 50 Hz and your body picks it up like an antenna. On the raw signal it can be bigger than the brain waves.
+Every socket in the flat runs at 50 Hz and your body picks it up like an antenna. On a raw signal it can be bigger than the brain waves. This kit runs on battery, which removes most of that hum before it reaches the file, so the mission uses a recording that has plenty of it: PiEEG's `example_dry.csv` from Mission 0, made with dry electrodes and real mains pickup.
 
 ```bash
-python record.py --seconds 60 --label hum_test
-python mission_1_notch.py recordings/<file>_hum_test.csv
+python get_example_data.py dry
+python mission_1_notch.py recordings/example_dry.csv
 ```
 
-Fill in `remove_mains()` in [`code/mission_1_notch.py`](../code/mission_1_notch.py). Done when both checks print **PASS**: hum reduced by more than 95 %, alpha changed by less than 10 %.
+Fill in `remove_mains()` in [`code/mission_1_notch.py`](../code/mission_1_notch.py). Done when both checks print **PASS**: the 50 Hz peak above the noise floor reduced by more than 95 %, alpha changed by less than 10 %.
 
-`record.py` records the raw signal (it switches PiEEG Server's filters off while it records), so your file has the real hum. On battery the hum on a person can be small, and the script measures the hum as the peak that sticks out above the neighbouring frequencies, so the noise floor doesn't count against you. If there is almost nothing to remove, the script says `SKIP` instead of judging: then use `example_dry.csv` from Mission 0, or record 30 s with **no electrodes on anyone** and the cables hanging free: open inputs pick up the room's 50 Hz like antennas.
+Then try it on your own data: `python record.py --seconds 60 --label hum_test` and the script on that file. `record.py` records raw (it switches PiEEG Server's filters off while it records), so whatever hum your setup has is in the file. If there is almost none, the script says `SKIP` instead of judging, which is itself a result worth a line in the notebook: battery power did the filter's job. To see the hum anyway, record 30 s with **no electrodes on anyone** and the cables hanging free: open inputs pick up the room's 50 Hz like antennas.
 
 <details><summary>Hints</summary>
 
@@ -121,13 +121,14 @@ Getting alpha from the back of the head (O1, O2) needs electrodes that work thro
 
 ## Mission 5: read the datasheet
 
-Each sample arrives as 3 bytes per channel from the ADS1299. PiEEG converts them to µV in software.
+Each sample arrives as 3 bytes per channel from the ADS1299. PiEEG converts them to µV in software, and this repo's reading of the datasheet says that conversion is off by a factor of two ([README note](../README.md#step-7--check-the-signal)). This mission is to check that claim independently, the way a reviewer would, and then to report it.
 
-1. Read the official conversion in the [PiEEG-8 specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/#converting-to-microvolts) and in `_decode_channels` in [PiEEG Server hardware.py](https://github.com/pieeg-club/PiEEG-server/blob/main/pieeg_server/hardware.py).
-2. Find the data format and the LSB size in the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf) (sections on data format and input full scale range).
-3. Write down every step: bytes, two's complement, gain, VREF, µV. Two things to look at closely: how many counts the datasheet puts between −VREF and +VREF (is the full scale 2^24 or 2^23 counts?), and which gain PiEEG actually programs into `CHnSET`.
+1. Read the official conversion in the [PiEEG-8 specification](https://docs.pieeg.com/hardware/devices/pieeg-8/specification/#converting-to-microvolts) and in `_decode_channels` in [PiEEG Server hardware.py](https://github.com/pieeg-club/PiEEG-server/blob/9bf350310bb492e1373edfe5b0714857f1fe04e9/pieeg_server/hardware.py): `uv = 4.5e6 * raw / 16777215`, negatives as `raw - 16777214`.
+2. In the [ADS1299 datasheet](https://www.ti.com/lit/ds/symlink/ads1299.pdf), find the table of ideal output code versus input signal (data format section): which code is +FS, which is −FS, what +FS is in volts at a given gain, and what one LSB is. Note the gain PiEEG programs (`CHnSET = 0x00`).
+3. Write down every step from 3 bytes to µV with the datasheet section each comes from. Then answer: by what factor do the two formulas differ, and is PiEEG's negative branch (`− 16777214`) the two's complement the datasheet describes?
+4. Check it on the chip if you can: the ADS1299 has an internal test signal (`CONFIG2`, `CHnSET = 0x05`) of known amplitude. PiEEG Server exposes `reg_write` over the WebSocket. What amplitude does the server report for it, and which formula does that agree with?
 
-Done when you can explain each step and you've checked whether the PiEEG formula (about 0.268 µV per count at gain 1) matches the datasheet exactly. If you find a difference, that's a real finding worth an issue on GitHub. Until then, every absolute µV value in this repo is provisional.
+Done when your write up in the [lab notebook](lab-notebook.md#mission-5--datasheet) reaches a conclusion with evidence, and, if it confirms the discrepancy, when the issue is filed on [PiEEG-server](https://github.com/pieeg-club/PiEEG-server/issues) with the datasheet reference and, ideally, the test signal measurement. That is a small, real contribution to an open source instrument, which is exactly what this kit is for.
 
 Bonus: PiEEG sets `BIAS_SENSP` and `BIAS_SENSN` to `0x00` (in PiEEG Server and in the official scripts). Look both registers up in the datasheet. What does the bias amplifier do with that setting, and what would change with `0xFF`?
 
