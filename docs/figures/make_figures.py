@@ -150,7 +150,7 @@ class Svg:
 def brackets(s):
     i = 18
     for x, y, dx, dy in [(i, i, 1, 1), (W - i, i, -1, 1), (i, s.h - i, 1, -1), (W - i, s.h - i, -1, -1)]:
-        s.add(f'<path d="M{x} {y + dy * i} L{x} {y} L{x + dx * i} {y}" stroke="{LINE}" stroke-width="2" fill="none"/>')
+        s.add(f'<path class="bracket" d="M{x} {y + dy * i} L{x} {y} L{x + dx * i} {y}" stroke="{LINE}" stroke-width="2" fill="none"/>')
 
 
 def sheet(h, num, name, title, caption=None):
@@ -163,6 +163,14 @@ def sheet(h, num, name, title, caption=None):
     if caption:
         s.text(44, 113, caption, "caption")
     return s
+
+
+def resize(s, h):
+    """Change a sheet's height after drawing: new ground and corner brackets."""
+    s.h = h
+    s.items = [it for it in s.items if 'class="bracket"' not in it]
+    s.items[0] = f'<rect width="{W}" height="{h}" fill="{GROUND}"/>'
+    brackets(s)
 
 
 def footer(s, text):
@@ -1013,55 +1021,116 @@ def fig_placement():
     return s
 
 
+# ---------------------------------------------------------------- the rendered boards (FIG. 01, 05)
+import parts3d as P3                                    # noqa: E402
+
+LEAD_PIN = {"E1": "E1", "E2": "E2", "REF": "Ref", "BIAS": "Biasout"}
+for _lead, (_ch, _col) in LEADS.items():
+    R3.material("wire_" + _lead, _col, 0.75, 0.25, 30, 0.6, emit=0.25)
+
+
+def board_scene(leads=("REF", "BIAS", "E1"), stub=None, toward=(-110.0, 0.0, 150.0), length=230.0):
+    """Pi 3 B with the PiEEG-8, a jumper housing on each used pin and its wire. The wire's shape is
+    the elastic rod at rest on its way to the head (up and to the left); stub keeps its first mm."""
+    sc = R3.Scene()
+    P3.raspberry_pi(sc)
+    P3.pieeg(sc, used=[LEAD_PIN[l] for l in leads])
+    obst = [(0, 0, -2, 87, 56, P3.PE_TOP)]
+    for l in leads:
+        x, y = P3.pin_xy(LEAD_PIN[l])
+        obst.append((x - 1.27, y - 1.27, P3.EL_BASE, x + 1.27, y + 1.27, P3.EL_BASE + P3.HOUSING_L))
+    wires = {}
+    for i, l in enumerate(leads):
+        p0 = P3.housing_top(LEAD_PIN[l])
+        far = p0 + np.array(toward) + np.array([0, 0, 12.0 * i])
+        P = P3.hang(p0, (0, 0, 1), far, length + 10 * i, floors=[((0, 0, 1), -2.0)], boxes=obst)
+        if stub:
+            P = P3.cut_path(P, stub)
+        P3.add_cable(sc, P, "wire_" + l)
+        wires[l] = P
+    return sc, wires
+
+
+def cable_break(s, r, P, col):
+    """Technical drawing break at the end of a cable that continues: two short slanted strokes."""
+    a, b = r.to_svg(np.asarray(P[-2:], float))
+    d = (b - a) / max(np.linalg.norm(b - a), 1e-9)
+    nrm = np.array([-d[1], d[0]])
+    for off in (3.0, 7.0):
+        c = b + d * off
+        p, q = c + nrm * 6 + d * 2.5, c - nrm * 6 - d * 2.5
+        s.line(*p, *q, col, 1.2)
+    return b + d * 12
+
+
 # ---------------------------------------------------------------- FIG. 05 wiring
 def fig_wiring():
-    s = sheet(900, 5, "WIRING", "Which pin goes where",
-              "Ten male pins on the left edge of the PiEEG-8, printed Ref, Biasout, E8 to E1 from top to bottom.")
-    # A: the board
-    k, x0, y0 = 3.2, 60, 196
-    s.text(44, 150, "A  ·  PIEEG-8, TOP VIEW", "note")
-    M = draw_pieeg(s, x0, y0, k, chip_label=False)
-    ax_, ay_ = M(PIEEG["ads1299"][0], PIEEG["ads1299"][1] + 7.2)
-    s.text(ax_, ay_ + 3, "ADS1299", "chip", GOLD, "middle")
-    hb = (PIEEG["header_x"] - 2.4, PIEEG["header_top"] - 9 * 2.54 - 2.4, PIEEG["header_x"] + 2.4, PIEEG["header_top"] + 2.4)
-    bx1, by1 = M(hb[0], hb[3])
-    bx2, by2 = M(hb[2], hb[1])
-    s.rect(bx1, by1, bx2 - bx1, by2 - by1, INK, 1, dash="3 3")
-    s.text(bx1 + 2, by1 - 6, "B", "pin", INK)
-    gx, gy = M(32, 52.5)
-    leader(s, [(gx, gy), (gx, y0 - 16), (gx + 12, y0 - 16)], GOLD)
-    s.text(gx + 16, y0 - 12, "40 PIN SOCKET, UNDERNEATH → PI", "note", GOLD)
-    lx, ly = M(*PIEEG["led"])
-    leader(s, [(lx, ly), (lx, y0 + 56 * k + 22), (lx + 12, y0 + 56 * k + 22)], GOLD)
-    s.text(lx + 16, y0 + 56 * k + 26, "LED, ON WITH POWER", "note", GOLD)
-    # B: header detail, pin pitch 32 px
-    hx, hy0, pp = 470, 196, 32
-    s.text(hx - 34, 150, "B  ·  ELECTRODE HEADER, 2.54 MM PITCH", "note")
-    s.rect(hx - 20, hy0 - 20, 40, 9 * pp + 40, GOLD, 1.5, fill=SURFACE, r=6)
-    pin_y = {}
-    used = {"Ref": (REFC, "behind the left ear", "M1, left mastoid", None),
-            "Biasout": (BIASC, "behind the right ear", "M2, right mastoid", None),
-            "E2": (E2C, "right forehead, optional", "Fp2", "8 6"),
-            "E1": (E1C, "left forehead", "Fp1", None)}
-    for i, name in enumerate(HEADER):
-        y = hy0 + i * pp
-        pin_y[name] = y
-        on = name in used
-        s.rect(hx - 6, y - 6, 12, 12, GOLD, 1.2, fill=GOLD if on else "none")
-        s.text(hx - 34, y + 4, name, "pin", INK if on else FAINT, "end")
-    s.line(hx + 34, pin_y["E8"] - 6, hx + 34, pin_y["E3"] + 6, FAINT, 1)
-    s.text(hx + 44, (pin_y["E8"] + pin_y["E3"]) / 2 + 3.5, "E3 TO E8: EMPTY", "note", FAINT)
-    dx = 706
-    dest = {"Ref": hy0 - 2, "Biasout": hy0 + 64, "E2": hy0 + 196, "E1": hy0 + 262}
-    for name, (col, where, pos, dash) in used.items():
-        y, ty = pin_y[name], dest[name]
-        wire(s, [(hx + 6, y), (hx + 60, y), (dx - 90, ty), (dx - 16, ty)], col, dash=dash)
-        sticker(s, dx, ty, 11, 11, col, style="optional" if dash else "solid")
-        s.text(dx + 20, ty - 2, f"{upper(name)}  →  {upper(pos)}", "pin", col)
-        s.text(dx + 20, ty + 15, where[0].upper() + where[1:], "detail")
-    s.text(hx - 34, hy0 + 9 * pp + 46, "FEMALE DUPONT END ONTO THE PIN  ·  CLIP BITES THE METAL SNAP", "note")
+    s = sheet(1080, 5, "WIRING", "Which pin goes where",
+              "The PiEEG-8 on the Raspberry Pi. Each lead starts with a jumper, its female end pushed onto a pin.")
+    # ---- A: the whole stack, three jumpers in place
+    sc, wires = board_scene(stub=30.0)
+    ca = R3.Camera.orbit(-35, 30)
+    ra = R3.Render(sc, ca, 4.1, 0, 0, catcher=-2.0).move_to(30, 170)
+    place(s, ra)
+    s.text(44, 150, "A  ·  ON THE PI, SEEN FROM THE MICROSD END", "note")
+    for l in ("REF", "BIAS", "E1"):
+        cable_break(s, ra, wires[l], LEADS[l][1])
+    abot = ra.image_box()[1] + ra.image_box()[3] + 8
+    targets = [("ELECTRODE HEADER", "ENLARGED IN B", np.array([P3.PIEEG["header_x"] - 1.3, 16.0, P3.PE_TOP + 1.0]), 44, INK),
+               ("ADS1299", "THE EEG CHIP", np.array([*P3.PIEEG["ads1299"], P3.PE_TOP + 1.0]), 236, GOLD),
+               ("LED", "ON WITH POWER", np.array([*P3.PIEEG["led"], P3.PE_TOP + 0.6]), 384, GOLD)]
+    for title, sub, P, tx, col in targets:
+        x, y = ra.to_svg(P[None])[0]
+        leader(s, [(x, y), (x, abot), (tx, abot)] if abs(x - tx) > 2 else [(x, y), (x, abot)], col)
+        s.text(tx, abot + 18, title, "pin", col)
+        s.text(tx, abot + 33, sub, "note", MUTED)
+    # ---- B: the electrode header, a detail cut out of the board
+    cb = R3.Camera.orbit(-16, 16)
+    scb, wb = board_scene(stub=12.0)
+    cut = [((-1, 0, 0), -15.0), ((0, 1, 0), 11.0), ((0, -1, 0), -42.0), ((0, 0, 1), P3.PE_Z0 - 0.05)]
+    corners = np.array([[x, y, z] for x in (0, 15) for y in (11, 42) for z in (P3.PE_Z0, P3.EL_BASE + P3.HOUSING_L + 12)])
+    pc = cb.project(corners)
+    kb = 344 / (np.ptp(pc[:, 0]) + 8)
+    rb = R3.Render(scb, cb, kb, 0, 0, cut=cut, pad=4, bounds=(pc[:, 0].min(), pc[:, 1].min(), pc[:, 0].max(), pc[:, 1].max())).move_to(604, 180)
+    place(s, rb)
+    s.text(604, 150, "B  ·  ELECTRODE HEADER, 2.54 MM PITCH", "note")
+    for l in ("REF", "BIAS", "E1"):
+        cable_break(s, rb, wb[l], LEADS[l][1])
+    x2, y2 = P3.pin_xy("E2")                      # where the optional fourth jumper goes
+    w2 = P3.HOUSING_W / 2
+    sq = [(x2 - w2, y2 - w2), (x2 - w2, y2 + w2), (x2 + w2, y2 + w2), (x2 + w2, y2 - w2)]
+    z0, z1 = P3.EL_BASE, P3.EL_BASE + P3.HOUSING_L
+    for a in range(4):
+        for p, q in [((*sq[a], z0), (*sq[(a + 1) % 4], z0)), ((*sq[a], z1), (*sq[(a + 1) % 4], z1)),
+                     ((*sq[a], z0), (*sq[a], z1))]:
+            pp, qq = rb.to_svg(np.array([p, q]))
+            if rb.visible(np.array([p, q]), tol=0.6).all():
+                s.line(*pp, *qq, E2C, 1, dash="3 3")
+    yb0 = rb.image_box()[1] + rb.image_box()[3] + 4
+    colors = {"Ref": REFC, "Biasout": BIASC, "E1": E1C, "E2": E2C}
+    for i, name in enumerate(P3.HEADER):
+        x, y = P3.pin_xy(name)
+        px_ = rb.to_svg(np.array([[x - 1.3, y, P3.EL_BASE]]))[0, 0]       # straight below the pin,
+        ix0, iy0, _, _ = rb.image_box()                                     # from the board's lower edge
+        rows = np.nonzero(rb.mask[:, int((px_ - ix0) * rb.ss)])[0]
+        py_ = iy0 + (rows.max() + 1) / rb.ss + 3
+        ty = yb0 + 18 + (i % 2) * 18
+        col = colors.get(name, FAINT)
+        s.line(px_, py_, px_, ty - 11, col if name in colors else LINE, 0.9)
+        s.text(px_, ty, name, "chip", col, "middle", caps=True, size=10)
+    b_end = yb0 + 40
+    ty = abot + 96
+    s.text(44, ty - 24, "EACH LEAD GOES TO", "note")
+    for l, where in [("REF", "M1, BEHIND THE LEFT EAR"), ("BIAS", "M2, BEHIND THE RIGHT EAR"),
+                     ("E1", "FP1, LEFT FOREHEAD"), ("E2", "FP2, RIGHT FOREHEAD, OPTIONAL")]:
+        col = LEADS[l][1]
+        s.line(44, ty - 4, 60, ty - 4, col, 2.5, dash="5 4" if l == "E2" else None)
+        s.text(68, ty, f"{'BIASOUT' if l == 'BIAS' else l}  →  {where}", "chip", col, size=11)
+        ty += 19
+    s.text(44, ty + 4, "E3 TO E8 STAY EMPTY", "note", FAINT)
+    c_top = max(b_end, ty + 10) + 34
     # C: inside the ADS1299
-    cy0 = 578
+    cy0 = c_top + 26
     s.line(44, cy0 - 26, W - 44, cy0 - 26, LINE, 1)
     s.text(44, cy0, "C  ·  INSIDE THE ADS1299, WITH THE REGISTER VALUES PIEEG SERVER WRITES", "note")
     bx0, bx1, cb0, cb1 = 196, 716, cy0 + 22, cy0 + 254
@@ -1120,6 +1189,7 @@ def fig_wiring():
     s.text(rx, yB + 6, "Forehead minus left mastoid.", "detail")
     s.text(rx, yB + 23, "Bias holds the body at", "detail")
     s.text(rx, yB + 40, "the chip's mid supply.", "detail")
+    resize(s, cy0 + 254 + 96)
     footer(s, "SOURCES  ·  PIEEG DOCS: ELECTRODES & PINOUT  ·  PIEEG SERVER 0.49.0 HARDWARE.PY  ·  TI ADS1299 DATASHEET")
     return s
 

@@ -296,7 +296,7 @@ class Render:
     camera's screen mm. The raster is computed at `ss` pixels per SVG px."""
 
     def __init__(self, scene, cam, k, ox, oy, ss=4, pad=6.0, bounds=None, light=(-0.55, 0.70, 0.45),
-                 shadows=True, ao=True, cut=None, ground=None):
+                 shadows=True, ao=True, cut=None, catcher=None):
         V, F, M, N = scene.arrays()
         self.cam, self.k, self.ox, self.oy, self.ss = cam, k, ox, oy, ss
         single = cut is not None and len(cut) == 2 and np.isscalar(cut[1])
@@ -335,6 +335,15 @@ class Render:
             self.shadow = self._shadows(V, F, cut)
         self.occl = self._ssao() if ao else np.ones(mask.shape)
         self.img = self._shade()
+        if catcher is not None and shadows:
+            a = self._catcher(catcher)
+            self.img[..., :3] = np.where(a[..., None] > 0, hex_rgb("#03041a") * 255, self.img[..., :3])
+            self.img[..., 3] = np.where(self.mask, 255, a * 255)
+
+    def move_to(self, X, Y):
+        """Shift the view so its image's top left corner lands on SVG (X, Y)."""
+        self.ox, self.oy = X - self.x0 * self.k, Y - self.y0 * self.k
+        return self
 
     # mapping for vector overlays
     def to_svg(self, P):
@@ -355,22 +364,44 @@ class Render:
 
     def _shadows(self, V, F, cut):
         lc = Camera(-self.L, up=(0, 0, 1) if abs(self.L[2]) < 0.95 else (0, 1, 0))
-        P = lc.project(V)
-        res = 0.35                                          # mm per shadow map pixel
+        P = lc.project(V[np.unique(F)])
+        span = max(np.ptp(P[:, 0]), np.ptp(P[:, 1]))
+        res = max(0.35, span / 2400)                          # mm per shadow map pixel
         x0, y0 = P[:, 0].min() - 2, P[:, 1].min() - 2
         Ws, Hs = int((P[:, 0].max() - x0 + 2) / res) + 1, int((P[:, 1].max() - y0 + 2) / res) + 1
-        zb, _, _, _ = rasterize((P[:, 0] - x0) / res, (P[:, 1] - y0) / res, P[:, 2], F, Ws, Hs)
-        Q = lc.project(self.X.reshape(-1, 3))
-        sx, sy = (Q[:, 0] - x0) / res, (Q[:, 1] - y0) / res
+        Pa = lc.project(V)
+        zb, _, _, _ = rasterize((Pa[:, 0] - x0) / res, (Pa[:, 1] - y0) / res, Pa[:, 2], F, Ws, Hs)
+        self._smap = (lc, zb, x0, y0, res, Ws, Hs)
         ndl = np.clip(np.abs(self.N.reshape(-1, 3) @ self.L), 0.15, 1)
         bias = 0.6 + 1.6 * np.sqrt(1 - ndl ** 2) / ndl          # slope scaled, against shadow acne
+        return self._lit(self.X.reshape(-1, 3), bias).reshape(self.mask.shape)
+
+    def _lit(self, X, bias):
+        lc, zb, x0, y0, res, Ws, Hs = self._smap
+        Q = lc.project(X)
+        sx, sy = (Q[:, 0] - x0) / res, (Q[:, 1] - y0) / res
+        inside = (sx >= 0) & (sx < Ws) & (sy >= 0) & (sy < Hs)
         lit = np.zeros(len(Q))
         offs = [(dx, dy) for dx in (-2, 0, 2) for dy in (-2, 0, 2)]
         for dx, dy in offs:                                 # percentage closer filtering: soft edges
             ix = np.clip((sx + dx).astype(int), 0, Ws - 1)
             iy = np.clip((sy + dy).astype(int), 0, Hs - 1)
             lit += Q[:, 2] >= zb[iy, ix] - bias
-        return (lit / len(offs)).reshape(self.mask.shape)
+        lit /= len(offs)
+        lit[~inside] = 1.0
+        return lit
+
+    def _catcher(self, h, strength=0.5):
+        """Shadow on an invisible floor at height h: alpha for the empty pixels."""
+        H, W = self.mask.shape
+        xs = self.x0 + (np.arange(W) + 0.5) / (self.k * self.ss)
+        ys = self.y0 + (np.arange(H) + 0.5) / (self.k * self.ss)
+        SX, SY = np.meshgrid(xs, ys)
+        base = SX[..., None] * self.cam.r - SY[..., None] * self.cam.u
+        t = (h - base[..., 2]) / self.cam.d[2]
+        Pw = base + t[..., None] * self.cam.d
+        lit = self._lit(Pw.reshape(-1, 3), 0.8).reshape(H, W)
+        return strength * (1 - lit) * (~self.mask)
 
     def _ssao(self):
         z = np.where(self.mask, self.zbuf, np.nan)
