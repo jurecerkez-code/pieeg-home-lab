@@ -5,22 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tina, this is your brain on the network</title>
 <meta name="description" content="A guide to the PiEEG-8 kit and a live view of the signal, written for one person.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23170d02'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ffac02'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0d33'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%234b4bff'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0b0d33">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <div class="wrap">
 
-<header class="hero">
-  <p class="eyebrow">PiEEG-8 on a Raspberry Pi 3</p>
-  <h1>Tina, this is your brain on the network.</h1>
+<header class="hero framed">
+  <div class="hero-text">
+    <p class="kicker">Open source EEG &nbsp;·&nbsp; Starter kit</p>
+    <h1 class="title">PiEEG<br>Home Lab</h1>
+    <p class="specline">8 CHANNEL EEG · RASPBERRY PI 3 · ADS1299 · 24 BIT · 250 HZ</p>
+    <div class="chips" role="tablist" aria-label="Ways in">
+      <button type="button" role="tab" aria-selected="true" data-cmd="ssh jure@raspberrypi.local"
+        data-note="On your Mac: open Terminal, paste this, press Enter.">TERMINAL</button>
+      <button type="button" role="tab" aria-selected="false" data-cmd="http://raspberrypi.local:1617"
+        data-note="The dashboard, in any browser on the same WiFi. Press Connect.">DASHBOARD</button>
+      <button type="button" role="tab" aria-selected="false" data-cmd="python code/live_view.py"
+        data-note="From the pieeg-home-lab repo on your laptop, for your own analysis.">PYTHON</button>
+    </div>
+    <div class="cmd prompt"><button class="copy" type="button">Copy</button><pre id="hero-cmd">ssh jure@raspberrypi.local</pre></div>
+    <p class="prompt-note" id="hero-note">On your Mac: open Terminal, paste this, press Enter.</p>
+  </div>
+  <img class="athena" src="assets/svg/athena.svg" width="340" height="460"
+    alt="Athena bust wearing the kit: a sticker on the left forehead, its blue lead over the ear, REF and BIAS leads from behind the ear">
+  <img class="hero-trace" src="assets/svg/trace.svg" width="536" height="100"
+    alt="Six seconds of real EEG from PiEEG's example recording, alpha bursts at 10 Hz in blue">
+</header>
+
+<div class="hello">
+  <h2>Tina, this is your brain on the network.</h2>
   <p class="lede">Eight channels of EEG, EMG and ECG, read by a Raspberry Pi and streamed to this page.
     The manual, the spec sheet and the dashboard in one, written for the one person who will actually
     use it.</p>
-  <span class="badge sample" id="badge" data-state="connecting">
-    <span class="dot"></span><span id="badge-label">Connecting</span>
-  </span>
-</header>
+  <div class="status" aria-live="polite">
+    <span class="item"><span class="dot on"></span>this page</span>
+    <span class="badge sample" id="badge" data-state="connecting">
+      <span class="dot"></span><span id="badge-label">Connecting</span>
+    </span>
+  </div>
+</div>
+
+<section aria-labelledby="ssh-h">
+  <h2 id="ssh-h">Open the Pi from your Mac</h2>
+  <p>The Pi has no screen. You talk to it from your laptop, over the WiFi you are both on.</p>
+  <ol class="plain">
+    <li>Open <b>Terminal</b>: press <kbd>⌘</kbd> + <kbd>Space</kbd>, type <code>Terminal</code>, press Enter.</li>
+    <li>Type this and press Enter:</li>
+  </ol>
+  <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@raspberrypi.local</pre></div>
+  <p class="expect">The first time it asks whether to trust the Pi: type <b>yes</b>. Then it asks for the Pi's
+    password, the one Jure gave you; nothing appears while you type it, that is normal. You land in your
+    lab's welcome, with the links, a session in four steps and the commands.</p>
+  <p class="caption">To leave, type <code>exit</code>. If <code>raspberrypi.local</code> does not answer,
+    use the address the welcome shows, or the one in the router's device list.</p>
+</section>
 
 <section aria-labelledby="specs-h">
   <h2 id="specs-h">What the thing is</h2>
@@ -190,7 +230,7 @@
     <li><b>Find it.</b> Open <code>http://raspberrypi.local</code> in a browser, or run
       <code>ping raspberrypi.local</code>. If neither answers, open the router's admin page and look for a
       device called <code>raspberrypi</code>.</li>
-    <li><b>Log in.</b> <code>ssh USER@raspberrypi.local</code>. Accept the fingerprint with
+    <li><b>Log in.</b> <code>ssh jure@raspberrypi.local</code>. Accept the fingerprint with
       <code>yes</code>. The password does not appear while you type it, that is normal.</li>
   </ol>
 
@@ -499,7 +539,9 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
     <a href="https://www.pieeg.com/hardware/pieeg">pieeg.com/hardware/pieeg</a>. Text rewritten for one
     person. Install details, the sudo trap and the 50 Hz notch note come from this build, not from the
     source. The drawings are true scale renders made with the pieeg-home-lab repo: a MakeHuman head and
-    body, the Pi from its official drawing, the PiEEG-8 measured on its photo.</p>
+    body, the Pi from its official drawing, the PiEEG-8 measured on its photo. The bust and the trace at
+    the top are the repo's own hero. Guide and code:
+    <a href="https://github.com/jurecerkez-code/pieeg-home-lab">github.com/jurecerkez-code/pieeg-home-lab</a>.</p>
 </footer>
 
 </div>

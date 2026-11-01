@@ -148,6 +148,16 @@ Behind the head doesn't work: Fp1 is about 45 cm away. Every lead should hang lo
 
 Wait about a minute while the Pi boots and joins the WiFi.
 
+**Connect to the Pi from the MacBook.** Open **Terminal** (<kbd>⌘</kbd> + <kbd>Space</kbd>, type `Terminal`, Enter) and type:
+
+```bash
+ssh jure@raspberrypi.local
+```
+
+The first time, type `yes` to trust the Pi, then the Pi's password (nothing appears while you type it). The Pi answers with its welcome: whether the server, the page and the power are OK, the links, a session in four steps and the commands you need on the Pi. `exit` leaves. The same links work without the terminal: **[http://raspberrypi.local:8080](http://raspberrypi.local:8080)** is the kit's own page (manual, checklist, live signal), and the dashboard is step 6.
+
+<img src="deploy/welcome-preview.png" alt="The Pi's SSH welcome: the PiEEG Home Lab title, the Athena bust and a real EEG trace in the terminal, then live status, links, a session in four steps and commands" width="640">
+
 ### Step 5 · Check the setup (optional, 10 seconds)
 
 On the MacBook, after the [code setup](#code):
