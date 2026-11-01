@@ -741,8 +741,6 @@ def fig_placement():
         s.text((xa + xb) / 2, y + 4, lab, "pin", col, "middle", bg=True)
     # A: optional E2, the hidden mastoid stickers, the pupil line
     sticker_outline(s, rf, "Fp2", E2C, "optional")
-    sticker_outline(s, rf, "M1", REFC, "hidden")
-    sticker_outline(s, rf, "M2", BIASC, "hidden")
     px, py = rf.to_svg(hmark("pupil_l")[None])[0]
     fy = rf.to_svg((hpos("Fp1") - [0, 0, R3.STICKER_R])[None])[0, 1]
     s.line(px, py - 7, px, fy + 2, E1C, 1, dash="2 2")
@@ -751,9 +749,10 @@ def fig_placement():
     leader(s, [(x2 - 12, y2 - 10), (x2 - 40, y2 - 52), (44 + lw2 + 8, y2 - 52)], E2C)
     s.text(44, y2 - 48, "E2 · FP2", "pin", E2C)
     s.text(44, y2 - 34, "OPTIONAL", "note", MUTED)
-    xb, yb = rf.to_svg(hpos("M2")[None])[0]
+    yb = rf.to_svg(hpos("M2")[None])[0, 1]              # M2 is behind the right ear: point at the ear's back
+    xb = silhouette_x(rf, yb, -1)
     lwb = text_width("BIAS · M2", "pin")
-    leader(s, [(xb - 3, yb + 13), (xb - 14, yb + 64), (44 + lwb + 8, yb + 64)], BIASC)
+    leader(s, [(xb + 1, yb), (xb - 14, yb + 64), (44 + lwb + 8, yb + 64)], BIASC)
     s.text(44, yb + 68, "BIAS · M2", "pin", BIASC)
     s.text(44, yb + 82, "BEHIND THE", "note", MUTED)
     s.text(44, yb + 96, "RIGHT EAR", "note", MUTED)
@@ -845,7 +844,7 @@ def fig_placement():
         for j, line in enumerate(lines):
             s.text(dx0, y + 20 + j * 18, line, "detail")
         y += 34 + 18 * len(lines)
-    s.text(dx0, y + 4, "Short dashes: hidden behind the head. Long dashes: optional.", "detail")
+    s.text(dx0, y + 4, "Dashed: optional. Both mastoid stickers sit behind the ear, as in B.", "detail")
     footer(s, "SOURCES  ·  HEAD: MAKEHUMAN BASE MESH, CC0  ·  POSITIONS: MNE-PYTHON STANDARD 10-20, FITTED TO 5 LANDMARKS")
     return s
 
