@@ -102,7 +102,7 @@ Channels 2 to 8 have nothing connected and look like noise. That's normal.
 
 > Alpha is strongest at the back of the head (O1, O2), where this kit has no electrode. On the forehead it's weaker, so give it time and watch the spectrum. Blinks, eye movements and jaw clenches are your first proof that the system records real biosignals.
 
-**About the µV numbers.** Textbook sizes at the forehead are tens of µV for the background EEG and around 100 µV or more for a blink. The dashboard's µV come from PiEEG's conversion formula, and [Mission 5](missions.md#mission-5-read-the-datasheet) checks that formula against the ADS1299 datasheet. Until then, treat absolute amplitudes as provisional. Shapes, timing and frequencies don't depend on it.
+**About the µV numbers.** Textbook sizes at the forehead are tens of µV for the background EEG and around 100 µV or more for a blink. The dashboard's µV come from PiEEG's conversion formula, which, read against the ADS1299 datasheet, gives half the true value (0.268 instead of 0.536 µV per count at gain 1, see the note in the [README](../README.md#step-7--check-the-signal) and [Mission 5](missions.md#mission-5-read-the-datasheet)). So a blink that is really 150 µV shows as about 75. Shapes, timing, frequencies and comparisons between recordings don't depend on it.
 
 ## 9. Done for today
 

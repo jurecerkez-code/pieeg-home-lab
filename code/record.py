@@ -236,7 +236,7 @@ def main():
         "n_samples": n_rows,
         "n_channels": n_ch,
         "units": "microvolts",
-        "units_note": "As converted by PiEEG Server. Mission 5 checks that conversion against the ADS1299 datasheet.",
+        "units_note": "As converted by PiEEG Server (4.5 V / 16777215 per count). Read against the ADS1299 datasheet that is half the true value at gain 1; see the README note and Mission 5. Kept unchanged so files stay comparable with PiEEG's dashboard and example data.",
         "montage": montage,
         "electrodes": electrodes,
         "data_filtering": filtering,
