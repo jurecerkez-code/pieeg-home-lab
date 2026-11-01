@@ -36,7 +36,8 @@ def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
     meta = json.loads(csv_path.with_suffix(".json").read_text())
     data_uv = np.column_stack([load(csv_path, c) for c in range(1, meta["n_channels"] + 1)])
 
-    # TODO 1: nwbfile = NWBFile(...)
+    # TODO 1: nwbfile = NWBFile(...)   session_start_time wants a datetime with a time zone:
+    #         datetime.fromisoformat(meta["start_time"]) gives you one, the sidecar carries the offset
     # TODO 2: nwbfile.subject = Subject(subject_id=meta.get("subject", "sub-01"), species=...)
     # TODO 3: device = nwbfile.create_device(...); group = nwbfile.create_electrode_group(...)
     # TODO 4: for each channel: nwbfile.add_electrode(...)

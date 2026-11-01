@@ -5,8 +5,8 @@ abstract: "Starter kit for 8-channel EEG with the PiEEG-8 shield on a Raspberry 
 type: software
 license: MIT
 authors:
-  - family-names: "Čerkez"
-    given-names: "Jure"
+  - family-names: "Vidović"
+    given-names: "Valentina"
 repository-code: "https://github.com/jurecerkez-code/pieeg-home-lab"
 keywords: [EEG, BCI, Raspberry Pi, ADS1299, PiEEG, NWB, neuroscience]
 references:

@@ -91,7 +91,7 @@ def unique_path(folder: Path, stem: str) -> Path:
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--host", default="raspberrypi.local")
+    p.add_argument("--host", default="tina.local")
     p.add_argument("--port", type=int, default=DEFAULT_PORT)
     p.add_argument("--seconds", type=float, default=60)
     p.add_argument("--label", default="session")
@@ -227,8 +227,9 @@ def main():
         "label": a.label,
         "subject": a.subject,
         "notes": a.notes,
-        "start_time": datetime.fromtimestamp(first.t).isoformat(timespec="milliseconds"),
-        "end_time": datetime.fromtimestamp(last.t).isoformat(timespec="milliseconds"),
+        "start_time": datetime.fromtimestamp(first.t).astimezone().isoformat(timespec="milliseconds"),
+        "end_time": datetime.fromtimestamp(last.t).astimezone().isoformat(timespec="milliseconds"),
+        "time_note": "Pi's clock, written in the laptop's time zone with its UTC offset (NWB wants an offset)",
         "planned_duration_s": a.seconds,
         "duration_s": round(n_rows / fs, 3),
         "sample_rate_hz": fs,

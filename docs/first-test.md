@@ -77,7 +77,7 @@ Every line `[ok]` means WiFi, Pi, server and board work together. The noise part
 
 ## 7. Open the dashboard
 
-1. On the MacBook open **http://raspberrypi.local:1617** in Safari or Chrome and click **Connect**.
+1. On the MacBook open **http://tina.local:1617** in Safari or Chrome and click **Connect**.
 2. Check that the dashboard shows **8 channels**. Sixteen means the server isn't in PiEEG-8 mode, see [troubleshooting](troubleshooting.md#pieeg-server).
 3. **Bandpass**: already on. PiEEG Server starts with a 1 to 40 Hz bandpass, and the button shows that range. Leave it. Careful: inside the Bandpass menu, the button labelled **Enabled** shows the current state, and clicking it switches the filter off.
 4. **Notch**: open it, set **Freq** to **50**, then click **Disabled** so it turns into **Enabled**. The dashboard starts at 60 Hz (USA). Germany runs at 50 Hz.

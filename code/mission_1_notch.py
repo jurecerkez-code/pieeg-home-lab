@@ -39,6 +39,18 @@ def band_power(x, lo, hi):
     return np.trapezoid(p[m], f[m])
 
 
+def hum_excess(x):
+    """How much the 49 to 51 Hz band sticks out above its neighbours (45 to 48 and 52 to 55 Hz).
+
+    On battery power a recording can have almost no hum. Then "95 % less" would be measured
+    against the noise floor, which no filter can lower, and the test could never pass. This
+    measures the hum peak above the floor instead: zero means 50 Hz is no louder than 47 or 53 Hz.
+    """
+    hum = band_power(x, 49, 51)
+    floor = (band_power(x, 45, 48) + band_power(x, 52, 55)) / 2 * (2 / 3)  # 3 Hz bands scaled to 2 Hz
+    return max(hum - floor, 0.0), hum
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
@@ -46,11 +58,18 @@ if __name__ == "__main__":
         print("Note:", note)
     x = load(sys.argv[1], channel=1)
     y = remove_mains(x)
-    hum_before, hum_after = band_power(x, 49, 51), band_power(y, 49, 51)
+    excess_before, hum_before = hum_excess(x)
+    excess_after, hum_after = hum_excess(y)
     a_before, a_after = band_power(x, 8, 13), band_power(y, 8, 13)
-    print(f"50 Hz power: {hum_before:10.2f} -> {hum_after:10.2f}")
-    print(f"alpha power: {a_before:10.2f} -> {a_after:10.2f}")
-    ok1 = hum_after < 0.05 * hum_before
+    print(f"50 Hz power:  {hum_before:10.2f} -> {hum_after:10.2f} µV²  (above the floor: "
+          f"{excess_before:.2f} -> {excess_after:.2f})")
+    print(f"alpha power:  {a_before:10.2f} -> {a_after:10.2f} µV²")
     ok2 = abs(a_after - a_before) < 0.1 * a_before
-    print("PASS" if ok1 else "FAIL", "hum reduced by more than 95 %")
+    if excess_before < 0.05 * a_before:
+        print("SKIP hum check: this recording has almost no 50 Hz hum to remove (battery power does that), "
+              "so it can't show whether your filter works.\n     Use example_dry.csv from Mission 0, or "
+              "record with the cables hanging free, see docs/missions.md.")
+    else:
+        ok1 = excess_after < 0.05 * excess_before
+        print("PASS" if ok1 else "FAIL", "hum peak above the floor reduced by more than 95 %")
     print("PASS" if ok2 else "FAIL", "alpha changed by less than 10 %")

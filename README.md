@@ -45,7 +45,7 @@ There's no EEG cap in this kit on purpose. It starts with electrode stickers on 
 | Electrodes | Ag/AgCl stickers, forehead and mastoids |
 | Power | Battery only (powerbank) |
 | Analysis | Python 3.10+, NumPy, SciPy, Matplotlib, PyNWB |
-| Validated | Raspberry Pi and PiEEG Server on 31 October 2026, board pending: [docs/validation.md](docs/validation.md) |
+| Status | Pi, PiEEG Server, code and tests validated on 31 October 2026. The PiEEG-8 itself has not been on this Pi yet, so everything the board does (noise test, first alpha) is written from PiEEG's documentation and awaits part 2 of [docs/validation.md](docs/validation.md) |
 
 ---
 
@@ -89,7 +89,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 
 ## Step by step
 
-The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)). "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
+The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)), and the Pi answers to `tina.local`. "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
 
 ### Step 1 · Mount the board
 
@@ -151,10 +151,10 @@ Wait about a minute while the Pi boots and joins the WiFi.
 **Connect to the Pi from the MacBook.** Open **Terminal** (<kbd>⌘</kbd> + <kbd>Space</kbd>, type `Terminal`, Enter) and type:
 
 ```bash
-ssh jure@raspberrypi.local
+ssh jure@tina.local
 ```
 
-The first time, type `yes` to trust the Pi, then the Pi's password (nothing appears while you type it). The Pi answers with its welcome: whether the server, the page and the power are OK, the links, a session in four steps and the commands you need on the Pi. `exit` leaves. The same links work without the terminal: **[http://raspberrypi.local:8080](http://raspberrypi.local:8080)** is the kit's own page (manual, checklist, live signal), and the dashboard is step 6.
+The first time, type `yes` to trust the Pi, then the Pi's password (nothing appears while you type it). The Pi answers with its welcome: whether the server, the page and the power are OK, the links, a session in four steps and the commands you need on the Pi. `exit` leaves. The same links work without the terminal: **[http://tina.local:8080](http://tina.local:8080)** is the kit's own page (manual, checklist, live signal), and the dashboard is step 6.
 
 <img src="deploy/welcome-preview.png" alt="The Pi's SSH welcome: the PiEEG Home Lab title, the Athena bust and a real EEG trace in the terminal, then live status, links, a session in four steps and commands" width="640">
 
@@ -172,7 +172,7 @@ Checks the whole chain in one go: WiFi, Pi, PiEEG Server, 8 channel mode, sample
 
 The dashboard is the kit's graphical view. The Pi itself runs without a desktop (Raspberry Pi OS Lite, to leave its 1 GB of RAM to the server), so everything visual happens in the laptop's browser.
 
-On the MacBook (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Then:
+On the MacBook (charger unplugged, same WiFi) open **[http://tina.local:1617](http://tina.local:1617)** in Safari or Chrome and click **Connect**. Then:
 
 1. Check it shows **8 channels** (16 means the server isn't in PiEEG-8 mode, see [troubleshooting](docs/troubleshooting.md#pieeg-server)).
 2. **Bandpass** is already on: PiEEG Server starts with 1 to 40 Hz, and the button shows that range. Leave it. Inside its menu, the **Enabled** button shows the current state, and clicking it switches the filter off.
@@ -241,7 +241,7 @@ py -m venv .venv
 .venv\Scripts\python check_setup.py
 ```
 
-Start every script with `.venv\Scripts\python` instead of `python`. `raspberrypi.local` works on Windows 10 and 11.
+Start every script with `.venv\Scripts\python` instead of `python`. `tina.local` works on Windows 10 and 11.
 </details>
 
 > [!IMPORTANT]
@@ -278,7 +278,7 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | Script | Purpose |
 |---|---|
 | [`check_setup.py`](code/check_setup.py) | Checks laptop, WiFi, Pi, PiEEG Server and board in one go, names the first broken link |
-| [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://raspberrypi.local:1616`), reconnects by itself |
+| [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://tina.local:1616`), reconnects by itself |
 | [`live_view.py`](code/live_view.py) | Live bandpass filtered traces and a Welch spectrum |
 | [`record.py`](code/record.py) | Raw recording to CSV with a JSON metadata sidecar |
 | [`spectrum.py`](code/spectrum.py) | Power spectrum, alpha peak frequency and alpha power |
@@ -312,7 +312,7 @@ python -m pytest tests
 | 4 | **More channels on bare skin** | 4 channels incl. eye corners, a left/right eye movement plot |
 | 5 | **Read the datasheet** | Every step from 3 raw bytes to one µV value explained |
 
-Details and hints: **[docs/missions.md](docs/missions.md)**
+Details and hints: **[docs/missions.md](docs/missions.md)**. Results, with the recording and plot behind each one: **[docs/lab-notebook.md](docs/lab-notebook.md)**
 
 ---
 
@@ -338,7 +338,7 @@ pieeg-home-lab/
 │   └── requirements-lock.txt  exact tested versions
 ├── tests/                   pytest suite, runs against simulate.py
 ├── .github/workflows/       runs the tests on every push
-├── page/                    Tina's page on the Pi (port 8080), its drawings and the script that renders them
+├── page/                    the kit's page on the Pi (port 8080), its drawings and the script that renders them
 ├── deploy/                  how the page and the SSH welcome are installed on the Pi
 └── docs/
     ├── equipment.md         every part, specs, why
@@ -348,6 +348,7 @@ pieeg-home-lab/
     ├── setup-raspberry-pi.md
     ├── safety.md
     ├── validation.md        what was checked on this kit's hardware
+    ├── lab-notebook.md      sessions and mission results, with the recordings behind them
     ├── missions.md
     ├── troubleshooting.md
     ├── figures/             make_figures.py: draws every figure from its sources
@@ -372,9 +373,5 @@ Conference on Electrical, Electronics, Communication, Computer Technologies and 
 Techniques (ICEECCOT), pp. 410–413. DOI: 10.1109/ICEECCOT52851.2021.9707969
 ```
 
-This repository: see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. The bust of Athena in the hero is an AI generated illustration, recolored for this repo; the EEG trace next to it is real data from PiEEG's published example recordings. Every figure is drawn by [`docs/figures/make_figures.py`](docs/figures/README.md) from documented sources: the Raspberry Pi's official mechanical drawing, MNE-Python's standard 10-20 montage, PiEEG's documentation and PiEEG Server. This is an unofficial starter kit, not affiliated with PiEEG.
+This repository: Valentina Vidović, see [CITATION.cff](CITATION.cff). Code is MIT licensed. Images marked "PiEEG" belong to PiEEG and are shown from their repositories with credit. The bust of Athena in the hero is an AI generated illustration, recolored for this repo; the EEG trace next to it is real data from PiEEG's published example recordings. Every figure is drawn by [`docs/figures/make_figures.py`](docs/figures/README.md) from documented sources: the Raspberry Pi's official mechanical drawing, MNE-Python's standard 10-20 montage, PiEEG's documentation and PiEEG Server. This is an unofficial starter kit, not affiliated with PiEEG.
 
-<div align="center">
-<br>
-Merry Christmas 🎄
-</div>

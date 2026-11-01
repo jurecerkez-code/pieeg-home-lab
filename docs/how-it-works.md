@@ -22,7 +22,7 @@ From a voltage on your forehead to a number in Python.
 
 Every channel measures the **difference** between its electrode and **Ref**. If Ref is noisy, every channel is noisy, so Ref and Bias stickers matter most.
 
-**Bias** is driven by an amplifier in the ADS1299 and connects the body to a fixed voltage, the middle of the chip's analog supply. That keeps the body inside the converter's input range and reduces the noise that appears on all electrodes at once, mainly 50 Hz mains hum (PiEEG: [Electrodes & Pinout](https://docs.pieeg.com/hardware/devices/pieeg-8/connections/)). PiEEG's register setup sets `BIAS_SENSP` and `BIAS_SENSN` to `0x00`, so no channel feeds the bias amplifier: it holds a fixed voltage rather than working as a feedback loop that subtracts the measured noise ([safety](safety.md#what-the-bias-electrode-does) has the register details). **Ref** is the ADS1299's SRB1 input, shared by all channels (`MISC1 = 0x20`).
+**Bias** is driven by an amplifier in the ADS1299 and connects the body to a fixed voltage, the middle of the chip's analog supply. That keeps the body, and with it every electrode, inside the converter's input range. In many EEG amplifiers the bias electrode does more: it feeds the common noise of the channels back into the body, inverted, which is what actively cancels 50 Hz hum (PiEEG describes it that way in [Electrodes & Pinout](https://docs.pieeg.com/hardware/devices/pieeg-8/connections/)). PiEEG Server's register setup doesn't use that loop: `BIAS_SENSP` and `BIAS_SENSN` are `0x00`, so no channel feeds the bias amplifier and it holds a fixed voltage. Hum is still smaller with Bias connected than without, because the body no longer floats, but the real hum reduction in this kit comes from battery power and short leads ([safety](safety.md#what-the-bias-electrode-does) has the register details, and the Mission 5 bonus asks what `0xFF` would change). **Ref** is the ADS1299's SRB1 input, shared by all channels (`MISC1 = 0x20`).
 
 ## Filters on the server
 
@@ -39,7 +39,7 @@ So `record.py` does this:
 | When | What `record.py` does |
 |---|---|
 | Start | Reads the filter state from the welcome message, switches both filters off, drops the next 0.5 s |
-| Every 5 s | Reads a fresh welcome message on a second connection. If another client switched a filter on, it switches it off again and marks the affected samples in the sidecar |
+| Every 5 s | Reads a fresh welcome message on a second connection. If another client switched a filter on, it switches it off again and marks the affected samples in the sidecar. Side effect: `journalctl -u pieeg-server` shows a "Client connected" line every 5 s while `record.py` runs, that's this check |
 | After a reconnect | Same check as at the start (a restarted server begins with the bandpass on again) |
 | End | Switches back on what was on at the start: bandpass 1 to 40 Hz, notch at its frequency |
 
@@ -76,7 +76,7 @@ PiEEG Server turns each 3 byte value into microvolts and broadcasts JSON. The ex
 
 ## Data formats in this repo
 
-**Live stream** (`ws://raspberrypi.local:1616`), one message per sample:
+**Live stream** (`ws://tina.local:1616`), one message per sample:
 
 ```json
 { "t": 1766686800.123456, "n": 42, "channels": [12.34, -5.67, 8.90, 0.12, 3.45, -1.0, 2.2, 0.8] }
@@ -104,7 +104,7 @@ plus a sidecar with the same name and `.json` (shortened):
   "label": "eyes_closed",
   "subject": "sub-01",
   "notes": "",
-  "start_time": "2026-12-25T19:00:00.120",
+  "start_time": "2026-12-25T19:00:00.120+01:00",
   "planned_duration_s": 60,
   "duration_s": 60.0,
   "sample_rate_hz": 250,
@@ -121,9 +121,9 @@ plus a sidecar with the same name and `.json` (shortened):
   "sample_number_gaps": 0,
   "missing_samples": 0,
   "events": [
-    { "time": "2026-12-25T19:00:00.000", "last_n": null, "event": "connected", "detail": "server filters: bandpass on, notch on at 50 Hz" },
-    { "time": "2026-12-25T19:00:00.001", "last_n": null, "event": "server filters switched off", "detail": "they were on" },
-    { "time": "2026-12-25T19:01:00.400", "last_n": 16042, "event": "server filters switched back on", "detail": "..." }
+    { "time": "2026-12-25T19:00:00.000+01:00", "last_n": null, "event": "connected", "detail": "server filters: bandpass on, notch on at 50 Hz" },
+    { "time": "2026-12-25T19:00:00.001+01:00", "last_n": null, "event": "server filters switched off", "detail": "they were on" },
+    { "time": "2026-12-25T19:01:00.400+01:00", "last_n": 16042, "event": "server filters switched back on", "detail": "..." }
   ]
 }
 ```

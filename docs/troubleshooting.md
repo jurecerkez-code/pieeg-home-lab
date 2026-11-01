@@ -4,7 +4,7 @@ Start with two checks, they narrow down almost everything:
 
 ```bash
 python check_setup.py --noise-test                     # from code/ on the laptop: WiFi, Pi, server, board
-ssh jure@raspberrypi.local "pieeg-server doctor"       # on the Pi: SPI, GPIO, service, ports
+ssh jure@tina.local "pieeg-server doctor"       # on the Pi: SPI, GPIO, service, ports
 ```
 
 `check_setup.py` names the first broken link in the chain. If its noise test passes (all channels under 5 µV RMS), the board is fine and any noise comes from electrodes, cables or surroundings. Based on the official [PiEEG-8 troubleshooting](https://docs.pieeg.com/hardware/devices/pieeg-8/troubleshooting/) page.
@@ -15,7 +15,7 @@ PiEEG Server runs and answers (the dashboard opens, `check_setup.py` passes ever
 
 1. Unplug the power. Is the PiEEG-8 pressed onto **all 40 pins**, none visible at either end, pin 1 on pin 1?
 2. Power on, wait a minute, run `python check_setup.py` again.
-3. Still nothing: `ssh jure@raspberrypi.local "journalctl -u pieeg-server -n 40"` and look for errors.
+3. Still nothing: `ssh jure@tina.local "journalctl -u pieeg-server -n 40"` and look for errors.
 
 Without a mounted board this is exactly what happens, so it's also what the Pi shows before the PiEEG-8 arrives. Note: PiEEG Server's own noise test reports "Device OK" even when it collected zero samples. `self_test.py` and `check_setup.py` check the sample count and say "no usable test" instead.
 
@@ -34,18 +34,18 @@ Without a mounted board this is exactly what happens, so it's also what the Pi s
 
 1. Wait a full 2 minutes after plugging in the powerbank.
 2. MacBook and Pi on the **same WiFi network**. The Pi 3 uses 2.4 GHz, the Mac may use 5 GHz on the same router, that's fine.
-3. `raspberrypi.local` not resolving, see below.
+3. `tina.local` not resolving, see below.
 4. SSH in and check: `systemctl status pieeg-server` and `journalctl -u pieeg-server -n 50`.
 
 ### live_view.py, record.py or self_test.py can't connect, but the dashboard works
 
 macOS blocks local network access until you allow it. System Settings → Privacy & Security → **Local Network** → turn on Terminal (and Python if listed). Run the script again.
 
-### raspberrypi.local is not found
+### tina.local is not found
 
 Macs and Windows 10 or 11 resolve `.local` names out of the box, but some routers and guest networks block it. Use the Pi's IP address instead:
 
-- Router page (Vodafone: http://192.168.0.1) → list of connected devices → `raspberrypi`
+- Router page (Vodafone: http://192.168.0.1) → list of connected devices → `tina`
 - Or via a working SSH session: `hostname -I`
 
 Then `http://<ip>:1617` and `python live_view.py --host <ip>`.
