@@ -13,7 +13,7 @@ In a real EEG lab the researcher and the person being recorded are two different
 2. **Screen.** Ask the participant: pacemaker or other implanted electronic device? Skin problems where the stickers go? If yes to the first, no recording without a physician's approval ([PiEEG safety](https://docs.pieeg.com/hardware/devices/pieeg-8/safety/)).
 3. **Pseudonym.** Give the participant a code like `sub-02` and use only that in file names and metadata. Never a real name. Keep the list of who is who somewhere else, or nowhere.
 4. **Consent.** If the data might ever leave your laptop, get written consent first, see [if you publish](#if-you-publish).
-5. **Prepare the rig.** Powerbank charged and unplugged from the wall, MacBook charger unplugged, `python self_test.py` passes. Run the self test before the session, never during a recording.
+5. **Prepare the rig.** Powerbank charged and unplugged from the wall, laptop charger unplugged, `python self_test.py` passes. Run the self test before the session, never during a recording.
 
 ## During the session
 

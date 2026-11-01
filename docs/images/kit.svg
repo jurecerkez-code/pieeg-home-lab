@@ -683,9 +683,9 @@
 <text x="467.0" y="480.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">USB</text>
 <rect x="506.0" y="388.0" width="219.0" height="236.0" rx="0" stroke="#2b3170" stroke-width="1" fill="none" opacity="1"/>
 <text x="520.0" y="412.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="12" font-weight="400" letter-spacing="1.5" fill="#8f96ff" text-anchor="start" opacity="1" xml:space="preserve">07</text>
-<text x="520.0" y="572.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="500" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Wipes and MacBook</text>
+<text x="520.0" y="572.0" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="500" letter-spacing="0" fill="#ecebf7" text-anchor="start" opacity="1" xml:space="preserve">Wipes and laptop</text>
 <text x="520.0" y="592.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="0.8" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">CLEAN, DRY SKIN</text>
-<text x="520.0" y="607.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="0.8" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">MACBOOK ON BATTERY, WIFI</text>
+<text x="520.0" y="607.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="10" font-weight="400" letter-spacing="0.8" fill="#9a9ccc" text-anchor="start" opacity="1" xml:space="preserve">LAPTOP ON BATTERY, WIFI</text>
 <rect x="524.0" y="450.0" width="70.0" height="50.0" rx="4" stroke="#ecebf7" stroke-width="1.5" fill="none" opacity="1"/>
 <line x1="524.0" y1="462.0" x2="594.0" y2="462.0" stroke="#2b3170" stroke-width="1" stroke-linecap="round" opacity="1"/>
 <text x="559.0" y="486.0" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="9" font-weight="400" letter-spacing="0.5" fill="#9a9ccc" text-anchor="middle" opacity="1" xml:space="preserve">WIPES</text>
