@@ -77,13 +77,28 @@ From top to bottom: **Ref, Biasout, E8, E7, E6, E5, E4, E3, E2, E1**. Always che
 | Amount | 10, one for every pin on the electrode header |
 | Bought at | [BerryBase, DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
 
-The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. The Pi has to sit close to your head (shoulder, shelf, or pillow).
+The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: less antenna, less hum, fewer motion spikes. But 20 cm alone is not enough: measured on an adult head and shoulders model, the longest path in the start montage (Pi on a shelf at shoulder height, Bias behind the right ear) is 33 cm. One extension jumper per lead fixes that, see ⑤.
 
 > If your board ever turns out to have a socket instead of pins, you need the male version (BerryBase DUPAD20).
 
 ---
 
-## ⑤ Powerbank and Micro USB cable
+## ⑤ Dupont extension jumpers (20 cm)
+
+| | |
+|---|---|
+| Ends | Female Dupont (onto the board's pin) ↔ male Dupont (into the clip cable's female end) |
+| Length | 20 cm, about 40 cm of lead per electrode together with the clip cable |
+| Amount | A ribbon of 40 that you peel apart. 3 in use for the start montage, the rest are spares |
+| Bought at | [BerryBase, DUPK-40-FM-20](https://www.berrybase.de/40pin-jumper-dupont-kabel-male-female-trennbar) |
+
+**Why they exist.** The 20 cm clip cables can't reach Fp1, Ref and Bias from any single board position on an adult head: the three sites span half the head. With one jumper per lead, a shelf at shoulder height and a pillow beside the head both work (README, step 4).
+
+**What they cost you in signal.** Longer unshielded wire picks up more 50 Hz hum, and moving cables make motion artifacts, which matters in the microvolt range. Keep the three leads loosely together, away from mains leads, chargers and monitors, and keep still while recording. Push each joint fully home: a loose joint shows up as spikes or a flat channel.
+
+---
+
+## ⑥ Powerbank and Micro USB cable
 
 | | |
 |---|---|
@@ -95,7 +110,7 @@ A 10,000 mAh powerbank runs the Pi for several hours. Charge it **before** a ses
 
 ---
 
-## ⑥ Alcohol wipes
+## ⑦ Alcohol wipes
 
 Wipe each spot before sticking an electrode and let it dry. Removes skin oil, lowers contact impedance, cleaner signal.
 
