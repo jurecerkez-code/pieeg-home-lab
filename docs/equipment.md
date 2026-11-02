@@ -83,14 +83,18 @@ The 10 wires come as a ribbon you can peel apart. Short wires are good for EEG: 
 
 ---
 
-## ⑤ Dupont extension jumpers (20 cm)
+## ⑤ Dupont extension jumpers (20 cm and 50 cm)
 
 | | |
 |---|---|
 | Ends | Female Dupont (onto the board's pin) ↔ male Dupont (into the clip cable's female end) |
-| Length | 20 cm, about 40 cm of lead per electrode together with the clip cable |
-| Amount | A ribbon of 40 that you peel apart. 3 in use for the start montage, the rest are spares |
-| Bought at | [BerryBase, DUPK-40-FM-20](https://www.berrybase.de/40pin-jumper-dupont-kabel-male-female-trennbar) |
+| Length | 20 cm or 50 cm. Together with the clip cable that is about 40 cm or 70 cm of lead per electrode |
+| Amount | One ribbon of 40 in each length. 3 in use for the start montage, the rest are spares |
+| Bought at | BerryBase [DUPK-40-FM-20](https://www.berrybase.de/en/40pin-jumper-dupont-cable-male-female-separable/length-0-20-m) and [DUPK-40-FM-50](https://www.berrybase.de/en/40pin-jumper-dupont-cable-male-female-separable/length-0-50-m) |
+
+**Which length.** Take 20 cm when the board can sit on a shelf beside the head: that is the
+shortest lead that reaches, and short wire is the quieter wire. Take 50 cm when the board has
+to be further away, behind the head or on a desk. Both fit the same pins.
 
 **Why they exist.** The 20 cm clip cables can't reach Fp1, Ref and Bias from any single board position on an adult head: the three sites span half the head. With one jumper per lead, a shelf at shoulder height and a pillow beside the head both work (README, step 4).
 

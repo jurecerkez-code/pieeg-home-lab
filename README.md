@@ -60,7 +60,7 @@ There's no EEG cap in this kit on purpose. It starts with electrode stickers on 
 | ② | **PiEEG-8 board** | ADS1299, 24 bit, 250 Hz, 8 ch + Ref + Bias, 2.54 mm male header | [Elecrow](https://www.elecrow.com/pieeg.html) |
 | ③ | **Ag/AgCl electrode stickers**, 60 pcs | 2.6 cm foam, snap button, single use | [Somnomedics SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
 | ④ | **Dupont to alligator clip cables**, 10 pcs | female 2.54 mm ↔ clip, 20 cm | [BerryBase DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
-| ⑤ | **Dupont extension jumpers**, ribbon of 40 | male to female 2.54 mm, 20 cm, peel off one per lead | [BerryBase DUPK-40-FM-20](https://www.berrybase.de/40pin-jumper-dupont-kabel-male-female-trennbar) |
+| ⑤ | **Dupont extension jumpers**, 2 ribbons of 40 | male to female 2.54 mm, one ribbon 20 cm and one 50 cm, peel off one per lead | [BerryBase DUPK-40-FM-20](https://www.berrybase.de/en/40pin-jumper-dupont-cable-male-female-separable/length-0-20-m) and [DUPK-40-FM-50](https://www.berrybase.de/en/40pin-jumper-dupont-cable-male-female-separable/length-0-50-m) |
 | ⑥ | **Powerbank** + official Micro USB cable | 5 V, 3 A recommended by PiEEG (Raspberry Pi specifies 2.5 A for the Pi 3) | [BerryBase RPI-MUSB-1](https://www.berrybase.de/offizielles-raspberry-pi-micro-usb-kabel-rot-1-0m) |
 | ⑦ | Alcohol wipes | skin prep | dm |
 

@@ -24,6 +24,8 @@ Pi unplugged. The PiEEG-8 sits on all 40 pins of the Pi's GPIO header, pushed do
 
 Each lead is an extension jumper plus a clip cable. The jumper's female end slides onto a pin of the 10 pin header, the clip cable's black female end onto the jumper's male end. Push each joint fully home.
 
+The cable is heavier than the sticker, so let the skin carry almost none of it: make a small loop of cable right at the sticker and tape that loop down a few centimetres away. Then a long lead pulls on the tape instead of peeling the sticker, and the wire stops swinging into the signal.
+
 | Lead | Pin |
 |---|---|
 | 1 | **E1** |
