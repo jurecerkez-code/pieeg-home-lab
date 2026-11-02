@@ -135,3 +135,31 @@ def test_no_server_gives_a_clear_error(tmp_path):
     assert r.returncode != 0
     assert "No connection to PiEEG Server" in r.stderr
     assert not list((tmp_path / "r").glob("*.csv"))
+
+def test_subject_age_and_sex_reach_the_sidecar(sim, tmp_path):
+    """When record.py is given the subject metadata, the sidecar carries it, so the NWB file
+    can hold a real age and sex instead of the unknown form."""
+    r = script("record.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 2,
+               "--age", "P29Y", "--sex", "F", "--out", tmp_path, cwd=tmp_path)
+    assert r.returncode == 0, r.stdout + r.stderr
+    _, meta = only_recording(tmp_path)
+    assert meta["subject_age"] == "P29Y"
+    assert meta["subject_sex"] == "F"
+
+
+def test_subject_metadata_is_absent_when_not_given(sim, tmp_path):
+    """Absent keys, not invented ones: mission_3_nwb.py reads that as 'not recorded'."""
+    r = script("record.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 2,
+               "--out", tmp_path, cwd=tmp_path)
+    assert r.returncode == 0, r.stdout + r.stderr
+    _, meta = only_recording(tmp_path)
+    assert "subject_age" not in meta
+    assert "subject_sex" not in meta
+
+
+def test_an_age_that_is_not_an_iso_duration_is_refused(sim, tmp_path):
+    r = script("record.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 2,
+               "--age", "29", "--out", tmp_path, cwd=tmp_path)
+    assert r.returncode != 0
+    assert "ISO 8601" in r.stderr
+    assert not list(tmp_path.glob("*.csv")), "nothing should be recorded before the arguments are valid"

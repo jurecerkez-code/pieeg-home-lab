@@ -25,8 +25,9 @@
 4. [Step by step](#step-by-step): from the box to your first alpha wave
 5. [Code](#code): live view, recording and analysis on the laptop
 6. [Missions](#missions)
-7. [Repository structure](#repository-structure)
-8. [References and citation](#references-and-citation)
+7. [From a recording to DANDI](docs/road-to-dandi.md): how a recording becomes published data
+8. [Repository structure](#repository-structure)
+9. [References and citation](#references-and-citation)
 
 ---
 

@@ -8,6 +8,7 @@ Run all tests from the repository root:
 
 import asyncio
 import json
+import numpy as np
 import os
 import socket
 import subprocess
@@ -80,3 +81,34 @@ def only_recording(folder: Path):
     csvs = sorted(folder.glob("*.csv"))
     assert len(csvs) == 1, csvs
     return csvs[0], json.loads(csvs[0].with_suffix(".json").read_text())
+
+
+FS = 250
+
+
+def write_recording(tmp_path, n=200, missing=None, **sidecar):
+    """A CSV plus sidecar in record.py's format. missing holds sample counter
+    ranges that were never recorded."""
+    missing = set(missing or [])
+    ns = [i for i in range(n) if i not in missing]
+    csv_path = tmp_path / "session.csv"
+    with open(csv_path, "w") as f:
+        f.write("t,n,ch1,ch2\n")
+        for k, i in enumerate(ns):
+            f.write(f"{i / FS:.3f},{i},{k * 0.5:.2f},{k * -0.5:.2f}\n")
+    meta = {
+        "label": "rest",
+        "subject": "sub-02",
+        "notes": "sat still",
+        "start_time": "2026-11-01T10:00:00+01:00",
+        "sample_rate_hz": FS,
+        "n_samples": len(ns),
+        "n_channels": 2,
+        "units": "microvolts",
+        "electrodes": {"ch1": "Fp1, left forehead", "ch2": "Fp2, right forehead",
+                       "ref": "M1, left mastoid", "bias": "M2, right mastoid"},
+        "data_filtering": "none: record.py kept PiEEG Server's filters off",
+    }
+    meta.update(sidecar)
+    csv_path.with_suffix(".json").write_text(json.dumps(meta))
+    return csv_path
