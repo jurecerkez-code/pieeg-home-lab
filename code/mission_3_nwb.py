@@ -33,7 +33,7 @@ from pynwb.file import Subject
 from spectrum import load
 
 
-def _start_time(meta: dict) -> datetime:
+def start_time(meta: dict) -> datetime:
     """The sidecar carries an ISO time with a UTC offset, which NWB requires.
 
     Example datasets have no start time at all. Rather than invent one, the
@@ -109,33 +109,29 @@ def _subject(meta: dict) -> Subject:
     )
 
 
-def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
-    meta = json.loads(csv_path.with_suffix(".json").read_text())
-    if str(meta.get("units", "")).lower() not in ("microvolts", "uv", "µv"):
-        raise ValueError(f"conversion to volts assumes microvolts, sidecar says {meta.get('units')!r}")
-    n_channels = int(meta["n_channels"])
-    fs = float(meta["sample_rate_hz"])
-    data_uv = np.column_stack([load(csv_path, c) for c in range(1, n_channels + 1)])
+def _device(nwbfile):
+    """The PiEEG-8 shield as an NWB Device.
 
-    described = meta.get("description") or meta.get("label", "PiEEG recording")
-    if "start_time" not in meta:
-        described += " (start time unknown: set to the conversion time)"
+    pynwb 4 moved the manufacturer onto a DeviceModel, older versions take it on the device
+    itself. Both write the same NWB, so this uses whichever the installed pynwb has.
+    """
+    name = "PiEEG-8"
+    description = "8 channel ADS1299 EEG shield for the Raspberry Pi"
+    if hasattr(nwbfile, "create_device_model"):
+        model = nwbfile.create_device_model(name=name, manufacturer="PiEEG")
+        return nwbfile.create_device(name=name, description=description, model=model)
+    return nwbfile.create_device(name=name, description=description, manufacturer="PiEEG")
 
-    notes = str(meta.get("notes", "") or "")
-    nwbfile = NWBFile(
-        session_description=described,
-        identifier=str(uuid.uuid4()),
-        session_start_time=_start_time(meta),
-        experiment_description=notes or None,
-    )
 
-    nwbfile.subject = _subject(meta)
+def add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels):
+    """Add the shield, its electrodes and the EEG series to an open NWBFile.
 
-    device = nwbfile.create_device(
-        name="PiEEG-8",
-        description="8 channel ADS1299 EEG shield for the Raspberry Pi",
-        manufacturer="PiEEG",
-    )
+    csv_to_nwb below and code/neuroconv_interface.py both call this, so one recording becomes
+    the same NWB objects whichever way it is converted: one electrode per channel carrying the
+    position the sidecar documents, the signal stored in microvolts and reported in volts
+    through the conversion factor, and the ranges a reader should skip.
+    """
+    device = _device(nwbfile)
     group = nwbfile.create_electrode_group(
         name="electrodes",
         description="10-20 positions on skin without hair, reference and bias on the mastoids",
@@ -163,6 +159,31 @@ def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
     for start, stop, why in _invalid_intervals(csv_path, meta, fs):
         # the invalid_times table has no description column, its labels are tags
         nwbfile.add_invalid_time_interval(start_time=start, stop_time=stop, tags=[why])
+
+
+def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
+    meta = json.loads(csv_path.with_suffix(".json").read_text())
+    if str(meta.get("units", "")).lower() not in ("microvolts", "uv", "µv"):
+        raise ValueError(f"conversion to volts assumes microvolts, sidecar says {meta.get('units')!r}")
+    n_channels = int(meta["n_channels"])
+    fs = float(meta["sample_rate_hz"])
+    data_uv = np.column_stack([load(csv_path, c) for c in range(1, n_channels + 1)])
+
+    described = meta.get("description") or meta.get("label", "PiEEG recording")
+    if not meta.get("start_time"):
+        described += " (start time unknown: set to the conversion time)"
+
+    notes = str(meta.get("notes", "") or "")
+    nwbfile = NWBFile(
+        session_description=described,
+        identifier=str(uuid.uuid4()),
+        session_start_time=start_time(meta),
+        experiment_description=notes or None,
+    )
+
+    nwbfile.subject = _subject(meta)
+
+    add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{csv_path.stem}.nwb"

@@ -66,6 +66,18 @@ ELECTRODE_KEYS = [f"ch{i}" for i in range(1, 9)] + ["ref", "bias"]
 NO_SAMPLE_TIMEOUT = 15.0   # s after connecting without a single sample: give up
 
 
+AGE_PART = re.compile(r"P(?:\d+Y)?(?:\d+M)?(?:\d+W)?(?:\d+D)?")
+
+
+def valid_age(text: str) -> bool:
+    """ISO 8601 duration, or a range with a blank bound: P29Y, P23W, P90Y/."""
+    left, sep, right = text.partition("/")
+    parts = (left, right) if sep else (left,)
+    return any(parts) and all(
+        part == "" or (AGE_PART.fullmatch(part) and any(c.isdigit() for c in part)) for part in parts
+    )
+
+
 def parse_electrodes(text: str) -> dict:
     """'ch1=Fp1,ch2=Fp2,ref=M1,bias=M2' -> {'ch1': 'Fp1', ...}"""
     out = {}
@@ -102,6 +114,11 @@ def main():
     p.add_argument("--electrodes",
                    help="your own positions instead of a montage, e.g. \"ch1=Fp1,ch2=Fp2,ref=M1,bias=M2\"")
     p.add_argument("--notes", default="", help="free text for the sidecar, e.g. \"sneezed at 40 s\"")
+    p.add_argument("--age",
+                   help="subject's age as an ISO 8601 duration (P29Y, P23W), or a range with a blank "
+                        "bound (P90Y/). Goes to the sidecar so NWB files carry a real age")
+    p.add_argument("--sex", choices=["M", "F", "O", "U"],
+                   help="subject's sex the way NWB spells it, written to the sidecar")
     p.add_argument("--keep-server-filters", action="store_true",
                    help="record what the server sends, filters included (not raw)")
     p.add_argument("--check-every", type=float, default=5.0, help=argparse.SUPPRESS)
@@ -111,6 +128,8 @@ def main():
     a = p.parse_args()
     if a.seconds <= 0:
         p.error("--seconds must be more than 0")
+    if a.age and not valid_age(a.age):
+        p.error("--age should be an ISO 8601 duration like P29Y, or a range with a blank bound like P90Y/")
     try:
         electrodes = parse_electrodes(a.electrodes) if a.electrodes else MONTAGES[a.montage]
     except ValueError as e:
@@ -255,6 +274,10 @@ def main():
                    if k in stream.server_info},
         "recorded_with": "pieeg-home-lab code/record.py",
     }
+    if a.age:
+        meta["subject_age"] = a.age
+    if a.sex:
+        meta["subject_sex"] = a.sex
     csv_path.with_suffix(".json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
 
     print(f"Saved {n_rows} samples ({n_rows / fs:.1f} s) to {csv_path}  [{end_reason}]")
