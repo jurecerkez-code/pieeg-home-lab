@@ -62,7 +62,8 @@ So a working combination is:
 
 ```bash
 python3.12 -m venv .venv
-pip install "zarr==2.18.7" "hdmf_zarr==0.11.0" neuroconv numpy scipy nwbinspector
+source .venv/bin/activate
+python -m pip install "zarr==2.18.7" "hdmf_zarr==0.11.0" neuroconv numpy scipy nwbinspector
 ```
 
 The tests for the interface are skipped when neuroconv is not installed, so the kit itself

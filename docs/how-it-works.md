@@ -131,6 +131,9 @@ plus a sidecar with the same name and `.json` (shortened):
 | Field | Meaning |
 |---|---|
 | `complete` | `true` only if every planned sample arrived, without gaps |
+| `unrecorded_duration_s`, `unreceived_samples` | How much of the requested recording was not saved, including an unfinished tail or early stop |
+| `duration_s`, `elapsed_duration_s` | Saved sample duration versus elapsed time including gaps |
+| `recording_status` | `in_progress`, `complete` or `incomplete`; an interrupted process leaves an unfinished sidecar |
 | `events` | Every connect, disconnect, reconnect and filter change, with the last sample number seen |
 | `missing_samples`, `sample_number_gaps` | Samples missed while the connection was down |
 | `possibly_filtered_samples` | `[first_n, last_n]` ranges where another client had switched a server filter on |
@@ -157,3 +160,7 @@ PiEEG's default 8 channel montage: Fp1, Fp2, C3, C4, P7, P8, O1, O2. This kit st
 | ADS1299 datasheet | [Texas Instruments](https://www.ti.com/lit/ds/symlink/ads1299.pdf) |
 | Original paper | I. Rakhmatulin, S. Völkl: *PIEEG: Turn a Raspberry Pi into a Brain-Computer-Interface to measure biosignals*, [arXiv:2201.02228](https://arxiv.org/abs/2201.02228) |
 | 10-20 system | Jasper (1958), *The ten-twenty electrode system of the International Federation* |
+
+### Exported timing
+
+NWB samples and invalid intervals share a timeline starting at the first saved sample. Discontinuous recordings use explicit timestamps. Original CSV timestamps, counters, calibration notes and the full sidecar remain available in NWB scratch data. Software timestamps describe when the server read samples; their precision has not been calibrated against the hardware clock. Counter resets make old counter-only filter annotations ambiguous, so those recordings are conservatively excluded from spectral analysis when such annotations are present.

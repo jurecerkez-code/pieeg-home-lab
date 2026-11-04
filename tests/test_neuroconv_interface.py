@@ -48,13 +48,14 @@ def test_conversion_keeps_the_recorded_numbers(tmp_path):
         nwb = io.read()
         series = nwb.acquisition["eeg"]
         from_csv = np.column_stack([load(csv_path, c) for c in (1, 2)])
-        assert series.rate == FS
+        expected_times = np.r_[np.arange(30), np.arange(50, 200)] / FS
+        np.testing.assert_allclose(series.timestamps[:], expected_times)
         assert series.conversion == 1e-6        # microvolts stored, volts reported
         assert np.allclose(series.data[:] * series.conversion, from_csv * 1e-6)
         assert list(nwb.electrodes["location"]) == ["Fp1, left forehead", "Fp2, right forehead"]
         spans = list(zip(nwb.intervals["invalid_times"]["start_time"][:],
                          nwb.intervals["invalid_times"]["stop_time"][:]))
-        assert (30 / FS, 50 / FS) in spans       # the samples that never arrived are marked
+        np.testing.assert_allclose(spans, [(30 / FS, 50 / FS)])
 
 
 def test_a_recording_without_a_sidecar_is_refused(tmp_path):

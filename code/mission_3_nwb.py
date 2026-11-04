@@ -18,19 +18,18 @@ Docs: https://pynwb.readthedocs.io  ·  https://nwbinspector.readthedocs.io
 Install: pip install pynwb nwbinspector
 """
 
-import csv
+import hashlib
 import json
 import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import numpy as np
 from pynwb import NWBFile, NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 from pynwb.file import Subject
 
-from spectrum import load
+from recording import read_recording
 
 
 def start_time(meta: dict) -> datetime:
@@ -54,42 +53,6 @@ def _locations(meta: dict, n_channels: int) -> list:
         if isinstance(electrodes, dict):
             loc = electrodes.get(f"ch{i}") or "not documented"
         out.append(loc)
-    return out
-
-
-def _sample_numbers(csv_path: Path):
-    """The n column is PiEEG Server's sample counter. A jump means lost samples."""
-    with open(csv_path) as f:
-        rows = csv.reader(f)
-        header = next(rows)
-        if "n" not in header:
-            return None
-        col = header.index("n")
-        out = []
-        for row in rows:
-            if len(row) != len(header):
-                continue
-            try:
-                out.append(int(float(row[col])))
-            except ValueError:
-                continue
-    return np.array(out) if out else None
-
-
-def _invalid_intervals(csv_path: Path, meta: dict, fs: float) -> list:
-    """Time ranges a reader should skip: gaps in the sample counter, and the
-    ranges another client may have filtered while recording."""
-    out = []
-    ns = _sample_numbers(csv_path)
-    if ns is not None and len(ns) > 1:
-        for i in np.nonzero(np.diff(ns) != 1)[0]:
-            start, stop = (ns[i] + 1) / fs, ns[i + 1] / fs
-            if stop > start:
-                out.append((float(start), float(stop), "gap in the sample counter"))
-    for first, last in meta.get("possibly_filtered_samples") or []:
-        last = first if last is None else last
-        out.append((float(first) / fs, float(last + 1) / fs,
-                    "possibly filtered by another client during the recording"))
     return out
 
 
@@ -123,7 +86,7 @@ def _device(nwbfile):
     return nwbfile.create_device(name=name, description=description, manufacturer="PiEEG")
 
 
-def add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels):
+def add_recording(nwbfile, recording, csv_path):
     """Add the shield, its electrodes and the EEG series to an open NWBFile.
 
     csv_to_nwb below and code/neuroconv_interface.py both call this, so one recording becomes
@@ -131,10 +94,17 @@ def add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels):
     position the sidecar documents, the signal stored in microvolts and reported in volts
     through the conversion factor, and the ranges a reader should skip.
     """
+    meta, data_uv = recording.meta, recording.data
+    n_channels = data_uv.shape[1]
+    if str(meta.get("units", "")).lower() not in ("microvolts", "uv", "µv"):
+        raise ValueError(f"conversion to volts assumes microvolts, sidecar says {meta.get('units')!r}")
+    positions = meta.get("electrodes")
+    positions = positions if isinstance(positions, dict) else {}
     device = _device(nwbfile)
     group = nwbfile.create_electrode_group(
-        name="electrodes",
-        description="10-20 positions on skin without hair, reference and bias on the mastoids",
+        name="recording_electrodes",
+        description=(f"Positions from the source sidecar. Reference: {positions.get('ref', 'not documented')}. "
+                     f"Bias: {positions.get('bias', 'not documented')}."),
         device=device,
         location="scalp",
     )
@@ -148,26 +118,36 @@ def add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels):
 
     nwbfile.add_acquisition(ElectricalSeries(
         name="eeg",
-        description="EEG from the PiEEG-8. Stored in microvolts, conversion scales to volts.",
+        description=("Signal values unchanged from the source CSV. Stored in microvolts, conversion scales to volts. "
+                     + str(meta.get("units_note") or "Amplitude calibration is not documented in the source sidecar.")),
         data=data_uv,
         electrodes=electrodes,
-        rate=fs,
+        **recording.nwb_timing(),
         conversion=1e-6,
         filtering=str(meta.get("data_filtering", "not documented in the sidecar")),
     ))
 
-    for start, stop, why in _invalid_intervals(csv_path, meta, fs):
+    for start, stop, why in recording.invalid_intervals():
         # the invalid_times table has no description column, its labels are tags
         nwbfile.add_invalid_time_interval(start_time=start, stop_time=stop, tags=[why])
 
+    provenance = {
+        "sidecar": meta,
+        "source_csv_sha256": hashlib.sha256(Path(csv_path).read_bytes()).hexdigest(),
+        "converter_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "recording_reader_sha256": hashlib.sha256(Path(__file__).with_name("recording.py").read_bytes()).hexdigest(),
+        "ignored_incomplete_final_row": recording.ignored_trailing_row,
+        "timing": "CSV t minus its first value; software timestamps, not a calibrated hardware clock. Gaps are retained.",
+    }
+    nwbfile.add_scratch(json.dumps(provenance, ensure_ascii=False), name="recording_provenance",
+                        description="Source sidecar, calibration caveats, file hashes and timing assumptions (JSON)")
+    nwbfile.add_scratch(recording.numbers, name="source_sample_numbers", description="Original CSV n column, including resets")
+    nwbfile.add_scratch(recording.source_times, name="source_timestamps", description="Original CSV t column, before subtracting its first value")
+
 
 def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
-    meta = json.loads(csv_path.with_suffix(".json").read_text())
-    if str(meta.get("units", "")).lower() not in ("microvolts", "uv", "µv"):
-        raise ValueError(f"conversion to volts assumes microvolts, sidecar says {meta.get('units')!r}")
-    n_channels = int(meta["n_channels"])
-    fs = float(meta["sample_rate_hz"])
-    data_uv = np.column_stack([load(csv_path, c) for c in range(1, n_channels + 1)])
+    recording = read_recording(csv_path)
+    meta = recording.meta
 
     described = meta.get("description") or meta.get("label", "PiEEG recording")
     if not meta.get("start_time"):
@@ -183,7 +163,7 @@ def csv_to_nwb(csv_path: Path, out_dir: Path = Path("nwb")) -> Path:
 
     nwbfile.subject = _subject(meta)
 
-    add_recording(nwbfile, data_uv, meta, csv_path, fs, n_channels)
+    add_recording(nwbfile, recording, csv_path)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{csv_path.stem}.nwb"

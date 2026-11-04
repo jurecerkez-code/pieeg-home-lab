@@ -17,6 +17,13 @@
 
 ---
 
+## Start here
+
+1. **Set up:** follow [the first test](docs/first-test.md).
+2. **Record:** use the [Python setup and recording commands](#code).
+3. **Check:** read the completion message. If time is missing, repeat the recording before comparing results.
+4. **Explore:** compare spectra or try a [mission](docs/missions.md). “No clear alpha rhythm detected” is a valid result.
+
 ## Contents
 
 1. [Overview](#overview)
@@ -250,6 +257,8 @@ Start every script with `.venv\Scripts\python` instead of `python`. `tina.local`
 
 ### Run
 
+Run these commands from the repository’s `code` folder, after the setup above.
+
 ```bash
 source .venv/bin/activate
 python live_view.py                                     # live traces + running spectrum (channels 1 and 2)
@@ -258,7 +267,9 @@ python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
-`record.py` always records the raw signal: it switches PiEEG Server's filters off while it records and back on afterwards. It writes every sample to disk as it arrives, reconnects by itself if the WiFi drops, and notes every gap and event in the `.json` sidecar. `python record.py --help` lists the options (electrode positions, notes, more).
+`record.py` requests raw data by default: it switches PiEEG Server's filters off while it records and back on afterwards. It writes every sample to disk as it arrives, reconnects by itself if the WiFi drops, and notes every gap and event in the `.json` sidecar. `python record.py --help` lists the options (electrode positions, notes, more).
+
+An incomplete recording prints how much requested time was not saved. The JSON sidecar records the reason. `spectrum.py` analyzes continuous sections separately and excludes marked uncertain filter ranges; it does not automatically remove blinks or muscle activity. A candidate peak needs visual checking.
 
 ### Without hardware
 
@@ -287,13 +298,13 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | [`self_test.py`](code/self_test.py) | Board noise test (inputs shorted), PiEEG's official hardware check |
 | [`simulate.py`](code/simulate.py) | Simulated PiEEG Server: same stream, same filters, answers the self test |
 | [`mission_1_notch.py`](code/mission_1_notch.py) | Mission 1 with automatic PASS/FAIL check |
-| [`mission_3_nwb.py`](code/mission_3_nwb.py) | Mission 3 skeleton: CSV → NWB |
+| [`mission_3_nwb.py`](code/mission_3_nwb.py) | CSV → NWB, preserving sample times and metadata |
 
 Stream format, CSV columns and sidecar fields: [docs/how-it-works.md](docs/how-it-works.md#data-formats-in-this-repo).
 
 ### Tests
 
-`tests/` runs every script against the simulator: raw recordings, filters switched back on, nothing lost when the WiFi drops or the server restarts. GitHub runs them on every push (`.github/workflows/tests.yml`). Locally, from the repository root:
+`tests/` runs every script against the simulator: raw recordings, filters switched back on, missing samples reported when WiFi drops or the server restarts. GitHub runs them on every push (`.github/workflows/tests.yml`). Locally, from the repository root:
 
 ```bash
 pip install pytest
@@ -310,7 +321,7 @@ Besides the scripts, the suite checks that the documents agree with each other: 
 |---|---|---|
 | 0 | **Real data first** | Your detector finds 10 chews and 10 blinks in PiEEG's example file |
 | 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice on PiEEG's `example_dry.csv` |
-| 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
+| 2 | **Find your alpha peak** | Compare eyes open vs closed; report a candidate peak or no clear rhythm |
 | 3 | **Make it NWB** | Your recording passes `nwbinspector` |
 | 4 | **More channels on bare skin** | 4 channels incl. eye corners, a left/right eye movement plot |
 | 5 | **Read the datasheet** | Every step from 3 raw bytes to one µV value explained |

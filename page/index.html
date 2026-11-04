@@ -106,31 +106,31 @@
   <div class="cards">
 
     <details class="card" open>
-      <summary><span class="num">01</span><span class="name">Focus and relaxation</span>
+      <summary><span class="num">01</span><span class="name">Signal rhythms</span>
         <span class="one">EEG, Fp1 against M1</span></summary>
       <div class="body">
         <figure class="card-figure">
           <img src="assets/svg/head-map.svg" width="600" height="313"
             alt="Adult head seen from the front left: E1 sticker on the left forehead at Fp1, REF on the bone behind the left ear, BIAS behind the right ear">
         </figure>
-        <p>Alpha grows at the back of the head when the eyes close. Beta rises when you work something
-          out. This page measures both on channel 1 and shows them as a focus number and a relaxation
-          number: a rough readout, not a validated score, but enough to see the effect while sitting
-          still and doing nothing visible.</p>
+        <p>These numbers estimate how strong the 10 Hz and 20 Hz components are on channel 1.
+          They do not measure focus or relaxation. Movement and electrical noise can also raise them.
+          A rhythm at a different frequency may not show up in these two numbers.</p>
         <p class="muted">Your start montage: E1 on the left forehead (Fp1), REF on the bone behind the left
           ear (M1), BIAS behind the right ear (M2). Alpha is strongest at the back of the head (O1, O2), but
-          that is under hair, where stickers do not hold. From the forehead it is weaker and still shows when
-          you close your eyes.</p>
+          that is under hair, where stickers do not hold. It is weaker at the forehead and may be hard
+          to see. Closing your eyes sometimes makes it clearer.</p>
         <div class="demo-row">
-          <button class="demo-btn" id="demo-eyes" aria-pressed="false">Close eyes</button>
-          <button class="demo-btn" id="demo-math" aria-pressed="false">Do mental math</button>
+          <button class="demo-btn" id="demo-eyes" aria-pressed="false">Example: stronger 10 Hz</button>
+          <button class="demo-btn" id="demo-math" aria-pressed="false">Example: stronger 20 Hz</button>
         </div>
         <div class="scores">
-          <div class="score"><div class="k">Focus</div><div class="v" id="score-focus">0.00</div></div>
-          <div class="score"><div class="k">Relaxation</div><div class="v" id="score-relax">0.00</div></div>
+          <div class="score"><div class="k">10 Hz amplitude · µV*</div><div class="v" id="amplitude-alpha">0.0</div></div>
+          <div class="score"><div class="k">20 Hz amplitude · µV*</div><div class="v" id="amplitude-beta">0.0</div></div>
         </div>
-        <p class="caption" id="demo-note">Simulated, to show the shape of the effect. Real recordings are
-          noisier, and both scores sit near 0.1 to 0.25 when you are just sitting there.</p>
+        <p class="caption">*PiEEG Server’s amplitude scale has not been independently verified.
+          These are estimates at two frequencies, not total alpha or beta band power.</p>
+        <p class="caption" id="demo-note">Waiting for the signal. Examples are clearly marked as simulated.</p>
       </div>
     </details>
 
@@ -560,9 +560,11 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
     body, the Pi from its official drawing, the PiEEG-8 measured on its photo. The bust and the trace at
     the top are the repo's own hero. Guide and code:
     <a href="https://github.com/jurecerkez-code/pieeg-home-lab">github.com/jurecerkez-code/pieeg-home-lab</a>.</p>
+  <p class="dedication" style="margin-top:calc(var(--step)*1.5);font-style:italic;">Volim te i želim da
+    dobiješ ovaj posao i da odeš na doktorat, nadam se da će ti ovo pomoći &lt;3</p>
 </footer>
 
 </div>
-<script src="assets/app.js?v=590def4e"></script>
+<script src="assets/app.js?v=3b31ac7b"></script>
 </body>
 </html>

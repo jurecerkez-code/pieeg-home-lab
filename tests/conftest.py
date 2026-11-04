@@ -86,7 +86,7 @@ def only_recording(folder: Path):
 FS = 250
 
 
-def write_recording(tmp_path, n=200, missing=None, **sidecar):
+def write_recording(tmp_path, n=200, missing=None, counter_start=0, time_origin=0.0, **sidecar):
     """A CSV plus sidecar in record.py's format. missing holds sample counter
     ranges that were never recorded."""
     missing = set(missing or [])
@@ -95,7 +95,7 @@ def write_recording(tmp_path, n=200, missing=None, **sidecar):
     with open(csv_path, "w") as f:
         f.write("t,n,ch1,ch2\n")
         for k, i in enumerate(ns):
-            f.write(f"{i / FS:.3f},{i},{k * 0.5:.2f},{k * -0.5:.2f}\n")
+            f.write(f"{time_origin + i / FS:.6f},{counter_start + i},{k * 0.5:.2f},{k * -0.5:.2f}\n")
     meta = {
         "label": "rest",
         "subject": "sub-02",

@@ -27,7 +27,6 @@ import json
 import sys
 from pathlib import Path
 
-import numpy as np
 
 try:
     from neuroconv.basedatainterface import BaseDataInterface
@@ -37,7 +36,7 @@ except ImportError as exc:
     ) from exc
 
 from mission_3_nwb import add_recording, start_time
-from spectrum import load
+from recording import read_recording
 
 
 class PiEEGInterface(BaseDataInterface):
@@ -99,11 +98,10 @@ class PiEEGInterface(BaseDataInterface):
 
     def add_to_nwbfile(self, nwbfile, metadata: dict | None = None, **conversion_options) -> None:
         """Add the shield, its electrodes and the signal to the file being built."""
-        data_uv = np.column_stack(
-            [load(self.file_path, c) for c in range(1, self._n_channels + 1)])
-        add_recording(nwbfile, data_uv, self._meta, self.file_path, self._fs, self._n_channels)
+        recording = read_recording(self.file_path)
+        add_recording(nwbfile, recording, self.file_path)
         if self.verbose:
-            print(f"added {self._n_channels} channels of {len(data_uv)} samples from {self.file_path}")
+            print(f"added {self._n_channels} channels of {len(recording.data)} samples from {self.file_path}")
 
 
 def main() -> None:
