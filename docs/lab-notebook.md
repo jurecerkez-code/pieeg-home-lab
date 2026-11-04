@@ -20,7 +20,7 @@ Conventions: times are local (Europe/Berlin), subjects are pseudonyms (`sub-01` 
 
 What happened: blinks visible as _…_ µV spikes on channel 1; eye movements as steps; jaw clench as EMG bursts. Eyes closed for 30 s: _describe the alpha bump or its absence_.
 
-![alpha, eyes open vs closed](images/notebook/YYYY-MM-DD-alpha.png)
+Plot to add after the session: `images/notebook/YYYY-MM-DD-alpha.png` (eyes open vs closed).
 
 Notes: _anything unusual: cable movement, 50 Hz level, what was changed_.
 
@@ -46,7 +46,7 @@ Peak at _xx.x_ Hz (eyes closed), alpha power _x_ vs _y_ µV² open vs closed, fr
 
 ### Mission 4 · bare skin montage
 
-`--montage bare_skin`, recording `…`. Horizontal EOG (E3 − E4) plot: ![](images/notebook/….png). Blink rate: _n_ per minute.
+`--montage bare_skin`, recording `…`. Horizontal EOG (E3 − E4) plot: _add the saved plot after the session_. Blink rate: _n_ per minute.
 
 ### Mission 5 · datasheet
 
