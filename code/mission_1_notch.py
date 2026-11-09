@@ -1,7 +1,7 @@
 """
 MISSION 1: kill the 50 Hz hum.
 
-Every wall socket in Berlin runs at 50 Hz, and your body picks it up like an
+Every wall socket in Europe runs at 50 Hz, and your body picks it up like an
 antenna. In the raw signal it can be bigger than your brain waves.
 
 Your job: write remove_mains() so the 50 Hz peak disappears from the spectrum

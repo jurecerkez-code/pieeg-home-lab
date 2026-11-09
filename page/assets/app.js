@@ -47,7 +47,7 @@
 
   function hostName() {
     if (location.protocol === "http:" && location.hostname) return location.hostname;
-    return "tina.local";
+    return "raspberrypi.local";
   }
 
   function push(channels) {
@@ -273,7 +273,7 @@
     }
   }
 
-  /* ---------------- band power (for the demo readout) ---------------- */
+  /* ---------------- single-frequency amplitude estimates ---------------- */
 
   function goertzel(channel, freq) {
     var n = Math.min(filled, SR * 2);
@@ -289,36 +289,38 @@
       s1 = s0;
     }
     var power = (s1 * s1 + s2 * s2 - coeff * s1 * s2) / (n * n);
-    return Math.sqrt(Math.max(0, power));
+    return 2 * Math.sqrt(Math.max(0, power)); // peak amplitude of a sinusoid at this frequency
   }
 
   var demo = "none";             // none | eyes | math
-  var shown = { focus: 0, relax: 0 };
-  var focusEl = document.getElementById("score-focus");
-  var relaxEl = document.getElementById("score-relax");
+  var shown = { alpha: 0, beta: 0 };
+  var alphaEl = document.getElementById("amplitude-alpha");
+  var betaEl = document.getElementById("amplitude-beta");
 
   function updateScores() {
     var target;
-    if (demo === "eyes") target = { focus: 0.14, relax: 0.72 };
-    else if (demo === "math") target = { focus: 0.70, relax: 0.12 };
+    // Illustrative values only; the caption remains marked as simulated.
+    if (demo === "eyes") target = { alpha: 20, beta: 3 };
+    else if (demo === "math") target = { alpha: 3, beta: 12 };
     else {
       // real readout from CH1 (Fp1), the one channel of the start montage
       var alpha = goertzel(0, 10);
       var beta = goertzel(0, 20);
       target = {
-        focus: Math.max(0.02, Math.min(0.95, beta / 6)),
-        relax: Math.max(0.02, Math.min(0.95, alpha / 12))
+        alpha: alpha,
+        beta: beta
       };
     }
-    shown.focus += (target.focus - shown.focus) * 0.08;
-    shown.relax += (target.relax - shown.relax) * 0.08;
-    focusEl.textContent = shown.focus.toFixed(2);
-    relaxEl.textContent = shown.relax.toFixed(2);
+    shown.alpha += (target.alpha - shown.alpha) * 0.08;
+    shown.beta += (target.beta - shown.beta) * 0.08;
+    alphaEl.textContent = shown.alpha.toFixed(1);
+    betaEl.textContent = shown.beta.toFixed(1);
 
     if (demoNote) {
       demoNote.textContent = demo === "none"
-        ? (mode === "live" ? "Computed from your live signal right now." : "Computed from the sample.")
-        : "Simulated response, to show the shape of the effect. Release to go back to the real readout.";
+        ? (mode === "live" ? "Live signal · amplitude estimates in PiEEG Server’s µV; calibration not verified."
+                          : "Simulated sample · these values do not come from a person wearing the kit.")
+        : "Simulated example · click the selected button again to return to the signal readout.";
     }
   }
 
@@ -333,20 +335,14 @@
       math.setAttribute("aria-pressed", String(demo === "math"));
     }
 
-    eyes.addEventListener("pointerdown", function () { set("eyes", true); });
-    math.addEventListener("pointerdown", function () { set("math", true); });
-    ["pointerup", "pointerleave", "pointercancel"].forEach(function (ev) {
-      eyes.addEventListener(ev, function () { set("eyes", false); });
-      math.addEventListener(ev, function () { set("math", false); });
-    });
-    // keyboard and click fallback: toggle
+    // Native click supports mouse, touch and keyboard with one unambiguous toggle.
     eyes.addEventListener("click", function () { set("eyes", demo !== "eyes"); });
     math.addEventListener("click", function () { set("math", demo !== "math"); });
   }
 
   /* ---------------- checklist ---------------- */
 
-  var KIT_KEY = "tina-kit-v2";
+  var KIT_KEY = "pieeg-kit-v2";
 
   function readKit() {
     try { return JSON.parse(localStorage.getItem(KIT_KEY) || "{}"); }

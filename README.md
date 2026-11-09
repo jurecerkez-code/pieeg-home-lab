@@ -17,6 +17,13 @@
 
 ---
 
+## Start here
+
+1. **Set up:** follow [the first test](docs/first-test.md).
+2. **Record:** use the [Python setup and recording commands](#code).
+3. **Check:** read the completion message. If time is missing, repeat the recording before comparing results.
+4. **Explore:** compare spectra or try a [mission](docs/missions.md). “No clear alpha rhythm detected” is a valid result.
+
 ## Contents
 
 1. [Overview](#overview)
@@ -90,7 +97,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 
 ## Step by step
 
-The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)), and the Pi answers to `tina.local`. "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
+The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)), and the Pi answers to `raspberrypi.local`. "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
 
 ### Step 1 · Mount the board
 
@@ -152,10 +159,10 @@ Wait about a minute while the Pi boots and joins the WiFi.
 **Connect to the Pi from the laptop.** Open a terminal (on a Mac: <kbd>⌘</kbd> + <kbd>Space</kbd>, type `Terminal`, Enter; on Windows: PowerShell) and type:
 
 ```bash
-ssh jure@tina.local
+ssh <username>@raspberrypi.local
 ```
 
-The first time, type `yes` to trust the Pi, then the Pi's password (nothing appears while you type it). The Pi answers with its welcome: whether the server, the page and the power are OK, the links, a session in four steps and the commands you need on the Pi. `exit` leaves. The same links work without the terminal: **[http://tina.local:8080](http://tina.local:8080)** is the kit's own page (manual, checklist, live signal), and the dashboard is step 6.
+Replace `<username>` with the user chosen when the card was flashed. The first time, type `yes` to trust the Pi, then the Pi's password (nothing appears while you type it). The Pi answers with its welcome: whether the server, the page and the power are OK, the links, a session in four steps and the commands you need on the Pi. `exit` leaves. The same links work without the terminal: **[http://raspberrypi.local:8080](http://raspberrypi.local:8080)** is the kit's own page (manual, checklist, live signal), and the dashboard is step 6.
 
 <img src="deploy/welcome-preview.png" alt="The Pi's SSH welcome: the PiEEG Home Lab title, the Athena bust and a real EEG trace in the terminal, then live status, links, a session in four steps and commands" width="640">
 
@@ -173,7 +180,7 @@ Checks the whole chain in one go: WiFi, Pi, PiEEG Server, 8 channel mode, sample
 
 The dashboard is the kit's graphical view. The Pi itself runs without a desktop (Raspberry Pi OS Lite, to leave its 1 GB of RAM to the server), so everything visual happens in the laptop's browser.
 
-On the laptop (charger unplugged, same WiFi) open **[http://tina.local:1617](http://tina.local:1617)** in Safari or Chrome and click **Connect**. Then:
+On the laptop (charger unplugged, same WiFi) open **[http://raspberrypi.local:1617](http://raspberrypi.local:1617)** in Safari or Chrome and click **Connect**. Then:
 
 1. Check it shows **8 channels** (16 means the server isn't in PiEEG-8 mode, see [troubleshooting](docs/troubleshooting.md#pieeg-server)).
 2. **Bandpass** is already on: PiEEG Server starts with 1 to 40 Hz, and the button shows that range. Leave it. Inside its menu, the **Enabled** button shows the current state, and clicking it switches the filter off.
@@ -242,13 +249,15 @@ py -m venv .venv
 .venv\Scripts\python check_setup.py
 ```
 
-Start every script with `.venv\Scripts\python` instead of `python`. `tina.local` works on Windows 10 and 11.
+Start every script with `.venv\Scripts\python` instead of `python`. `raspberrypi.local` works on Windows 10 and 11.
 </details>
 
 > [!IMPORTANT]
 > The first time Python connects to the Pi, macOS asks **"Allow Python to find devices on your local network?"** Click **Allow**. Missed it? System Settings → Privacy & Security → Local Network → turn on Terminal.
 
 ### Run
+
+Run these commands from the repository’s `code` folder, after the setup above.
 
 ```bash
 source .venv/bin/activate
@@ -258,7 +267,9 @@ python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
-`record.py` always records the raw signal: it switches PiEEG Server's filters off while it records and back on afterwards. It writes every sample to disk as it arrives, reconnects by itself if the WiFi drops, and notes every gap and event in the `.json` sidecar. `python record.py --help` lists the options (electrode positions, notes, more).
+`record.py` requests raw data by default: it switches PiEEG Server's filters off while it records and back on afterwards. It writes every sample to disk as it arrives, reconnects by itself if the WiFi drops, and notes every gap and event in the `.json` sidecar. `python record.py --help` lists the options (electrode positions, notes, more).
+
+An incomplete recording prints how much requested time was not saved. The JSON sidecar records the reason. `spectrum.py` analyzes continuous sections separately and excludes marked uncertain filter ranges; it does not automatically remove blinks or muscle activity. A candidate peak needs visual checking.
 
 ### Without hardware
 
@@ -279,7 +290,7 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | Script | Purpose |
 |---|---|
 | [`check_setup.py`](code/check_setup.py) | Checks laptop, WiFi, Pi, PiEEG Server and board in one go, names the first broken link |
-| [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://tina.local:1616`), reconnects by itself |
+| [`eeg_stream.py`](code/eeg_stream.py) | Client for the PiEEG Server WebSocket stream (`ws://raspberrypi.local:1616`), reconnects by itself |
 | [`live_view.py`](code/live_view.py) | Live bandpass filtered traces and a Welch spectrum |
 | [`record.py`](code/record.py) | Raw recording to CSV with a JSON metadata sidecar |
 | [`spectrum.py`](code/spectrum.py) | Power spectrum, alpha peak frequency and alpha power |
@@ -287,13 +298,13 @@ python live_view.py --host localhost   # Terminal tab 2 (⌘T)
 | [`self_test.py`](code/self_test.py) | Board noise test (inputs shorted), PiEEG's official hardware check |
 | [`simulate.py`](code/simulate.py) | Simulated PiEEG Server: same stream, same filters, answers the self test |
 | [`mission_1_notch.py`](code/mission_1_notch.py) | Mission 1 with automatic PASS/FAIL check |
-| [`mission_3_nwb.py`](code/mission_3_nwb.py) | Mission 3 skeleton: CSV → NWB |
+| [`mission_3_nwb.py`](code/mission_3_nwb.py) | CSV → NWB, preserving sample times and metadata |
 
 Stream format, CSV columns and sidecar fields: [docs/how-it-works.md](docs/how-it-works.md#data-formats-in-this-repo).
 
 ### Tests
 
-`tests/` runs every script against the simulator: raw recordings, filters switched back on, nothing lost when the WiFi drops or the server restarts. GitHub runs them on every push (`.github/workflows/tests.yml`). Locally, from the repository root:
+`tests/` runs every script against the simulator: raw recordings, filters switched back on, missing samples reported when WiFi drops or the server restarts. GitHub runs them on every push (`.github/workflows/tests.yml`). Locally, from the repository root:
 
 ```bash
 pip install pytest
@@ -310,7 +321,7 @@ Besides the scripts, the suite checks that the documents agree with each other: 
 |---|---|---|
 | 0 | **Real data first** | Your detector finds 10 chews and 10 blinks in PiEEG's example file |
 | 1 | **Kill the 50 Hz hum** | `mission_1_notch.py` prints PASS twice on PiEEG's `example_dry.csv` |
-| 2 | **Find your alpha peak** | Individual alpha frequency to 0.5 Hz, eyes open vs closed |
+| 2 | **Find your alpha peak** | Compare eyes open vs closed; report a candidate peak or no clear rhythm |
 | 3 | **Make it NWB** | Your recording passes `nwbinspector` |
 | 4 | **More channels on bare skin** | 4 channels incl. eye corners, a left/right eye movement plot |
 | 5 | **Read the datasheet** | Every step from 3 raw bytes to one µV value explained |

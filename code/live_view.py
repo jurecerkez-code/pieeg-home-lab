@@ -1,7 +1,7 @@
 """
 Live view of the EEG on your laptop, with a running spectrum.
 
-    python live_view.py                      # real PiEEG on tina.local
+    python live_view.py                      # real PiEEG on raspberrypi.local
     python live_view.py --host localhost     # together with simulate.py
     python live_view.py --channels 1 2 3     # choose channels 1 to 8 (default: 1 2)
 
@@ -45,7 +45,7 @@ def check_channels(channels):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--host", default="tina.local")
+    p.add_argument("--host", default="raspberrypi.local")
     p.add_argument("--port", type=int, default=DEFAULT_PORT)
     p.add_argument("--channels", type=int, nargs="+", default=[1, 2])
     p.add_argument("--raw", action="store_true", help="show the signal as it arrives, no laptop side filter")

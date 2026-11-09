@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tina.local · PiEEG Home Lab</title>
+<title>PiEEG Home Lab</title>
 <meta name="description" content="The PiEEG Home Lab page served by the Pi itself: manual, spec sheet and the live EEG signal in one.">
 <link rel="icon" href="assets/favicon.svg?v=px1" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=px1" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=px1">
 <meta name="theme-color" content="#0b0d33">
-<link rel="stylesheet" href="assets/style.css?v=3d3b5dcf">
+<link rel="stylesheet" href="assets/style.css?v=635259d5">
 </head>
 <body>
 <div class="wrap">
@@ -20,14 +20,14 @@
     <h1 class="title">PiEEG<br>Home Lab</h1>
     <p class="specline">8 CHANNEL EEG · RASPBERRY PI 3 · ADS1299 · 24 BIT · 250 HZ</p>
     <div class="chips" role="group" aria-label="Ways in">
-      <button type="button" aria-pressed="true" data-cmd="ssh jure@tina.local"
+      <button type="button" aria-pressed="true" data-cmd="ssh &lt;username&gt;@raspberrypi.local"
         data-note="On your laptop: open a terminal, paste this, press Enter.">TERMINAL</button>
-      <button type="button" aria-pressed="false" data-cmd="http://tina.local:1617"
+      <button type="button" aria-pressed="false" data-cmd="http://raspberrypi.local:1617"
         data-note="The dashboard, in any browser on the same WiFi. Press Connect.">DASHBOARD</button>
       <button type="button" aria-pressed="false" data-cmd="python code/live_view.py"
         data-note="From the pieeg-home-lab repo on your laptop, for your own analysis.">PYTHON</button>
     </div>
-    <div class="cmd prompt"><button class="copy" type="button">Copy</button><pre id="hero-cmd">ssh jure@tina.local</pre></div>
+    <div class="cmd prompt"><button class="copy" type="button">Copy</button><pre id="hero-cmd">ssh &lt;username&gt;@raspberrypi.local</pre></div>
     <p class="prompt-note" id="hero-note">On your laptop: open a terminal, paste this, press Enter.</p>
   </div>
   <img class="athena" src="assets/svg/athena.svg" width="340" height="460"
@@ -56,11 +56,11 @@
     <li>Open <b>Terminal</b>: press <kbd>⌘</kbd> + <kbd>Space</kbd>, type <code>Terminal</code>, press Enter.</li>
     <li>Type this and press Enter:</li>
   </ol>
-  <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@tina.local</pre></div>
+  <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh &lt;username&gt;@raspberrypi.local</pre></div>
   <p class="expect">The first time it asks whether to trust the Pi: type <b>yes</b>. Then it asks for the Pi's
     password; nothing appears while you type it, that is normal. You land in your
     lab's welcome, with the links, a session in four steps and the commands.</p>
-  <p class="caption">To leave, type <code>exit</code>. If <code>tina.local</code> does not answer,
+  <p class="caption">To leave, type <code>exit</code>. If <code>raspberrypi.local</code> does not answer,
     use the address the welcome shows, or the one in the router's device list.</p>
 </section>
 
@@ -106,31 +106,31 @@
   <div class="cards">
 
     <details class="card" open>
-      <summary><span class="num">01</span><span class="name">Focus and relaxation</span>
+      <summary><span class="num">01</span><span class="name">Signal rhythms</span>
         <span class="one">EEG, Fp1 against M1</span></summary>
       <div class="body">
         <figure class="card-figure">
           <img src="assets/svg/head-map.svg" width="600" height="313"
             alt="Adult head seen from the front left: E1 sticker on the left forehead at Fp1, REF on the bone behind the left ear, BIAS behind the right ear">
         </figure>
-        <p>Alpha grows at the back of the head when the eyes close. Beta rises when you work something
-          out. This page measures both on channel 1 and shows them as a focus number and a relaxation
-          number: a rough readout, not a validated score, but enough to see the effect while sitting
-          still and doing nothing visible.</p>
+        <p>These numbers estimate how strong the 10 Hz and 20 Hz components are on channel 1.
+          They do not measure focus or relaxation. Movement and electrical noise can also raise them.
+          A rhythm at a different frequency may not show up in these two numbers.</p>
         <p class="muted">Your start montage: E1 on the left forehead (Fp1), REF on the bone behind the left
           ear (M1), BIAS behind the right ear (M2). Alpha is strongest at the back of the head (O1, O2), but
-          that is under hair, where stickers do not hold. From the forehead it is weaker and still shows when
-          you close your eyes.</p>
+          that is under hair, where stickers do not hold. It is weaker at the forehead and may be hard
+          to see. Closing your eyes sometimes makes it clearer.</p>
         <div class="demo-row">
-          <button class="demo-btn" id="demo-eyes" aria-pressed="false">Close eyes</button>
-          <button class="demo-btn" id="demo-math" aria-pressed="false">Do mental math</button>
+          <button class="demo-btn" id="demo-eyes" aria-pressed="false">Example: stronger 10 Hz</button>
+          <button class="demo-btn" id="demo-math" aria-pressed="false">Example: stronger 20 Hz</button>
         </div>
         <div class="scores">
-          <div class="score"><div class="k">Focus</div><div class="v" id="score-focus">0.00</div></div>
-          <div class="score"><div class="k">Relaxation</div><div class="v" id="score-relax">0.00</div></div>
+          <div class="score"><div class="k">10 Hz amplitude · µV*</div><div class="v" id="amplitude-alpha">0.0</div></div>
+          <div class="score"><div class="k">20 Hz amplitude · µV*</div><div class="v" id="amplitude-beta">0.0</div></div>
         </div>
-        <p class="caption" id="demo-note">Simulated, to show the shape of the effect. Real recordings are
-          noisier, and both scores sit near 0.1 to 0.25 when you are just sitting there.</p>
+        <p class="caption">*PiEEG Server’s amplitude scale has not been independently verified.
+          These are estimates at two frequencies, not total alpha or beta band power.</p>
+        <p class="caption" id="demo-note">Waiting for the signal. Examples are clearly marked as simulated.</p>
       </div>
     </details>
 
@@ -174,7 +174,7 @@
           or phone on the same network, press Connect and watch all eight channels.</p>
         <p class="muted">That is a different page from this one: the real dashboard with filters,
           recording and integrations.</p>
-        <div class="cmd"><button class="copy" type="button">Copy</button><pre>http://tina.local:1617</pre></div>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>http://raspberrypi.local:1617</pre></div>
         <p class="caption">The session lobby has the server address already filled in. When it opens it
           says no signal yet, press Connect.</p>
       </div>
@@ -226,16 +226,17 @@
     <li><b>Set the settings before writing.</b> In Imager choose the Pi model, then <b>Raspberry Pi OS
       Lite (64-bit)</b> under "Raspberry Pi OS (other)": no desktop, so the Pi's 1 GB of memory goes to
       the server. Then open the customisation dialog and set the
-      hostname to <code>tina</code>, enable SSH with a password, set the username, set the WiFi
-      name and password with country DE, and set the timezone to Europe/Berlin. Imager writes these as
+      hostname to <code>raspberrypi</code>, enable SSH with a password, set the username, set the WiFi
+      name and password with your
+      country, and set your timezone. Imager writes these as
       configuration files on the card. Without them the Pi needs a monitor and a keyboard to set up.</li>
     <li><b>Write, eject, insert, power.</b> On this Pi 3 a normal boot reaches the login prompt in about a
       minute (measured: 63 seconds). The first boot is longer because it resizes the card and may reboot
       once on its own, so give it three minutes. Do not pull the power during it.</li>
-    <li><b>Find it.</b> Open <code>http://tina.local</code> in a browser, or run
-      <code>ping tina.local</code>. If neither answers, open the router's admin page and look for a
-      device called <code>tina</code>.</li>
-    <li><b>Log in.</b> <code>ssh jure@tina.local</code>. Accept the fingerprint with
+    <li><b>Find it.</b> Open <code>http://raspberrypi.local</code> in a browser, or run
+      <code>ping raspberrypi.local</code>. If neither answers, open the router's admin page and look for a
+      device called <code>raspberrypi</code>.</li>
+    <li><b>Log in.</b> <code>ssh &lt;username&gt;@raspberrypi.local</code>. Accept the fingerprint with
       <code>yes</code>. The password does not appear while you type it, that is normal.</li>
   </ol>
 
@@ -248,7 +249,7 @@
 
   <div class="trap">
     <span class="label">The address can change</span>
-    <p><code>tina.local</code> is a name resolved over the network, not a fixed address. When it
+    <p><code>raspberrypi.local</code> is a name resolved over the network, not a fixed address. When it
       stops answering, the router page is the answer. A reinstall is not.</p>
   </div>
 </section>
@@ -338,7 +339,7 @@
         keeps the commands here identical to it.</p>
 
       <h3>4.1 Open a terminal on the Pi</h3>
-      <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh jure@tina.local</pre></div>
+      <div class="cmd"><button class="copy" type="button">Copy</button><pre>ssh &lt;username&gt;@raspberrypi.local</pre></div>
 
       <h3>4.2 Update the system</h3>
       <div class="cmd"><button class="copy" type="button">Copy</button><pre>sudo apt update &amp;&amp; sudo apt full-upgrade -y</pre></div>
@@ -382,7 +383,7 @@ grep -E '^(dtparam=spi=on|core_freq_fixed=1)' /boot/firmware/config.txt</pre></d
 grep ExecStart /etc/systemd/system/pieeg-server.service
 sudo systemctl daemon-reload
 sudo systemctl restart pieeg-server</pre></div>
-      <p class="expect">Expect <b>ExecStart=/home/jure/PiEEG-server/.venv/bin/pieeg-server --device pieeg8
+      <p class="expect">Expect <b>ExecStart=/home/&lt;username&gt;/PiEEG-server/.venv/bin/pieeg-server --device pieeg8
         --gpio-chip /dev/gpiochip0</b>. The device flag once, the chip flag present.</p>
 
       <h3>4.8 Prove it</h3>
@@ -444,7 +445,7 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
       <p class="expect">From <code>pieeg-home-lab/code</code> with the venv active. Every line <b>[ok]</b>
         means WiFi, Pi, server, 8 channel mode and board all work; the first <b>[FAIL]</b> names the broken
         link. Or on the Pi itself: <code>pieeg-server doctor</code>, expect <b>All checks passed</b>.</p>
-      <p class="expect">Then open <code>http://tina.local:1617</code> and press Connect. It should show
+      <p class="expect">Then open <code>http://raspberrypi.local:1617</code> and press Connect. It should show
         8 channels. Sixteen means the service lacks <code>--device pieeg8</code> (step 4.7).</p>
       <p class="caption">To run the server by hand, for example with <code>--mock</code> to see the dashboard
         move without a board, stop the service first: <code>sudo systemctl stop pieeg-server</code>, then
@@ -495,7 +496,7 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
       moving cable is noise.</li>
     <li>Move away from the router and the phone, and put the phone in airplane mode.</li>
     <li>Sit still for the first minute. Blinks are signal too, they belong to the recording.</li>
-    <li>Switch the notch to 50 Hz. It ships defaulted to 60, which is the American mains, and Berlin hum
+    <li>Switch the notch to 50 Hz. It ships defaulted to 60, which is the American mains, and European hum
       sits at 50.</li>
     <li>Leave the 1 to 40 Hz band pass on for watching. It is on when the server starts.
       <code>record.py</code> records raw regardless, you filter later.</li>
@@ -514,7 +515,7 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
       <tr><td>Badge says SAMPLE, not LIVE</td><td>This page comes from the Pi, so the Pi is reachable, but PiEEG Server on port 1616 is not answering, or it just restarted</td><td>Wait: the page tries again by itself every few seconds. Still SAMPLE after a minute: <code>systemctl status pieeg-server</code></td></tr>
       <tr><td>Badge says connected, no data</td><td>The socket is open but no samples arrive, usually because no shield is mounted</td><td>Fit the PiEEG-8, or start the server with <code>--mock</code> to watch the page move</td></tr>
       <tr><td>Port 1617 will not load</td><td>The server is not running</td><td><code>systemctl status pieeg-server</code>, then restart it</td></tr>
-      <tr><td><code>tina.local</code> not found</td><td>The name is not resolving, or the Pi has no address</td><td>Find the IP in the router and use the IP</td></tr>
+      <tr><td><code>raspberrypi.local</code> not found</td><td>The name is not resolving, or the Pi has no address</td><td>Find the IP in the router and use the IP</td></tr>
       <tr><td>Traces flat, straight line</td><td>Sticker off, wrong pin, or the board off by one</td><td>Reseat, then recheck the pin table</td></tr>
       <tr><td>Thick hum on every channel</td><td>Mains pickup</td><td>Everything on the battery, away from the router, notch at 50 Hz</td></tr>
       <tr><td>Spikes on one channel</td><td>That sticker has bad contact, or a joint is loose</td><td>Alcohol, a fresh sticker, the clip on the snap, every joint pushed home</td></tr>
@@ -560,11 +561,9 @@ curl -s http://127.0.0.1:1616/api/info</pre></div>
     body, the Pi from its official drawing, the PiEEG-8 measured on its photo. The bust and the trace at
     the top are the repo's own hero. Guide and code:
     <a href="https://github.com/jurecerkez-code/pieeg-home-lab">github.com/jurecerkez-code/pieeg-home-lab</a>.</p>
-  <p class="dedication" style="margin-top:calc(var(--step)*1.5);font-style:italic;">Volim te i želim da
-    dobiješ ovaj posao i da odeš na doktorat, nadam se da će ti ovo pomoći &lt;3</p>
 </footer>
 
 </div>
-<script src="assets/app.js?v=590def4e"></script>
+<script src="assets/app.js?v=18da9329"></script>
 </body>
 </html>

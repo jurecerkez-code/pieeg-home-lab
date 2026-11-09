@@ -15,10 +15,10 @@ What was checked on this kit's own hardware, and what came out. Part 1 is done. 
 | Service | enabled and running, `--device pieeg8 --gpio-chip /dev/gpiochip0` |
 | SPI | `dtparam=spi=on` and `core_freq_fixed=1` in `/boot/firmware/config.txt`, `/dev/spidev0.0` present |
 | `pieeg-server doctor` | every check passed (its two port warnings only mean the service already runs) |
-| Permissions | user `jure` in the groups `spi` and `gpio` |
+| Permissions | user `<username>` in the groups `spi` and `gpio` |
 | SSH | password and key login work |
-| WiFi | country DE, 2.4 GHz (channel 11), signal 57 of 100 |
-| Clock | Europe/Berlin, synchronised over the network (`record.py` uses the Pi's clock) |
+| WiFi | 2.4 GHz, connected |
+| Clock | local time zone, synchronised over the network (`record.py` uses the Pi's clock) |
 | Storage | 14 GB, 3.3 GB used, no SD card errors since boot |
 | `check_setup.py` | every check `[ok]` except `Samples`, as expected without the board |
 | `record.py` | switched the real server's filters off and back on (`"filter": true` again afterwards), clear message that no samples arrived |
@@ -37,7 +37,7 @@ To do once the board arrives. Pi off, board on all 40 pins, powerbank with the k
 
 | # | Check | Command | Pass when |
 |---|---|---|---|
-| 1 | Power | `ssh jure@tina.local vcgencmd get_throttled` (a minute after boot) | `throttled=0x0` |
+| 1 | Power | `ssh <username>@raspberrypi.local vcgencmd get_throttled` (a minute after boot) | `throttled=0x0` |
 | 2 | Whole chain and board noise | `python check_setup.py --noise-test --markdown ../docs/validation-board.md` | every line `[ok]` |
 | 3 | First test with electrodes | [first test](first-test.md) | blinks show as big spikes on channel 1 |
 | 4 | Alpha | `python record.py --seconds 60 --label eyes_open`, then `--label eyes_closed`, then `python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv --save ../docs/images/validation-alpha.png` | eyes closed shows more power at 8 to 13 Hz |

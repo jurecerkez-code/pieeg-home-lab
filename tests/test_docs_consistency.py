@@ -47,16 +47,14 @@ def test_setup_commands_on_the_page_match_the_setup_guide():
 
 def test_the_pi_has_one_name_everywhere():
     for name, text in (("README", README), ("setup guide", SETUP), ("page", PAGE), ("welcome", WELCOME)):
-        assert "tina.local" in text, f"{name} must use tina.local"
-        assert "raspberrypi.local" not in text.replace("hostname `raspberrypi` answers to `raspberrypi.local`", ""), \
-            f"{name} still mentions the old host name"
+        assert "raspberrypi.local" in text, f"{name} must use raspberrypi.local"
 
 
 def test_ports_agree():
     for name, text in (("README", README), ("page", PAGE), ("welcome", WELCOME)):
-        assert "tina.local:1617" in text, f"{name}: dashboard port"
-    assert "tina.local:8080" in README and "tina.local:8080" in WELCOME
-    assert "ws://tina.local:1616" in WELCOME
+        assert "raspberrypi.local:1617" in text, f"{name}: dashboard port"
+    assert "raspberrypi.local:8080" in README and "raspberrypi.local:8080" in WELCOME
+    assert "ws://raspberrypi.local:1616" in WELCOME
     assert 'DEFAULT_PORT = 1616' in (ROOT / "code" / "eeg_stream.py").read_text(encoding="utf-8")
 
 

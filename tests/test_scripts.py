@@ -73,7 +73,8 @@ def test_mission_1_runs_on_a_raw_recording(recording, tmp_path):
     r = script("mission_1_notch.py", recording, cwd=tmp_path)
     assert r.returncode == 0, r.stdout + r.stderr
     assert "FAIL hum peak" in r.stdout             # remove_mains() is still the empty starter
-    assert "Note:" not in r.stdout                 # raw data, nothing to warn about
+    assert "WITH PiEEG Server filters" not in r.stdout  # raw, but the calibration caveat remains
+    assert "As converted by PiEEG Server" in r.stdout
 
 
 def test_mission_3_converts_the_recording(recording, tmp_path):

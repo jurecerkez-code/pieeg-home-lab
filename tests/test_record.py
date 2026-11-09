@@ -5,12 +5,75 @@ for every client, and it keeps one sample counter for all connections.
 """
 
 import csv
+import json
+import sys
 import time
 
 import numpy as np
 from scipy import signal
+import pytest
+import record
+from eeg_stream import Sample, ServerFilters
 
 from conftest import free_port, only_recording, script, talk
+
+
+@pytest.fixture
+def replay(monkeypatch, tmp_path):
+    """Feed deterministic source samples through the actual recorder main()."""
+    def run(samples, error=None):
+        class Stream:
+            url = "ws://localhost:1616"
+            filters_at_start = ServerFilters(False, False, 50.0)
+            server_info = {"sample_rate": 250, "channels": 1}
+            possibly_filtered, events = [], []
+            discarded = 0
+            samples_received = len(samples)
+            connected = True
+            last_error = None
+
+            def __init__(self, *args, **kwargs): self.error = error
+            def start(self): return self
+            def stop(self): pass
+            def wait_connected(self, timeout): return True
+            def channel_warning(self): return None
+            def get_new(self):
+                # Metadata must already exist even before a recording finishes.
+                initial = json.loads(next(tmp_path.glob("*.json")).read_text())
+                assert initial["complete"] is False and initial["recording_status"] == "in_progress"
+                return samples
+
+        monkeypatch.setattr(record, "EEGStream", Stream)
+        monkeypatch.setattr(sys, "argv", ["record.py", "--seconds", "10", "--out", str(tmp_path)])
+        record.main()
+        return only_recording(tmp_path)
+    return run
+
+
+def test_reconnection_after_deadline_reports_missing_tail(replay, capsys):
+    samples = [Sample(1000 + i / 250, 25000 + i, [0.0]) for i in range(2000)]
+    samples.append(Sample(1011, 27750, [0.0]))
+    _, meta = replay(samples)
+    assert meta["complete"] is False
+    assert meta["n_samples"] == 2000
+    assert meta["missing_samples"] == meta["unreceived_samples"] == 500
+    assert meta["unrecorded_duration_s"] == 2
+    assert "2 s of the requested 10 s were not saved" in capsys.readouterr().out
+
+
+def test_reader_failure_keeps_the_unfinished_tail_visible(replay):
+    _, meta = replay([Sample(1000 + i / 250, 25000 + i, [0.0]) for i in range(2000)],
+                     error="test connection failed")
+    assert meta["complete"] is False
+    assert meta["unreceived_samples"] == 500
+    assert meta["missing_samples"] == 0  # no later counter confirmed transport loss
+    assert meta["duration_s"] == meta["elapsed_duration_s"] == 8
+
+
+def test_complete_replay_has_no_missing_time(replay):
+    _, meta = replay([Sample(1000 + i / 250, 25000 + i, [0.0]) for i in range(2500)])
+    assert meta["complete"] is True
+    assert meta["unrecorded_duration_s"] == 0
 
 
 def read_csv(path):
@@ -140,10 +203,10 @@ def test_subject_age_and_sex_reach_the_sidecar(sim, tmp_path):
     """When record.py is given the subject metadata, the sidecar carries it, so the NWB file
     can hold a real age and sex instead of the unknown form."""
     r = script("record.py", "--host", "127.0.0.1", "--port", sim, "--seconds", 2,
-               "--age", "P29Y", "--sex", "F", "--out", tmp_path, cwd=tmp_path)
+               "--age", "P40Y", "--sex", "F", "--out", tmp_path, cwd=tmp_path)
     assert r.returncode == 0, r.stdout + r.stderr
     _, meta = only_recording(tmp_path)
-    assert meta["subject_age"] == "P29Y"
+    assert meta["subject_age"] == "P40Y"
     assert meta["subject_sex"] == "F"
 
 

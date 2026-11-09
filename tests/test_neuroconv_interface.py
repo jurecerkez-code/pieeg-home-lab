@@ -24,10 +24,10 @@ def test_the_source_is_a_recording_csv():
 
 
 def test_metadata_reports_what_the_sidecar_knows(tmp_path):
-    csv_path = write_recording(tmp_path, subject_age="P29Y", subject_sex="F", label="rest")
+    csv_path = write_recording(tmp_path, subject_age="P40Y", subject_sex="F", label="rest")
     metadata = PiEEGInterface(str(csv_path)).get_metadata()
     assert metadata["Subject"]["subject_id"] == "sub-02"
-    assert metadata["Subject"]["age"] == "P29Y"
+    assert metadata["Subject"]["age"] == "P40Y"
     assert metadata["Subject"]["sex"] == "F"
     assert metadata["NWBFile"]["session_id"] == "rest"
     assert metadata["NWBFile"]["session_start_time"] == "2026-11-01T10:00:00+01:00"
@@ -48,13 +48,14 @@ def test_conversion_keeps_the_recorded_numbers(tmp_path):
         nwb = io.read()
         series = nwb.acquisition["eeg"]
         from_csv = np.column_stack([load(csv_path, c) for c in (1, 2)])
-        assert series.rate == FS
+        expected_times = np.r_[np.arange(30), np.arange(50, 200)] / FS
+        np.testing.assert_allclose(series.timestamps[:], expected_times)
         assert series.conversion == 1e-6        # microvolts stored, volts reported
         assert np.allclose(series.data[:] * series.conversion, from_csv * 1e-6)
         assert list(nwb.electrodes["location"]) == ["Fp1, left forehead", "Fp2, right forehead"]
         spans = list(zip(nwb.intervals["invalid_times"]["start_time"][:],
                          nwb.intervals["invalid_times"]["stop_time"][:]))
-        assert (30 / FS, 50 / FS) in spans       # the samples that never arrived are marked
+        np.testing.assert_allclose(spans, [(30 / FS, 50 / FS)])
 
 
 def test_a_recording_without_a_sidecar_is_refused(tmp_path):
@@ -65,7 +66,7 @@ def test_a_recording_without_a_sidecar_is_refused(tmp_path):
 
 
 def test_the_metadata_passes_neuroconvs_own_schema(tmp_path):
-    interface = PiEEGInterface(str(write_recording(tmp_path, subject_age="P29Y", subject_sex="F")))
+    interface = PiEEGInterface(str(write_recording(tmp_path, subject_age="P40Y", subject_sex="F")))
     interface.validate_metadata(metadata=interface.get_metadata())
 
 

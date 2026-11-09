@@ -1,5 +1,7 @@
 # Missions
 
+Run the Python commands below from the repository’s `code` folder with its environment active.
+
 Each mission is small enough for one evening. Do them in order or not, they're yours. Every mission works on your own recordings, on someone else's ([recording someone else](recording-someone-else.md)), or on PiEEG's published example data.
 
 ---
@@ -63,7 +65,9 @@ python record.py --seconds 60 --label eyes_closed
 python spectrum.py recordings/*eyes_open.csv recordings/*eyes_closed.csv
 ```
 
-Done when you know your peak to 0.5 Hz and the eyes closed power is clearly higher than eyes open.
+Done when you can compare the two recordings and report either a candidate alpha peak or “No clear alpha rhythm detected.” Repeat the comparison to see whether it holds up. The spectrum has 0.5 Hz bins; that is not a guarantee of 0.5 Hz accuracy.
+
+The candidate rule requires a local maximum with at least 3 dB prominence and 6 dB above a smooth background fitted outside the alpha band. It is a teaching heuristic, not a validated detector. Check the raw trace for movement, blinks and muscle activity before interpreting it. Sections shorter than 2 seconds and marked invalid intervals are excluded.
 
 Bonus: blocks of 30 s open / 30 s closed in one recording, then a spectrogram (`scipy.signal.spectrogram`) where you can see alpha switch on and off.
 
@@ -87,12 +91,9 @@ What it writes:
 - **Gaps and maybes marked.** A jump in the sample counter, and the ranges `possibly_filtered_samples` names, become invalid time intervals tagged with the reason. Anyone analysing the file can skip them.
 - **Unknown metadata is written as unknown.** NWB has no value for "not recorded": when the sidecar has no `subject_age` and `subject_sex`, the file gets `U` and an open age range `/`, and the inspector still passes. Real values from the sidecar are written instead.
 
-<details><summary>What is still open</summary>
+Also implemented: `record.py --age P40Y --sex F` carries subject metadata, and `code/neuroconv_interface.py` provides the optional NeuroConv interface. See [the NWB guide](road-to-dandi.md) for installation and use.
 
-- `PiEEGInterface` in the style of [NeuroConv](https://github.com/catalystneuro/neuroconv), so any PiEEG CSV converts with one call. That would make a nice GitHub link in an application.
-- `record.py` does not yet ask for the subject's age and sex, so every file carries the unknown form. One flag each would fix it.
-
-</details>
+Exports retain the source timestamps, sample counters and full sidecar in NWB scratch data. Calibration caveats also appear beside the signal. Gaps stay on the original timeline. If timestamps run backwards, conversion stops rather than inventing their order.
 
 ---
 

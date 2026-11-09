@@ -2,7 +2,7 @@
 
 What was measured with this kit, in order. One entry per session, one block per finished mission. Each entry names the recording it rests on (`code/recordings/` is not in the repository, the file names are the reference) and the sidecar's `complete` flag, so every number here can be traced to a file with a known montage and known filtering.
 
-Conventions: times are local (Europe/Berlin), subjects are pseudonyms (`sub-01` is the kit's owner), amplitudes are PiEEG Server's µV, which read against the ADS1299 datasheet are half the true value ([README note](../README.md#step-7--check-the-signal), [Mission 5](missions.md#mission-5-read-the-datasheet)). Plots go in `images/notebook/` as PNG at about 1600 px wide (`spectrum.py --save`, `dpi=130`), one per entry, so the folder stays small.
+Conventions: times are local, subjects are pseudonyms (`sub-01` is the kit's owner), amplitudes are PiEEG Server's µV, which read against the ADS1299 datasheet are half the true value ([README note](../README.md#step-7--check-the-signal), [Mission 5](missions.md#mission-5-read-the-datasheet)). Plots go in `images/notebook/` as PNG at about 1600 px wide (`spectrum.py --save`, `dpi=130`), one per entry, so the folder stays small.
 
 ---
 
@@ -20,7 +20,7 @@ Conventions: times are local (Europe/Berlin), subjects are pseudonyms (`sub-01` 
 
 What happened: blinks visible as _…_ µV spikes on channel 1; eye movements as steps; jaw clench as EMG bursts. Eyes closed for 30 s: _describe the alpha bump or its absence_.
 
-![alpha, eyes open vs closed](images/notebook/YYYY-MM-DD-alpha.png)
+Plot to add after the session: `images/notebook/YYYY-MM-DD-alpha.png` (eyes open vs closed).
 
 Notes: _anything unusual: cable movement, 50 Hz level, what was changed_.
 
@@ -46,7 +46,7 @@ Peak at _xx.x_ Hz (eyes closed), alpha power _x_ vs _y_ µV² open vs closed, fr
 
 ### Mission 4 · bare skin montage
 
-`--montage bare_skin`, recording `…`. Horizontal EOG (E3 − E4) plot: ![](images/notebook/….png). Blink rate: _n_ per minute.
+`--montage bare_skin`, recording `…`. Horizontal EOG (E3 − E4) plot: _add the saved plot after the session_. Blink rate: _n_ per minute.
 
 ### Mission 5 · datasheet
 

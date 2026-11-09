@@ -180,7 +180,7 @@ E1=$(c 63); REF=$(c 45); BIAS=$(c 141)
 
 dot() { if [ "$1" = active ]; then printf '%s●%s %s' "$OK" "$R" "$2"; else printf '%s●%s %s %s(%s)%s' "$BAD" "$R" "$2" "$DIM" "$1" "$R"; fi; }
 srv=$(systemctl is-active pieeg-server 2>/dev/null)
-page=$(systemctl is-active tina-page 2>/dev/null)
+page=$(systemctl is-active pieeg-page 2>/dev/null)
 thr=$(vcgencmd get_throttled 2>/dev/null | cut -d= -f2)
 # Anything but a number (an error message, "1 error_msg=...") would abort the whole banner
 # at the arithmetic below, so treat it as "unknown" instead.
@@ -203,14 +203,14 @@ cat <<'ART'
 
 ART
 cat <<TXT
-  ${B}${INK}Welcome to tina. This is your EEG lab.${R}
+  ${B}${INK}Welcome. This is your EEG lab.${R}
 
   $(dot "$srv" "PiEEG Server")    $(dot "$page" "your page")    $pw
 ${pwnote}
   ${GOLD}OPEN ON YOUR LAPTOP${R}
-    ${B}Your page${R}     http://tina.local:8080   ${DIM}manual, kit, live signal${R}
-    ${B}Dashboard${R}     http://tina.local:1617   ${DIM}press Connect${R}
-    ${B}Data${R}          ws://tina.local:1616     ${DIM}Python on your laptop${R}
+    ${B}Your page${R}     http://raspberrypi.local:8080   ${DIM}manual, kit, live signal${R}
+    ${B}Dashboard${R}     http://raspberrypi.local:1617   ${DIM}press Connect${R}
+    ${B}Data${R}          ws://raspberrypi.local:1616     ${DIM}Python on your laptop${R}
     ${DIM}If .local does not answer, use $IP instead.${R}
 
   ${GOLD}A SESSION IN FOUR STEPS${R}
@@ -255,7 +255,7 @@ def preview(path):
     d = Path(tempfile.mkdtemp())
     (d / "systemctl").write_text("#!/bin/sh\necho active\n")
     (d / "vcgencmd").write_text("#!/bin/sh\necho throttled=0x0\n")
-    (d / "hostname").write_text("#!/bin/sh\necho 192.168.0.209\n")
+    (d / "hostname").write_text("#!/bin/sh\necho 192.0.2.10\n")
     for f in d.iterdir():
         f.chmod(0o755)
     out = subprocess.run(["sh", str(OUT)], capture_output=True, text=True,

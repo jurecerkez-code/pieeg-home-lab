@@ -5,14 +5,14 @@ by [record.py](../code/record.py). Publishing one means turning those two into a
 that passes inspection, and putting that file in a DANDI dataset. This page is the map, and
 the honest list of what is still missing.
 
-This is the work [CatalystNeuro](https://catalystneuro.com/) does for research labs: take the
+This is everyday work in neuroscience data engineering: take the
 data as the equipment produced it, shape it into NWB, and publish it so it can be read in ten
 years.
 
 ## 1. Record
 
 ```bash
-python code/record.py --montage fp1 --seconds 60 --age P29Y --sex F --label rest
+python code/record.py --montage fp1 --seconds 60 --age P40Y --sex F --label rest
 ```
 
 The sidecar carries what the file needs later: the subject's pseudonym, the electrode
@@ -21,7 +21,7 @@ were lost or may have been filtered by another client.
 
 `--age` and `--sex` are optional, and record.py writes them to the sidecar only when they are
 given. Whatever is not asked for stays out. The conventions for age and sex are NWB's own:
-`P29Y` is an ISO 8601 duration, and a range with a blank bound (`P90Y/`) means open ended.
+`P40Y` is an ISO 8601 duration, and a range with a blank bound (`P90Y/`) means open ended.
 
 ## 2. Convert to NWB
 
@@ -62,7 +62,8 @@ So a working combination is:
 
 ```bash
 python3.12 -m venv .venv
-pip install "zarr==2.18.7" "hdmf_zarr==0.11.0" neuroconv numpy scipy nwbinspector
+source .venv/bin/activate
+python -m pip install "zarr==2.18.7" "hdmf_zarr==0.11.0" neuroconv numpy scipy nwbinspector
 ```
 
 The tests for the interface are skipped when neuroconv is not installed, so the kit itself

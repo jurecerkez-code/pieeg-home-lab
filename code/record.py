@@ -18,15 +18,16 @@ raw signal too. Don't touch the dashboard filters during a recording: record.py 
 every 5 seconds, switches them off again and marks the affected samples in the sidecar.
 --keep-server-filters records what the server sends instead, and the sidecar says so.
 
-Never loses data. Every sample is written to disk as it arrives. If the WiFi drops,
-record.py reconnects and carries on, and the sidecar lists the gap. The recording still
-ends at the planned time (by the Pi's clock), so a protocol like "60 s eyes closed" stays
-60 s. Ctrl+C or a lost connection still leaves a complete, readable file.
+Received samples are saved incrementally. If the WiFi drops, record.py reconnects;
+samples lost during the outage cannot be recovered. The recording still ends at the
+planned time (by the Pi's clock). A short recording is clearly marked incomplete.
+Ctrl+C or a lost connection leaves the received data and its metadata readable.
 """
 
 import argparse
 import csv
 import json
+import math
 import re
 import sys
 import time
@@ -70,7 +71,7 @@ AGE_PART = re.compile(r"P(?:\d+Y)?(?:\d+M)?(?:\d+W)?(?:\d+D)?")
 
 
 def valid_age(text: str) -> bool:
-    """ISO 8601 duration, or a range with a blank bound: P29Y, P23W, P90Y/."""
+    """ISO 8601 duration, or a range with a blank bound: P40Y, P23W, P90Y/."""
     left, sep, right = text.partition("/")
     parts = (left, right) if sep else (left,)
     return any(parts) and all(
@@ -101,9 +102,16 @@ def unique_path(folder: Path, stem: str) -> Path:
     return path
 
 
+def write_sidecar(path: Path, meta: dict):
+    """Replace the sidecar only after its new contents have been written."""
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    temporary.replace(path.with_suffix(".json"))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--host", default="tina.local")
+    p.add_argument("--host", default="raspberrypi.local")
     p.add_argument("--port", type=int, default=DEFAULT_PORT)
     p.add_argument("--seconds", type=float, default=60)
     p.add_argument("--label", default="session")
@@ -115,7 +123,7 @@ def main():
                    help="your own positions instead of a montage, e.g. \"ch1=Fp1,ch2=Fp2,ref=M1,bias=M2\"")
     p.add_argument("--notes", default="", help="free text for the sidecar, e.g. \"sneezed at 40 s\"")
     p.add_argument("--age",
-                   help="subject's age as an ISO 8601 duration (P29Y, P23W), or a range with a blank "
+                   help="subject's age as an ISO 8601 duration (P40Y, P23W), or a range with a blank "
                         "bound (P90Y/). Goes to the sidecar so NWB files carry a real age")
     p.add_argument("--sex", choices=["M", "F", "O", "U"],
                    help="subject's sex the way NWB spells it, written to the sidecar")
@@ -126,10 +134,10 @@ def main():
     p.add_argument("--wait-for-samples", type=float, default=NO_SAMPLE_TIMEOUT, help=argparse.SUPPRESS)
     p.add_argument("--out", default="recordings")
     a = p.parse_args()
-    if a.seconds <= 0:
-        p.error("--seconds must be more than 0")
+    if not math.isfinite(a.seconds) or a.seconds <= 0:
+        p.error("--seconds must be a finite number more than 0")
     if a.age and not valid_age(a.age):
-        p.error("--age should be an ISO 8601 duration like P29Y, or a range with a blank bound like P90Y/")
+        p.error("--age should be an ISO 8601 duration like P40Y, or a range with a blank bound like P90Y/")
     try:
         electrodes = parse_electrodes(a.electrodes) if a.electrodes else MONTAGES[a.montage]
     except ValueError as e:
@@ -162,7 +170,7 @@ def main():
 
     fs = stream.server_info.get("sample_rate")
     fs = fs if isinstance(fs, (int, float)) and not isinstance(fs, bool) and fs > 0 else SAMPLE_RATE
-    target = int(round(a.seconds * fs))
+    target = max(1, int(round(a.seconds * fs)))
     print(f"Recording {a.seconds:g} s to {csv_path} (Ctrl+C stops early and keeps the data)")
 
     n_rows, n_ch, first, last = 0, None, None, None
@@ -171,6 +179,22 @@ def main():
     t_connected, t_first, last_note, waiting_noted = time.monotonic(), None, 0.0, False
     f = csv_path.open("w", newline="")
     w = csv.writer(f)
+    # If the process is killed, this remains an explicitly unfinished recording.
+    initial_meta = {
+        "label": a.label, "subject": a.subject, "notes": a.notes,
+        "planned_duration_s": a.seconds, "sample_rate_hz": fs,
+        "n_channels": stream.server_info.get("channels"), "units": "microvolts",
+        "montage": montage, "electrodes": electrodes,
+        "complete": False, "recording_status": "in_progress",
+        "end_reason": "Final status not written; recording was interrupted or is still running",
+        "data_filtering": "not finalized; filter changes may have occurred",
+        "units_note": "Uncalibrated PiEEG Server values; amplitude scaling has not been independently verified.",
+    }
+    if a.age:
+        initial_meta["subject_age"] = a.age
+    if a.sex:
+        initial_meta["subject_sex"] = a.sex
+    write_sidecar(csv_path, initial_meta)
     try:
         while end_reason is None:
             for s in stream.get_new():
@@ -180,15 +204,26 @@ def main():
                 if len(s.uv) != n_ch:
                     skipped += 1   # the server changed its channel count mid recording
                     continue
-                if first is not None and s.t - first.t >= a.seconds:
-                    end_reason = "planned time span reached"   # by the Pi's clock, after a gap
-                    break
                 if last is not None:
+                    if not math.isfinite(s.t) or s.t <= last.t:
+                        end_reason = "sample timestamps did not move forward"
+                        break
                     step = s.n - last.n
                     if step > 1:
-                        gaps, missing = gaps + 1, missing + step - 1
+                        # A reconnection can arrive after the deadline. Count the
+                        # missing tail inside our window before stopping, not samples
+                        # belonging to the period after the requested recording.
+                        lost = min(step - 1, max(0, target - n_rows - missing))
+                        if lost:
+                            gaps, missing = gaps + 1, missing + lost
                     elif step <= 0:
                         resets += 1   # server restarted, its sample counter began again
+                if first is not None and s.t - first.t >= a.seconds:
+                    end_reason = "planned time span reached"
+                    break
+                if not math.isfinite(s.t):
+                    end_reason = "invalid sample timestamp"
+                    break
                 w.writerow([s.t, s.n, *s.uv])
                 n_rows += 1
                 first, last = first or s, s
@@ -226,6 +261,7 @@ def main():
 
     if n_rows == 0:
         csv_path.unlink(missing_ok=True)
+        csv_path.with_suffix(".json").unlink(missing_ok=True)
         if end_reason == "no samples received" and stream.samples_received == 0:
             raise SystemExit("Nothing saved: PiEEG Server answers, but no samples arrived. Is the PiEEG-8 "
                              "mounted and pressed onto all 40 pins? See docs/troubleshooting.md, "
@@ -242,15 +278,23 @@ def main():
     else:
         filtering = "none: record.py kept PiEEG Server's filters off, the file holds the unfiltered signal"
 
+    shortfall = max(0, target - n_rows)
+    complete = (end_reason.startswith("planned") and n_rows == target
+                and missing == 0 and resets == 0 and skipped == 0)
     meta = {
         "label": a.label,
         "subject": a.subject,
         "notes": a.notes,
-        "start_time": datetime.fromtimestamp(first.t).astimezone().isoformat(timespec="milliseconds"),
-        "end_time": datetime.fromtimestamp(last.t).astimezone().isoformat(timespec="milliseconds"),
+        "start_time": datetime.fromtimestamp(first.t).astimezone().isoformat(timespec="microseconds"),
+        "end_time": datetime.fromtimestamp(last.t).astimezone().isoformat(timespec="microseconds"),
         "time_note": "Pi's clock, written in the laptop's time zone with its UTC offset (NWB wants an offset)",
         "planned_duration_s": a.seconds,
         "duration_s": round(n_rows / fs, 3),
+        "elapsed_duration_s": round(last.t - first.t + 1 / fs, 6),
+        "expected_samples": target,
+        "unreceived_samples": shortfall,
+        "unrecorded_duration_s": round(shortfall / fs, 6),
+        "coverage_note": "Sample counts describe coverage of the server stream, not proof that the ADC acquired every sample. duration_s excludes gaps; elapsed_duration_s includes them. unreceived_samples also includes an unfinished tail or an early stop.",
         "sample_rate_hz": fs,
         "n_samples": n_rows,
         "n_channels": n_ch,
@@ -261,7 +305,8 @@ def main():
         "data_filtering": filtering,
         "server_filters_at_start": asdict(start_filters) if start_filters else None,
         "possibly_filtered_samples": stream.possibly_filtered,
-        "complete": end_reason.startswith("planned") and missing == 0 and resets == 0 and skipped == 0,
+        "complete": complete,
+        "recording_status": "complete" if complete else "incomplete",
         "end_reason": end_reason,
         "sample_number_gaps": gaps,
         "missing_samples": missing,
@@ -278,9 +323,15 @@ def main():
         meta["subject_age"] = a.age
     if a.sex:
         meta["subject_sex"] = a.sex
-    csv_path.with_suffix(".json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    write_sidecar(csv_path, meta)
 
     print(f"Saved {n_rows} samples ({n_rows / fs:.1f} s) to {csv_path}  [{end_reason}]")
+    if not complete:
+        if shortfall:
+            print(f"Incomplete recording: {shortfall / fs:g} s of the requested {a.seconds:g} s were not saved "
+                  f"({shortfall} samples). See the .json sidecar for the reason.")
+        else:
+            print("Incomplete recording: the sample counter or channel count changed. See the .json sidecar.")
     if gaps or resets:
         print(f"Note: {missing} samples missing in {gaps} gap(s), {resets} counter reset(s). "
               "Details in the .json sidecar under events.")

@@ -1,13 +1,13 @@
 [Unit]
-Description=Tina EEG page (static)
+Description=PiEEG Home Lab page (static)
 After=network.target
 
 [Service]
 Type=simple
-User=jure
-WorkingDirectory=/home/jure/tina-eeg
+User=pi
+WorkingDirectory=/home/pi/pieeg-page
 # Python's built in server, static files only.
-ExecStart=/usr/bin/python3 -m http.server 8080 --bind 0.0.0.0 --directory /home/jure/tina-eeg
+ExecStart=/usr/bin/python3 -m http.server 8080 --bind 0.0.0.0 --directory /home/pi/pieeg-page
 Restart=on-failure
 RestartSec=5
 # The server only reads files, so it gets no write access anywhere and no new privileges.
