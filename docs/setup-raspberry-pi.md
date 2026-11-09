@@ -1,8 +1,8 @@
 # Raspberry Pi setup
 
-The MicroSD in the box is ready: put it in the Pi, power it, and it streams. This page says what's on the card, how to reach the Pi from the laptop, how to check that everything works, and how to redo the setup from scratch.
+Set up the MicroSD once, put it in the Pi, power it, and it streams. This page says what ends up on the card, how to reach the Pi from the laptop, how to check that everything works, and how to redo the setup from scratch.
 
-## The card in the box
+## The finished card
 
 | | |
 |---|---|
@@ -57,7 +57,7 @@ vcgencmd get_throttled     # throttled=0x0 is good. 0x50005 means: under voltage
 
 ## Set it up from scratch
 
-How the card in the box was made, to redo it on a new card. About 45 to 90 minutes, most of it waiting: a Pi 3 is slow at updates and installs. This follows the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/) guide, adapted for a **Raspberry Pi 3 Model B** used **headless** (no monitor, controlled from the laptop over WiFi).
+How to make the card from an empty MicroSD. About 45 to 90 minutes, most of it waiting: a Pi 3 is slow at updates and installs. This follows the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/) guide, adapted for a **Raspberry Pi 3 Model B** used **headless** (no monitor, controlled from the laptop over WiFi).
 
 | | Official PiEEG guide | This kit |
 |---|---|---|

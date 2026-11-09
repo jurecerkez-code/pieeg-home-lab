@@ -29,7 +29,7 @@
 1. [Overview](#overview)
 2. [Equipment](#equipment)
 3. [Safety](#safety)
-4. [Step by step](#step-by-step): from the box to your first alpha wave
+4. [Step by step](#step-by-step): from the parts to your first alpha wave
 5. [Code](#code): live view, recording and analysis on the laptop
 6. [Missions](#missions)
 7. [From a recording to DANDI](docs/road-to-dandi.md): how a recording becomes published data
@@ -59,11 +59,11 @@ There's no EEG cap in this kit on purpose. It starts with electrode stickers on 
 
 ## Equipment
 
-<img src="docs/images/kit.png" alt="All parts in the box" width="100%">
+<img src="docs/images/kit.png" alt="All parts of the kit" width="100%">
 
 | # | Part | Spec | Source |
 |---|---|---|---|
-| ① | **Raspberry Pi 3 Model B** + 16 GB MicroSD | BCM2837, 1 GB, 2.4 GHz WiFi, set up with PiEEG Server | own |
+| ① | **Raspberry Pi 3 Model B** + 16 GB MicroSD | BCM2837, 1 GB, 2.4 GHz WiFi, set up with PiEEG Server | your own |
 | ② | **PiEEG-8 board** | ADS1299, 24 bit, 250 Hz, 8 ch + Ref + Bias, 2.54 mm male header | [Elecrow](https://www.elecrow.com/pieeg.html) |
 | ③ | **Ag/AgCl electrode stickers**, 60 pcs | 2.6 cm foam, snap button, single use | [Somnomedics SEN010C](https://shop.somnomedics.de/en/Single-adhesive-electrode-Ag-AgCl-foam-2.6-cm-OE/SEN010C) |
 | ④ | **Dupont to alligator clip cables**, 10 pcs | female 2.54 mm ↔ clip, 20 cm | [BerryBase DUPAC20](https://www.berrybase.de/en/10pin-jumper/dupont-kabel-female-krokodilklemme-trennbar-20cm?c=338) |
@@ -97,7 +97,7 @@ What each part does and why it was chosen: **[docs/equipment.md](docs/equipment.
 
 ## Step by step
 
-The MicroSD is already prepared ([how it was done](docs/setup-raspberry-pi.md)), and the Pi answers to `raspberrypi.local`. "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). From opening the box to the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
+Prepare the MicroSD first with the [Raspberry Pi setup guide](docs/setup-raspberry-pi.md), about 45 to 90 minutes. After that the Pi answers to `raspberrypi.local`. "You" below is whoever wears the electrodes. The researcher and the participant can be two different people, see [recording someone else](docs/recording-someone-else.md). With the card ready, the first alpha wave takes about 10 minutes. These steps follow the official [PiEEG-8 How to Start](https://docs.pieeg.com/hardware/devices/pieeg-8/setup/), adapted to this kit.
 
 ### Step 1 · Mount the board
 

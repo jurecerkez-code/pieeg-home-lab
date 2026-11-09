@@ -1,6 +1,6 @@
 # Equipment
 
-Every part in the box, what it is, why it's there, and how it connects.
+Every part of the kit, what it is, why it's there, and how it connects.
 
 ![Kit overview](images/kit.png)
 
@@ -120,7 +120,7 @@ Wipe each spot before sticking an electrode and let it dry. Removes skin oil, lo
 
 ---
 
-## Not in the box, but needed
+## Not in the kit, but needed
 
 - **Laptop** (Mac or Windows), on battery while recording, same WiFi as the Pi
 - **2.4 GHz WiFi**: the Pi 3 can't see 5 GHz networks
